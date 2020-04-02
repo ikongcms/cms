@@ -55,7 +55,7 @@ if(!empty($_GET['id'])&&!empty($_GET['n'])) {
         do{
             $sogou = getSogou(trim($data));
         } while ($sogou == '采集失败');
-	do {
+        do {
             $senma = getShenma(trim($data));
         } while ($senma == '采集失败');
         do {
@@ -67,7 +67,7 @@ if(!empty($_GET['id'])&&!empty($_GET['n'])) {
         if(is_array($sogou)){
             $keywords = array_values(array_flip(array_flip(array_merge($keywords, $sogou))));
         }
-	if(is_array($senma)){
+        if(is_array($senma)){
             $keywords = array_values(array_flip(array_flip(array_merge($keywords, $senma))));
         }
         if(is_array($socom)){
@@ -107,7 +107,7 @@ if(!empty($_GET['id'])&&!empty($_GET['i'])){
         $imgName = pathinfo($img[1]);
         $imgFlow = getImgUrl($img[1], $IP);
         if(!empty($imgFlow[1])&&$imgFlow[1]=='200'&&!empty($imgFlow[0])){
-	    $imgDir = __DIR__.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$title[1].DIRECTORY_SEPARATOR;
+            $imgDir = __DIR__.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.$title[1].DIRECTORY_SEPARATOR;
             if(!is_dir($imgDir)) {mkdirs($imgDir);}
             $imgFile = $imgDir.md5($imgName['filename']).'.'.$imgName['extension'];
             file_put_contents($imgFile, $imgFlow[0]);
@@ -186,7 +186,7 @@ function getDomain($dom) {
         $domDirs = __DIR__.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.trim($domain[0]).DIRECTORY_SEPARATOR;
         $dirName = substr(getHost(), 0, strrpos(getHost(), $domain[0]));
         if(empty($dirName)){header("HTTP/1.1 301 Moved Permanently");header("Location: ".$http_type.'www.'.$domain[0]);exit;}
-	$dirs = $domDirs.str_replace('.', DIRECTORY_SEPARATOR, $dirName);
+        $dirs = $domDirs.str_replace('.', DIRECTORY_SEPARATOR, $dirName);
         if(!is_dir($dirs)) {mkdirs($dirs);}
         return array($domDirs, $dirs, $domain[0]);
     }else{
@@ -248,12 +248,12 @@ function getArticle($key, $link) {
                 $_array = mb_str_split($keys[$v]);
                 if($uid % 2) {
                     foreach($_array as $id => $keysi){
-			$hexSrt[] = '&#12304;'.getSrt2Unicode(trim($keysi)).'&#12305;';
+                        $hexSrt[] = '&#12304;'.getSrt2Unicode(trim($keysi)).'&#12305;';
                     }
                 } else {
                     foreach($_array as $id => $keysi){
                         $keysi = str_replace(array('，','。',',','.'),getEmoji(mt_rand(0x1f300, 0x1f699)),$keysi);
-			$hexSrt[] = trim($keysi);
+                        $hexSrt[] = trim($keysi);
                     }
                 }
             }
@@ -332,14 +332,14 @@ function getLinks($dom) {
         $fileList = str_replace('news'.DIRECTORY_SEPARATOR, '', $listIdDir).$id.'.title.json';
         if(file_exists($fileList)) {
             if((time()-filemtime($fileList)) < 60) {
-		return unserialize(file_get_contents($fileList));
+                return unserialize(file_get_contents($fileList));
             } else {
                 $links = unserialize(file_get_contents($fileList));
                 $links['titles'] = $links['title'];
                 unset($links['links'],$links['title']);
                 return $links;
             }
-	}
+        }
     }
     return array('domain' => $dom[2], 'time' => time()-mt_rand(120,600), 'list' => (empty($matchList[0]) ? 'news' : $matchList[0]), 'id' => $id, 'file' => $listIdDir);
 }
@@ -716,48 +716,48 @@ function getImgUrl($url, $randIP) {
 }
 
 function image_size_add($imgsrc, $imgdst) {
-	list($width, $height, $type) = getimagesize($imgsrc);
-	$new_width = ($width >600 ? $width : $width) * 0.9;
-	$new_height = ($height >600 ? $height : $height) * 0.9;
+    list($width, $height, $type) = getimagesize($imgsrc);
+    $new_width = ($width >600 ? $width : $width) * 0.9;
+    $new_height = ($height >600 ? $height : $height) * 0.9;
     ob_start();
-	switch($type) {
-		case 1:
+    switch($type) {
+        case 1:
             $giftype = check_gifcartoon($imgsrc);
-		    if($giftype) {
-			    header('Content-Type: image/gif');
-			    $image_wp = imagecreatetruecolor($new_width, $new_height);
-			    $image = imagecreatefromgif($imgsrc);
-			    imagecopyresampled($image_wp, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
-			    imagejpeg($image_wp, $imgdst,75);
-			    imagedestroy($image_wp);
-		    }
-		    break;
-		case 2:
-		    header('Content-Type: image/jpeg');
-		    $image_wp = imagecreatetruecolor($new_width, $new_height);
-		    $image = imagecreatefromjpeg($imgsrc);
-		    imagecopyresampled($image_wp, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
-		    imagejpeg($image_wp, $imgdst, 75);
-		    imagedestroy($image_wp);
-		    break;
-		case 3:
-		    header('Content-Type: image/png');
-		    $image_wp = imagecreatetruecolor($new_width, $new_height);
-		    $image = imagecreatefrompng($imgsrc);
-		    imagecopyresampled($image_wp, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
-		    imagejpeg($image_wp, $imgdst, 75);
-		    imagedestroy($image_wp);
-		break;
-	}
+            if($giftype) {
+                header('Content-Type: image/gif');
+                $image_wp = imagecreatetruecolor($new_width, $new_height);
+                $image = imagecreatefromgif($imgsrc);
+                imagecopyresampled($image_wp, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+                imagejpeg($image_wp, $imgdst,75);
+                imagedestroy($image_wp);
+            }
+            break;
+        case 2:
+            header('Content-Type: image/jpeg');
+            $image_wp = imagecreatetruecolor($new_width, $new_height);
+            $image = imagecreatefromjpeg($imgsrc);
+            imagecopyresampled($image_wp, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+            imagejpeg($image_wp, $imgdst, 75);
+            imagedestroy($image_wp);
+            break;
+        case 3:
+            header('Content-Type: image/png');
+            $image_wp = imagecreatetruecolor($new_width, $new_height);
+            $image = imagecreatefrompng($imgsrc);
+            imagecopyresampled($image_wp, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+            imagejpeg($image_wp, $imgdst, 75);
+            imagedestroy($image_wp);
+        break;
+    }
     ob_end_clean();
     header("Content-Type: text/html");
 }
 
 function check_gifcartoon($image_file) {
-	$fp = fopen($image_file, 'rb');
-	$image_head = fread($fp, 1024);
-	fclose($fp);
-	return preg_match("/".chr(0x21).chr(0xff).chr(0x0b).'NETSCAPE2.0'."/", $image_head) ? false : true;
+    $fp = fopen($image_file, 'rb');
+    $image_head = fread($fp, 1024);
+    fclose($fp);
+    return preg_match("/".chr(0x21).chr(0xff).chr(0x0b).'NETSCAPE2.0'."/", $image_head) ? false : true;
 }
 
 function getEmoji($em) {
