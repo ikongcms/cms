@@ -20,7 +20,9 @@ class text_auth {
             $n_data_long++;
         }
         $this->_resize($key, 16, true);
-        if ('' == $key) $key = '0000000000000000';
+        if ('' == $key) {
+            $key = '0000000000000000';
+        }
         $n_key_long = $this->_str2long(0, $key, $key_long);
         $enc_data = '';
         $w = array(0, 0);
@@ -48,7 +50,9 @@ class text_auth {
     function decrypt($enc_data, $key) {
         $n_enc_data_long = $this->_str2long(0, $enc_data, $enc_data_long);
         $this->_resize($key, 16, true);
-        if ('' == $key) $key = '0000000000000000';
+        if ('' == $key) {
+            $key = '0000000000000000';
+        }
         $n_key_long = $this->_str2long(0, $key, $key_long);
         $data = '';
         $w = array(0, 0);
@@ -120,7 +124,9 @@ class text_auth {
     function _resize(&$data, $size, $nonull = false) {
         $n = strlen($data);
         $nmod = $n % $size;
-        if (0 == $nmod) $nmod = $size;
+        if (0 == $nmod) {
+            $nmod = $size;
+        }
         if ($nmod > 0) {
             if ($nonull) {
                 for ($i = $n;$i < $n - $nmod + $size;++$i) {
@@ -142,7 +148,9 @@ class text_auth {
         $n = strlen($data);
         $tmp = unpack('N*', $data);
         $j = $start;
-        foreach ($tmp as $value) $data_long[$j++] = $value;
+        foreach ($tmp as $value) {
+            $data_long[$j++] = $value;
+        }
         return $j;
     }
     function _long2str($l) {
@@ -185,4 +193,4 @@ class text_auth {
         return $result;
     }
 }
-?> 
+?>
