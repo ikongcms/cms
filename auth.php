@@ -1,15 +1,35 @@
-<?php
+<?php 
+// 加密过程
+$text_file = '456.php';
+$str = @file_get_contents($text_file);
+$text_auth = new text_auth(64);
+$str = $text_auth->encrypt($str, "baidu.com");
+$filename = '789.php'; // 加密后的文本为二进制，普通的文本编辑器无法正常查看
+file_put_contents($filename, $str);
+
+// 解密过程
+$text_file = '789.php';
+$str = @file_get_contents($text_file);
+$text_auth = new text_auth(64);
+$str = $text_auth->decrypt($str, "baidu.com");
+$filename = '123.php';
+file_put_contents($filename, $str);
+
 class text_auth {
     var $n_iter;
+ 
     function text_auth() {
         $this->setIter(32);
     }
+ 
     function setIter($n_iter) {
         $this->n_iter = $n_iter;
     }
+ 
     function getIter() {
         return $this->n_iter;
     }
+ 
     function encrypt($data, $key) {
         $n = $this->_resize($data, 4);
         $data_long[0] = $n;
@@ -28,7 +48,7 @@ class text_auth {
         $w = array(0, 0);
         $j = 0;
         $k = array(0, 0, 0, 0);
-        for ($i = 0;$i < $n_data_long;++$i) {
+        for ($i = 0; $i < $n_data_long; ++$i) {
             if ($j + 4 <= $n_key_long) {
                 $k[0] = $key_long[$j];
                 $k[1] = $key_long[$j + 1];
@@ -42,11 +62,12 @@ class text_auth {
             }
             $j = ($j + 4) % $n_key_long;
             $this->_encipherLong($data_long[$i], $data_long[++$i], $w, $k);
-            $enc_data.= $this->_long2str($w[0]);
-            $enc_data.= $this->_long2str($w[1]);
+            $enc_data .= $this->_long2str($w[0]);
+            $enc_data .= $this->_long2str($w[1]);
         }
         return $enc_data;
     }
+ 
     function decrypt($enc_data, $key) {
         $n_enc_data_long = $this->_str2long(0, $enc_data, $enc_data_long);
         $this->_resize($key, 16, true);
@@ -60,7 +81,7 @@ class text_auth {
         $len = 0;
         $k = array(0, 0, 0, 0);
         $pos = 0;
-        for ($i = 0;$i < $n_enc_data_long;$i+= 2) {
+        for ($i = 0; $i < $n_enc_data_long; $i += 2) {
             if ($j + 4 <= $n_key_long) {
                 $k[0] = $key_long[$j];
                 $k[1] = $key_long[$j + 1];
@@ -77,26 +98,27 @@ class text_auth {
             if (0 == $i) {
                 $len = $w[0];
                 if (4 <= $len) {
-                    $data.= $this->_long2str($w[1]);
+                    $data .= $this->_long2str($w[1]);
                 } else {
-                    $data.= substr($this->_long2str($w[1]), 0, $len % 4);
+                    $data .= substr($this->_long2str($w[1]), 0, $len % 4);
                 }
             } else {
                 $pos = ($i - 1) * 4;
                 if ($pos + 4 <= $len) {
-                    $data.= $this->_long2str($w[0]);
+                    $data .= $this->_long2str($w[0]);
                     if ($pos + 8 <= $len) {
-                        $data.= $this->_long2str($w[1]);
+                        $data .= $this->_long2str($w[1]);
                     } elseif ($pos + 4 < $len) {
-                        $data.= substr($this->_long2str($w[1]), 0, $len % 4);
+                        $data .= substr($this->_long2str($w[1]), 0, $len % 4);
                     }
                 } else {
-                    $data.= substr($this->_long2str($w[0]), 0, $len % 4);
+                    $data .= substr($this->_long2str($w[0]), 0, $len % 4);
                 }
             }
         }
         return $data;
     }
+ 
     function _encipherLong($y, $z, &$w, &$k) {
         $sum = (integer)0;
         $delta = 0x9E3779B9;
@@ -109,6 +131,7 @@ class text_auth {
         $w[0] = $y;
         $w[1] = $z;
     }
+ 
     function _decipherLong($y, $z, &$w, &$k) {
         $sum = 0xC6EF3720;
         $delta = 0x9E3779B9;
@@ -121,6 +144,7 @@ class text_auth {
         $w[0] = $y;
         $w[1] = $z;
     }
+ 
     function _resize(&$data, $size, $nonull = false) {
         $n = strlen($data);
         $nmod = $n % $size;
@@ -129,21 +153,23 @@ class text_auth {
         }
         if ($nmod > 0) {
             if ($nonull) {
-                for ($i = $n;$i < $n - $nmod + $size;++$i) {
+                for ($i = $n; $i < $n - $nmod + $size; ++$i) {
                     $data[$i] = $data[$i % $n];
                 }
             } else {
-                for ($i = $n;$i < $n - $nmod + $size;++$i) {
+                for ($i = $n; $i < $n - $nmod + $size; ++$i) {
                     $data[$i] = chr(0);
                 }
             }
         }
         return $n;
     }
+ 
     function _hex2bin($str) {
         $len = strlen($str);
         return pack('H' . $len, $str);
     }
+ 
     function _str2long($start, &$data, &$data_long) {
         $n = strlen($data);
         $tmp = unpack('N*', $data);
@@ -153,44 +179,48 @@ class text_auth {
         }
         return $j;
     }
+ 
     function _long2str($l) {
         return pack('N', $l);
     }
+ 
     function _rshift($integer, $n) {
-        if (0xffffffff < $integer || - 0xffffffff > $integer) {
+        if (0xffffffff < $integer || -0xffffffff > $integer) {
             $integer = fmod($integer, 0xffffffff + 1);
         }
         if (0x7fffffff < $integer) {
-            $integer-= 0xffffffff + 1.0;
+            $integer -= 0xffffffff + 1.0;
         } elseif (-0x80000000 > $integer) {
-            $integer+= 0xffffffff + 1.0;
+            $integer += 0xffffffff + 1.0;
         }
         if (0 > $integer) {
-            $integer&= 0x7fffffff;
+            $integer &= 0x7fffffff;
             $integer >>= $n;
-            $integer|= 1 << (31 - $n);
+            $integer |= 1 << (31 - $n);
         } else {
             $integer >>= $n;
         }
         return $integer;
     }
+ 
     function _add($i1, $i2) {
         $result = 0.0;
         foreach (func_get_args() as $value) {
             if (0.0 > $value) {
-                $value-= 1.0 + 0xffffffff;
+                $value -= 1.0 + 0xffffffff;
             }
-            $result+= $value;
+            $result += $value;
         }
-        if (0xffffffff < $result || - 0xffffffff > $result) {
+        if (0xffffffff < $result || -0xffffffff > $result) {
             $result = fmod($result, 0xffffffff + 1);
         }
         if (0x7fffffff < $result) {
-            $result-= 0xffffffff + 1.0;
+            $result -= 0xffffffff + 1.0;
         } elseif (-0x80000000 > $result) {
-            $result+= 0xffffffff + 1.0;
+            $result += 0xffffffff + 1.0;
         }
         return $result;
     }
 }
+
 ?>
