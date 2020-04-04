@@ -144,8 +144,8 @@ class Engine {
 
         $this->set(array(
             'web.libs.path' => 'app/libs',
-            'web.config' => require __DIR__ . '/fun/Database.php',
             'web.router' => require __DIR__ . '/config/Router.php',
+            'web.config' => require __DIR__ . '/config/Database.php',
         ));
 
         // Automatic loading library files
