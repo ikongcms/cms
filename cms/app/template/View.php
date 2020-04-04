@@ -177,7 +177,7 @@ class View {
             $this->mkdirs($this->cache);
         }
 
-        $tmpPath = $this->cache.'/'.md5(str_replace('/', '_', $this->template)).$this->extension;
+        $tmpPath = $this->cache.'/'.md5('KX~p8!aG*aT&2n$O3%VP^eF'.str_replace('/', '_', $this->template)).$this->extension;
 
         if (!$this->isCached($tmpPath)) {
             $tpl = preg_replace(array_keys($this->system_replace), $this->system_replace, @file_get_contents($this->template));
