@@ -284,4 +284,3 @@ class Response {
         $this->sent = true;
     }
 }
-

@@ -102,4 +102,3 @@ class Router {
         $this->index = 0;
     }
 }
-

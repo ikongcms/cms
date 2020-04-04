@@ -54,6 +54,13 @@ class Engine {
     protected $dispatcher;
 
     /**
+     * Stored dbInstances.
+     *
+     * @var array
+     */
+    protected static $dbInstances = array();
+
+    /**
      * Constructor.
      */
     public function __construct() {
@@ -105,6 +112,7 @@ class Engine {
         }
 
         // Register default components
+        $this->loader->register('fun', '\app\fun\Functions');
         $this->loader->register('request', '\app\net\Request');
         $this->loader->register('response', '\app\net\Response');
         $this->loader->register('router', '\app\net\Router');
@@ -129,13 +137,14 @@ class Engine {
         $this->set('sys.case_sensitive', false);
         $this->set('sys.handle_errors', true);
         $this->set('sys.log_errors', false);
-        $this->set('sys.views.path', './views');
-        $this->set('sys.views.cache', './views/cache');
+        $this->set('sys.views.path', __DIR__ . '/views');
+        $this->set('sys.views.cache', __DIR__ . '/views/cache');
         $this->set('sys.views.cacheTime', '0');
         $this->set('sys.views.extension', '.php');
 
         $this->set(array(
             'web.libs.path' => 'app/libs',
+            'web.config' => require __DIR__ . '/fun/Database.php',
             'web.router' => require __DIR__ . '/config/Router.php',
         ));
 
