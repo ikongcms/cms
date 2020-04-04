@@ -1,9 +1,4 @@
 <?php
-/**
- * 修改 php.ini
- * session.save_handler = Redis
- * session.save_path = "tcp://host:6379?auth=123456,tcp://host:6379?auth=123456"
- */
 return array(
 # ======> 公共配置
     # SESSION 数据用户未登录过期时间 秒

@@ -17,6 +17,11 @@ class RedisSess {
     private $prefix;
 
     public function __construct($host = '127.0.0.1', $port = '6379', $auth = null, $db = '0', $ttl = '10', $usertime = '3600', $timeout = '3600', $sename = null, $sedomain = null, $prefix = 'SSCC:') {
+
+        // 配置 SESSION 保持位置
+        ini_set('session.save_handler', 'redis');
+        ini_set('session.save_path', 'tcp://'.$host.':'.$port.'?auth='.$auth);
+
         $this->redis = new \Redis();
         $this->redis->connect($host, $port, $ttl) or die('Redis 连接失败!');
         $this->redis->auth($auth);
