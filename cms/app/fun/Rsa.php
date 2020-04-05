@@ -176,8 +176,12 @@ class RSA {
             $this->_error('padding error');
         }
 
-        if (openssl_public_encrypt($data, $result, $this->pub_key, $padding)) {
-            $ret = $this->_encode($result, $code);
+        $split = str_split($data, 100);// 1024bit && OPENSSL_PKCS1_PADDING  不大于117即可
+
+        foreach ($split as $part) {
+            if (openssl_public_encrypt($part, $result, $this->pub_key, $padding)) {
+                $ret .= $this->_encode($result, $code);
+            }
         }
 
         return $ret;
@@ -194,15 +198,19 @@ class RSA {
      */
     public function decrypt($data, $code = 'base64', $padding = OPENSSL_PKCS1_PADDING, $rev = false) {
         $ret  = false;
-        $data = $this->_decode($data, $code);
 
         if (!$this->_checkPadding($padding, 'de')) {
             $this->_error('padding error');
         }
 
-        if ($data !== false) {
-            if (openssl_private_decrypt($data, $result, $this->pri_key, $padding)) {
-                $ret = $rev ? rtrim(strrev($result), "\0") : '' . $result;
+        $split = str_split($data, 172);// 1024bit  固定172
+
+        foreach ($split as $part) {
+            $part = $this->_decode($part, $code);
+            if ($part !== false) {
+                if (openssl_private_decrypt($part, $result, $this->pri_key, $padding)) {
+                    $ret .= $rev ? rtrim(strrev($result), "\0") : '' . $result;
+                }
             }
         }
 
