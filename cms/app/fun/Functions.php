@@ -32,4 +32,42 @@ class Functions extends app\Engine {
         }
         return self::$dbInstances[$name];
     }
+
+    //二进制加密
+    public function getBit($data = 'str', $id = 1) {
+        $config = $this->get('web.config');
+        $this->loader->register('getBinary', '\app\fun\Binary');
+        $srt = $this->getBinary();
+        if($id == 1) {
+            return $srt->encrypt($data, md5($config['private'])); // 加密
+        } else {
+            return $srt->decrypt($data, md5($config['private'])); // 解密
+        }
+    }
+
+    //RSA加密
+    public function getRSA($data, $id = 'e', $sign = '') {
+        $config = $this->get('web.config');
+        $this->loader->register('getRsaSrt', '\app\fun\Rsa',array(
+            $config['public'],
+            $config['private'],
+        ));
+        $srt = $this->getRsaSrt();
+        switch ($id) {
+            case 'e':
+                return $srt->encrypt($data); // 加密
+                break;
+            case 'd':
+                return $srt->decrypt($data); // 解密
+                break;
+            case 's':
+                return $srt->sign($data); // 生成
+                break;
+            case 'v':
+                return $srt->verify($data, $sign); // 验证
+                break;
+            default:
+                return 'RSA Error: Data not';
+        }
+    }
 }
