@@ -2,218 +2,310 @@
 namespace app\fun;
 
 class RSA {
-    private $pub_key = null;  // 公钥字符串
-    private $pri_key = null;  // 私钥字符串
+    /**
+     * 签名算法， 默认为 OPENSSL_ALGO_SHA1
+     */
+    const RSA_ALGORITHM_SIGN = OPENSSL_ALGO_SHA256;
 
     /**
-     * 构造函数
-     *
-     * @param string 公钥文件（验签和加密时传入）
-     * @param string 私钥文件（签名和解密时传入）
+     * 公钥
+     * @var string
      */
-    public function __construct($public_key_file = '', $private_key_file = '') {
-        if ($public_key_file) {
-            $this->_get_public_key($public_key_file);
-        }
-
-        if ($private_key_file) {
-            $this->_get_private_key($private_key_file);
-        }
-    }
+    private static $publicKey = false;
 
     /**
-     * 自定义错误处理
+     * 私钥
+     * @var string
      */
-    private function _error($msg) {
-        die('RSA Error:' . $msg);
-    }
+    private static $privateKey = false;
 
     /**
-     * 检测填充类型
-     * 加密只支持PKCS1_PADDING
-     * 解密支持PKCS1_PADDING和NO_PADDING
-     *
-     * @param int 填充模式
-     * @param string 加密en/解密de
-     * @return bool
+     * 第三方公钥 交互验签使用
+     * @var string
      */
-    private function _checkPadding($padding, $type) {
-        if ($type == 'en') {
-            switch ($padding) {
-                case OPENSSL_PKCS1_PADDING:
-                    $ret = true;
-                    break;
-                default:
-                    $ret = false;
-            }
-        } else {
-            switch ($padding) {
-                case OPENSSL_PKCS1_PADDING:
-                case OPENSSL_NO_PADDING:
-                    $ret = true;
-                    break;
-                default:
-                    $ret = false;
-            }
-        }
-        return $ret;
-    }
+    private static $thirdPublicKey = false;
 
-    private function _encode($data, $code) {
-        switch (strtolower($code)) {
-            case 'base64':
-                $data = base64_encode('' . $data);
-                break;
-            case 'hex':
-                $data = bin2hex($data);
-                break;
-            case 'bin':
-            default:
-        }
-        return $data;
-    }
-
-    private function _decode($data, $code) {
-        switch (strtolower($code)) {
-            case 'base64':
-                $data = base64_decode($data);
-                break;
-            case 'hex':
-                $data = $this->_hex2bin($data);
-                break;
-            case 'bin':
-            default:
-        }
-        return $data;
-    }
-
-    private function _get_public_key($file) {
-        //$key_content = $this->_read_file($file);
-        $key_content = $file;
-        if ($key_content) {
-            $this->pub_key = openssl_get_publickey($key_content);
-        }
-    }
-
-    private function _get_private_key($file) {
-        //$key_content = $this->_read_file($file);
-        $key_content = $file;
-        if ($key_content) {
-            $this->pri_key = openssl_get_privatekey($key_content);
-        }
-    }
-
-    private function _read_file($file) {
-        $ret = false;
-        if (!file_exists($file)) {
-            $this->_error("The file {$file} is not exists");
-        } else {
-            $ret = file_get_contents($file);
-        }
-        return $ret;
-    }
-
-    private function _hex2bin($hex = false) {
-        $ret = $hex !== false && preg_match('/^[0-9a-fA-F]+$/i', $hex) ? pack("H*", $hex) : false;
-        return $ret;
+    /**
+     * 初始化秘钥信息
+     * @var string
+     */
+    public function __construct($public_key_file = false, $private_key_file = false, $third_key_file = false) {
+        self::$publicKey = $public_key_file;
+        self::$privateKey = $private_key_file;
+        self::$thirdPublicKey = $third_key_file;
     }
 
     /**
-     * 生成签名
-     *
-     * @param string 签名材料
-     * @param string 签名编码（base64/hex/bin）
-     * @return string 签名值
+     * 是否使用安全base64需要参考第三方验签的解析方案，如果也是php推荐使用安全方式
+     * @param $data
+     * @return string
      */
-    public function sign($data, $code = 'base64') {
-        $ret = false;
-        if (openssl_sign($data, $ret, $this->pri_key)) {
-            $ret = $this->_encode($ret, $code);
-        }
-
-        return $ret;
+    private static function url_safe_base64_encode($data) {
+        return str_replace(array('+', '/', '='), array('-', '_', '~'), base64_encode($data));
     }
 
     /**
-     * 验证签名
-     *
-     * @param string 签名材料
-     * @param string 签名值
-     * @param string 签名编码（base64/hex/bin）
-     * @return bool
+     * @param $data
+     * @return string
      */
-    public function verify($data, $sign, $code = 'base64') {
-        $ret  = false;
+    private static function url_safe_base64_decode($data) {
+        $base_64 = str_replace(array('-', '_', '~'), array('+', '/', '='), $data);
 
-        $sign = $this->_decode($sign, $code);
-        if ($sign !== false) {
-            switch (openssl_verify($data, $sign, $this->pub_key)) {
-                case 1:
-                    $ret = true;
-                    break;
-                case 0:
-                case -1:
-                default:
-                    $ret = false;
+        return base64_decode($base_64);
+    }
+
+    /**
+     * 获取rsa密钥加密位数
+     * @param $source
+     * @return mixed
+     */
+    private static function getKeyBitDetail($source) {
+        $srt = openssl_pkey_get_details($source);
+        return $srt['bits'];
+    }
+
+    /**
+     * 获取文本格式私钥 并重新格式化 为保证任何key都可以识别
+     * 由于各个语言以及环境使用的证书格式不同。参考下一节： ### 秘钥格式解析
+     * @return bool|resource
+     */
+    private static function getPrivateKey() {
+        //if (file_exists(self::$publicKey)) {
+            //$source =  file_get_contents(self::$privateKey);
+            $source =  self::$privateKey;
+
+            $search = array(
+                "-----BEGIN RSA PRIVATE KEY-----",
+                "-----END RSA PRIVATE KEY-----",
+                "\n",
+                "\r",
+                "\r\n"
+            );
+
+            $private_key = str_replace($search,"",$source);
+            return openssl_pkey_get_private($search[0] . PHP_EOL . wordwrap($private_key, 64, "\n", true) . PHP_EOL . $search[1]);
+        //}
+    }
+
+    /**
+     * 获取公钥 并重新格式化
+     * @return resource
+     */
+    private static function getPublicKey() {
+        //if (file_exists(self::$publicKey)) {
+            //$source = file_get_contents(self::$publicKey);
+            $source =  self::$publicKey;
+
+            $search = array(
+                "-----BEGIN PUBLIC KEY-----",
+                "-----END PUBLIC KEY-----",
+                "\n",
+                "\r",
+                "\r\n"
+            );
+            $public_key = str_replace($search,"",$source);
+
+            return openssl_pkey_get_public($search[0] . PHP_EOL . wordwrap($public_key, 64, "\n", true) . PHP_EOL . $search[1]);
+        //}
+    }
+
+    /**
+     * 获取第三方公钥，并格式化
+     * @return resource
+     */
+    private static function getPublicKeyThird() {
+        //if (file_exists(self::$thirdPublicKey)) {
+            //$source = file_get_contents(self::$thirdPublicKey);
+            $source =  self::$thirdPublicKey;
+
+            $search = array(
+                "-----BEGIN PUBLIC KEY-----",
+                "-----END PUBLIC KEY-----",
+                "\n",
+                "\r",
+                "\r\n"
+            );
+            $public_key = str_replace($search, "", $source);
+
+            return openssl_pkey_get_public($search[0] . PHP_EOL . wordwrap($public_key, 64, "\n", true) . PHP_EOL . $search[1]);
+        //}
+    }
+
+    /**
+     * 排序数据并生成待验签字符串（类似微信支付，使用此方法，而非例子中json_encode方法）
+     * @return string
+     */
+    private static function createLinkString($data = array()) {
+        unset($data['sign']);
+
+        foreach ($data as $key => $val) {
+            if (!$val) {
+                unset($data[$key]);
             }
         }
+        ksort($data);
 
-        return $ret;
+        return urldecode(http_build_query($data));
     }
 
     /**
-     * 加密
-     *
-     * @param string 明文
-     * @param string 密文编码（base64/hex/bin）
-     * @param int 填充方式（貌似php有bug，所以目前仅支持OPENSSL_PKCS1_PADDING）
-     * @return string 密文
+     * 排序数据并生成待验签字符串（类似微信支付，使用此方法，而非例子中json_encode方法）
+     * @return string
      */
-    public function encrypt($data, $code = 'base64', $padding = OPENSSL_PKCS1_PADDING) {
-        $ret = false;
+    public static function createLinkStringNew($data = array()) {
+        $mac = false;
+        ksort($data);
+        unset($data['sign'], $data['sign_type']);
 
-        if (!$this->_checkPadding($padding, 'en')) {
-            $this->_error('padding error');
-        }
-
-        $split = str_split($data, 100);// 1024bit && OPENSSL_PKCS1_PADDING  不大于117即可
-
-        foreach ($split as $part) {
-            if (openssl_public_encrypt($part, $result, $this->pub_key, $padding)) {
-                $ret .= $this->_encode($result, $code);
+        foreach ($data as $key => $val) {
+            if ($val) {
+                $mac .= "&{$key}={$val}";
             }
         }
 
-        return $ret;
+        return ltrim($mac, '&');
     }
 
     /**
-     * 解密
-     *
-     * @param string 密文
-     * @param string 密文编码（base64/hex/bin）
-     * @param int 填充方式（OPENSSL_PKCS1_PADDING / OPENSSL_NO_PADDING）
-     * @param bool 是否翻转明文（When passing Microsoft CryptoAPI-generated RSA cyphertext, revert the bytes in the block）
-     * @return string 明文
+     * 私钥加密
+     * @param $data
+     * @return bool|null
      */
-    public function decrypt($data, $code = 'base64', $padding = OPENSSL_PKCS1_PADDING, $rev = false) {
-        $ret  = false;
+    public static function privEncrypt($data = false) {
+        $privKey = self::getPrivateKey();
 
-        if (!$this->_checkPadding($padding, 'de')) {
-            $this->_error('padding error');
+        $partLen = self::getKeyBitDetail($privKey) / 8 - 11;
+
+        $parts = str_split($data, $partLen);
+
+        $encrypted = false;
+
+        foreach ($parts as $part) {
+            openssl_private_encrypt($part, $partEncrypt, $privKey);
+            $encrypted .= $partEncrypt;
+        }
+        openssl_free_key($privKey);
+
+        return $encrypted ? self::url_safe_base64_encode($encrypted) : null;
+    }
+
+    /**
+     * 公钥解密
+     * @param string $encrypted
+     * @return bool|null
+     */
+    public static function publicDecrypt($encrypted = false) {
+        $pubKey = self::getPublicKey();
+
+        $partLen = self::getKeyBitDetail($pubKey) / 8;
+
+        $parts = str_split(self::url_safe_base64_decode($encrypted), $partLen);
+
+        $decrypted = false;
+
+        foreach ($parts as $part) {
+            openssl_public_decrypt($part, $partDecrypt, $pubKey);
+            $decrypted .= $partDecrypt;
         }
 
-        $split = str_split($data, 172);// 1024bit  固定172
+        openssl_free_key($pubKey);
 
-        foreach ($split as $part) {
-            $part = $this->_decode($part, $code);
-            if ($part !== false) {
-                if (openssl_private_decrypt($part, $result, $this->pri_key, $padding)) {
-                    $ret .= $rev ? rtrim(strrev($result), "\0") : '' . $result;
-                }
-            }
+        return $decrypted ?: null;
+    }
+
+    /**
+     * 公钥加密
+     * @param string $data
+     * @return bool|null
+     */
+    public static function publicEncrypt($data = false) {
+        $pubKey = self::getPublicKey();
+
+        $partLen = self::getKeyBitDetail($pubKey) / 8 - 11;
+
+        $parts = str_split($data, $partLen);
+
+        $encrypted = false;
+
+        foreach ($parts as $part) {
+            openssl_public_encrypt($part, $partEncrypt, $pubKey);
+            $encrypted .= $partEncrypt;
         }
 
-        return $ret;
+        openssl_free_key($pubKey);
+
+        return $encrypted ? self::url_safe_base64_encode($encrypted) : null;
+    }
+
+    /**
+
+     * 私钥解密
+     * @param string $encrypted
+     * @return bool|null
+     */
+    public static function privDecrypt($encrypted = false) {
+        $privKey = self::getPrivateKey();
+
+        $partLen = self::getKeyBitDetail($privKey) / 8;
+
+        $parts = str_split(self::url_safe_base64_decode($encrypted), $partLen);
+
+        $decrypted = false;
+
+        foreach ($parts as $part) {
+            openssl_private_decrypt($part, $partDecrypt, $privKey);
+            $decrypted .= $partDecrypt;
+        }
+
+        openssl_free_key($privKey);
+
+        return $decrypted ?: null;
+    }
+
+    /**
+     * 私钥签名
+     * @param array $data
+     * @return null|string
+     */
+    public static function privSign($data = array()) {
+        $privKey = self::getPrivateKey();
+
+        openssl_sign(self::createLinkStringNew($data), $sign, $privKey, self::RSA_ALGORITHM_SIGN);
+
+        openssl_free_key($privKey);
+
+        return $sign ? self::url_safe_base64_encode($sign) : null;
+    }
+
+    /**
+     * 公钥验签
+     * @param array $data
+     * @param string $sign
+     * @return int
+     */
+    public static function publicVerifySign($data = array(), $sign = false) {
+        $pubKey = self::getPublicKey();
+
+        $res = openssl_verify(self::createLinkStringNew($data), self::url_safe_base64_decode($sign), $pubKey, self::RSA_ALGORITHM_SIGN);
+
+        openssl_free_key($pubKey);
+
+        return $res;
+    }
+
+    /**
+     * 公钥验签(第三方)
+     * @param array $data
+     * @param string $sign
+     * @return int
+     */
+    public static function publicVerifySignThird($data = array(), $sign = false) {
+        $pubKey = self::getPublicKeyThird();
+
+        $res = openssl_verify(self::createLinkStringNew($data), self::url_safe_base64_decode($sign), $pubKey, self::RSA_ALGORITHM_SIGN);
+
+        openssl_free_key($pubKey);
+
+        return $res;
     }
 }

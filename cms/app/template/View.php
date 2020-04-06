@@ -59,18 +59,6 @@ class View {
         '~\{(\$[a-z0-9_]+)\.([a-z0-9_]+)\.([a-z0-9_]+)\}~i' => '<?php echo $1[\'$2\'][\'$3\'] ?>',
         # {$arr.key.key2}
 
-        '~\{(include_once|require_once|include|require)\s*\(\s*(.+?)\s*\)\s*\s*\}~i' => '<?php include \$this->_include($2, __FILE__) ?>',
-        # {include('inc/top.php')}
-
-        '~\{:(.+?)\}~' => '<?php echo $1 ?>',
-        # {:strip_tags($a)}
-
-        '~\{\~(.+?)\}~' => '<?php $1 ?>',
-        # {~var_dump($a)}
-
-        '~<\?=\s*~' => '<?php echo ',
-        # <?=
-
         '~\{loop\s+(\S+)\s+(\S+)\}~' => '<?php if(is_array(\\1)) foreach(\\1 as \\2) { ?>',
         # {loop $array $vaule}
 
