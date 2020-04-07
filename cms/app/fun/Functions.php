@@ -39,9 +39,9 @@ class Functions extends app\Engine {
         $this->loader->register('getBinary', '\app\fun\Binary');
         $srt = $this->getBinary();
         if($id == 1) {
-            return $srt->encrypt($data, md5($config['private']), $expire); // 加密
+            return str_replace(array('+', '/', '='), array('-', '_', '~'),base64_encode($srt->encrypt($data, md5($config['private']), $expire))); // 加密
         } else {
-            return $srt->decrypt($data, md5($config['private'])); // 解密
+            return $srt->decrypt(base64_decode(str_replace(array('-', '_', '~'), array('+', '/', '='),$data)), md5($config['private'])); // 解密
         }
     }
 
