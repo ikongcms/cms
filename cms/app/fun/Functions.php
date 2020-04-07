@@ -80,4 +80,5 @@ class Functions extends app\Engine {
                 return 'RSA Error: Data not';
         }
     }
+
 }

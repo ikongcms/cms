@@ -118,4 +118,5 @@ class RedisSess {
     public function __destruct() {
         session_write_close();
     }
+
 }

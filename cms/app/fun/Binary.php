@@ -102,4 +102,5 @@ class Binary {
         while ($n <= -2147483649) $n += 4294967296;
         return (int)$n;
     }
+
 }
