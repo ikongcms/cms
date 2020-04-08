@@ -50,13 +50,19 @@ class Functions extends app\Engine {
         }
     }
 
+    // RSA 第三次公共证书
+    public function getKey($name = 'public') {
+        $config = $this->get('web.config');  // 禁止公共调用，否则会暴露密钥
+        return preg_replace('/[\r\n]/', '',$config[$name.'.third']);
+    }
+
     // RSA加密
     public function getRSA($id = 're', $data, $sign = false, $third = false) {
         $config = $this->get('web.config');  // 禁止公共调用，否则会暴露密钥
         $this->loader->register('getRsaSrt', '\app\fun\Rsa',array(
             $config['public'],
             $config['private'],
-            (empty($third)?$config['third']:$third),
+            (empty($third)?$this->getKey():$this->getKey($third)),
         ));
         $srt = $this->getRsaSrt();
         switch ($id) {
