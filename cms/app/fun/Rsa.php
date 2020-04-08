@@ -1,11 +1,12 @@
 <?php
 namespace app\fun;
 
-class RSA {
+class Rsa {
+
     /**
      * 签名算法， 默认为 OPENSSL_ALGO_SHA1
      */
-    const RSA_ALGORITHM_SIGN = OPENSSL_ALGO_SHA256;
+    const RSA_ALGORITHM_SIGN = OPENSSL_ALGO_SHA512;
 
     /**
      * 公钥

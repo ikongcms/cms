@@ -36,8 +36,8 @@ class Functions extends app\Engine {
     // XAES加密
     public function getXAes($data = 'str', $id = 'e' , $expire = 0) {
         $config = $this->get('web.config');  // 禁止公共调用，否则会暴露密钥
-        $this->loader->register('getXxtea', '\app\fun\Xxtea');
-        $srt = $this->getXxtea();
+        $this->loader->register('getTea', '\app\fun\Tea');
+        $srt = $this->getTea();
         switch ($id) {
             case 'e':
                 return str_replace(array('+', '/', '='), array('-', '_', '~'), $this->encrypt(base64_encode($srt->xencrypt($data, md5($config['private']), $expire)), substr(md5($config['private']),8,16))); // 加密
@@ -93,7 +93,7 @@ class Functions extends app\Engine {
      */
     public function encrypt($string, $key) {
         // openssl_encrypt 加密不同Mcrypt，对秘钥长度要求，超出16加密结果不变
-        $data = openssl_encrypt($string, 'AES-128-ECB', $key, OPENSSL_RAW_DATA);
+        $data = openssl_encrypt($string, 'AES-256-ECB', $key, OPENSSL_RAW_DATA);
         return base64_encode($data);
     }
 
@@ -103,7 +103,7 @@ class Functions extends app\Engine {
      * @return string
      */
     public function decrypt($string, $key) {
-        $decrypted = openssl_decrypt(base64_decode($string), 'AES-128-ECB', $key, OPENSSL_RAW_DATA);
+        $decrypted = openssl_decrypt(base64_decode($string), 'AES-256-ECB', $key, OPENSSL_RAW_DATA);
         return $decrypted;
     }
 

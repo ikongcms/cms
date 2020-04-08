@@ -1,7 +1,7 @@
 <?php
 namespace app\fun;
 
-class Xxtea {
+class Tea {
 
     /**
      * 加密字符串
