@@ -60,7 +60,7 @@ class Functions extends app\Engine {
     public function getRSA($id = 're', $data, $sign = false, $third = false) {
         $config = $this->get('web.config');  // 禁止公共调用，否则会暴露密钥
         $this->loader->register('getRsaSrt', '\app\fun\Rsa',array(
-            $config['public'],
+            $config['public.third'],
             $config['private'],
             (empty($third)?$this->getKey():$this->getKey($third)),
         ));
