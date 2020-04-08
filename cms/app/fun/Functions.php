@@ -34,14 +34,19 @@ class Functions extends app\Engine {
     }
 
     // XAES加密
-    public function getXAes($data = 'str', $id = 1 , $expire = 0) {
+    public function getXAes($data = 'str', $id = 'e' , $expire = 0) {
         $config = $this->get('web.config');  // 禁止公共调用，否则会暴露密钥
         $this->loader->register('getXxtea', '\app\fun\Xxtea');
         $srt = $this->getXxtea();
-        if($id == 1) {
-            return str_replace(array('+', '/', '='), array('-', '_', '~'), $this->encrypt(base64_encode($srt->xencrypt($data, md5($config['private']), $expire)), substr(md5($config['private']),8,16))); // 加密
-        } else {
-            return $srt->xdecrypt(base64_decode($this->decrypt(str_replace(array('-', '_', '~'), array('+', '/', '='),$data), substr(md5($config['private']),8,16))), md5($config['private'])); // 解密
+        switch ($id) {
+            case 'e':
+                return str_replace(array('+', '/', '='), array('-', '_', '~'), $this->encrypt(base64_encode($srt->xencrypt($data, md5($config['private']), $expire)), substr(md5($config['private']),8,16))); // 加密
+                break;
+            case 'd':
+                return $srt->xdecrypt(base64_decode($this->decrypt(str_replace(array('-', '_', '~'), array('+', '/', '='),$data), substr(md5($config['private']),8,16))), md5($config['private'])); // 解密
+                break;
+            default:
+                return 'AES Error: Data not';
         }
     }
 
@@ -60,7 +65,7 @@ class Functions extends app\Engine {
                 break;
             case 'ud':
                 return $srt->publicDecrypt($data); // 公钥解密
-
+                break;
             case 'ue':
                 return $srt->publicEncrypt(json_encode($data, JSON_UNESCAPED_UNICODE)); // 公钥加密
                 break;

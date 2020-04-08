@@ -18,9 +18,9 @@ class IndexController {
         //$data['english'] = 'litblc.com';
         //$third = '-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2KJ4i1DKa1TLCqjwRIA+BQw/zqIjey6FIL4G2qfSE4MKUbSCeZ1UKehLJyaweD4s9l9k7QOA87t3HtGWeMGxlam9kLCijc/XDdR3cD98ncfl8t+k6HsIORCcKXEbbOg/He0BrkbCSn2hzpXZEY1iIrG4w070XsV8WsNpkYkWU12F3mGwK1GW093tmNaqu5iz9Ra6peARI3231Ef7cAeSqJwzICLtE/QqYW1k9y8TXHT1kwbM4IG1jv/LOyjQoqcNk7v09wcDAOl3V0obI/BVF7jqweYZ1QOkUjr5asJ7+Dl2x9hzQMzvZA8NKDioXb7gwftn2KSFXFvVi8yiITnyDwIDAQAB-----END PUBLIC KEY-----';
 
-        $srt = Api::fun()->getXAes('我是谁','1',86400);
+        $srt = Api::fun()->getXAes('我是谁我和你','e',86400);
         echo $srt.PHP_EOL;
-        $srt = Api::fun()->getXAes($srt,'2');
+        $srt = Api::fun()->getXAes($srt,'d');
         echo $srt.PHP_EOL;
         //$baidu1 = Api::fun()->getRSA('re',$data);
         //echo $baidu1.PHP_EOL;
