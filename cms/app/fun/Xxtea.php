@@ -1,7 +1,7 @@
 <?php
 namespace app\fun;
 
-class Binary {
+class Xxtea {
 
     /**
      * 加密字符串
@@ -10,7 +10,7 @@ class Binary {
      * @param integer $expire 有效期（秒）     
      * @return string
      */
-    public static function encrypt($str, $key, $expire = 0) {
+    public static function xencrypt($str, $key, $expire = 0) {
         $expire = sprintf('%010d', ceil($expire) ? ceil($expire) + time():0);
 
         $str    =   $expire.$str;
@@ -44,7 +44,7 @@ class Binary {
      * @param string $key 加密key
      * @return string
      */
-    public static function decrypt($str, $key) {
+    public static function xdecrypt($str, $key) {
         $v = self::str2long($str, false);
         $k = self::str2long($key, false);
         $n = count($v) - 1;

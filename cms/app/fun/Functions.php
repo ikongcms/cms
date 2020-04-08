@@ -5,7 +5,7 @@ use app;
 
 class Functions extends app\Engine {
 
-    //设置SESSION链接
+    // 设置SESSION链接
     public function getSESS($name = 'sess') {
         if (!isset(self::$dbInstances[$name])) {
             $config = $this->get('web.config');  // 禁止公共调用，否则会暴露密钥
@@ -33,19 +33,19 @@ class Functions extends app\Engine {
         return self::$dbInstances[$name];
     }
 
-    //二进制加密
-    public function getBit($data = 'str', $id = 1 , $expire = 0) {
+    // XAES加密
+    public function getXAes($data = 'str', $id = 1 , $expire = 0) {
         $config = $this->get('web.config');  // 禁止公共调用，否则会暴露密钥
-        $this->loader->register('getBinary', '\app\fun\Binary');
-        $srt = $this->getBinary();
+        $this->loader->register('getXxtea', '\app\fun\Xxtea');
+        $srt = $this->getXxtea();
         if($id == 1) {
-            return str_replace(array('+', '/', '='), array('-', '_', '~'),base64_encode($srt->encrypt($data, md5($config['private']), $expire))); // 加密
+            return str_replace(array('+', '/', '='), array('-', '_', '~'), $this->encrypt(base64_encode($srt->xencrypt($data, md5($config['private']), $expire)), substr(md5($config['private']),8,16))); // 加密
         } else {
-            return $srt->decrypt(base64_decode(str_replace(array('-', '_', '~'), array('+', '/', '='),$data)), md5($config['private'])); // 解密
+            return $srt->xdecrypt(base64_decode($this->decrypt(str_replace(array('-', '_', '~'), array('+', '/', '='),$data), substr(md5($config['private']),8,16))), md5($config['private'])); // 解密
         }
     }
 
-    //RSA加密
+    // RSA加密
     public function getRSA($id = 're', $data, $sign = false, $third = false) {
         $config = $this->get('web.config');  // 禁止公共调用，否则会暴露密钥
         $this->loader->register('getRsaSrt', '\app\fun\Rsa',array(
@@ -79,6 +79,27 @@ class Functions extends app\Engine {
             default:
                 return 'RSA Error: Data not';
         }
+    }
+
+    /**
+     * @param string $string 需要加密的字符串
+     * @param string $key 密钥
+     * @return string
+     */
+    public function encrypt($string, $key) {
+        // openssl_encrypt 加密不同Mcrypt，对秘钥长度要求，超出16加密结果不变
+        $data = openssl_encrypt($string, 'AES-128-ECB', $key, OPENSSL_RAW_DATA);
+        return base64_encode($data);
+    }
+
+    /**
+     * @param string $string 需要解密的字符串
+     * @param string $key 密钥
+     * @return string
+     */
+    public function decrypt($string, $key) {
+        $decrypted = openssl_decrypt(base64_decode($string), 'AES-128-ECB', $key, OPENSSL_RAW_DATA);
+        return $decrypted;
     }
 
 }
