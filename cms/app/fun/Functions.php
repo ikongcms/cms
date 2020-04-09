@@ -53,7 +53,7 @@ class Functions extends app\Engine {
     // RSA 第三次公共证书
     public function getKey($name = 'public') {
         $config = $this->get('web.config');  // 禁止公共调用，否则会暴露密钥
-        return preg_replace('/[\r\n]/', '',$config[$name.'.third']);
+        return trim(preg_replace('/[\r\n]/', '',$config[$name.'.third']));
     }
 
     // RSA加密

@@ -17,12 +17,14 @@ var data = 'my message';
 var publicKey = "{$publicKey}"
 var publicKeyArr = [];
 var publicKeyn = 64;
-var publicKey = publicKey.slice(26, publicKey.length-24);
+var publicKeyReg = new RegExp("-","g");
+var publicKey = publicKey.replace(publicKeyReg,"");
+var publicKey = publicKey.replace("BEGIN PUBLIC KEY","");
+var publicKey = publicKey.replace("END PUBLIC KEY","");
 for (var publicKeyi = 0, publicKeyl = publicKey.length; publicKeyi < (publicKeyl/publicKeyn); publicKeyi++) {
 var publicKeya = publicKey.slice(publicKeyn*publicKeyi, publicKeyn*(publicKeyi+1));
 publicKeyArr.push(publicKeya);}
 var publicKey = "-----BEGIN PUBLIC KEY-----\n"+publicKeyArr.join("\n")+"\n-----END PUBLIC KEY-----";
-console.log(publicKey);
 var js_encrypt = new JSEncrypt();
 js_encrypt.setPublicKey(publicKey);
 var encrypted = js_encrypt.encrypt(data);
