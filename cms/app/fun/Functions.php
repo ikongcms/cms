@@ -50,6 +50,20 @@ class Functions extends app\Engine {
         }
     }
 
+    // TOKEN 十六进制编码
+    public function getToken($id = 'e', $data = 'public') {
+        switch ($id) {
+            case 'e':
+                return strtoupper(bin2hex($this->encrypt($data,md5($this->getKey()))));
+                break;
+            case 'd':
+                return $this->decrypt(pack("H*",$data),md5($this->getKey()));
+                break;
+            default:
+                return 'TOKEN Error: Data not';
+        }
+    }
+
     // RSA 第三次公共证书
     public function getKey($name = 'public') {
         $config = $this->get('web.config');  // 禁止公共调用，否则会暴露密钥

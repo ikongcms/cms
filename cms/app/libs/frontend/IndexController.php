@@ -12,14 +12,17 @@ class IndexController {
      * @return [type]       [description]
      */
     public static function index() {
-
         //$data['name'] = '网红';
         //$data['age'] = '26';
         //$data['title'] = '我和你心连心';
         //$data['english'] = 'baidu.com';
 
+        //echo $srt = Api::fun()->getToken('e', '我和你心连心');
+        //echo Api::fun()->getToken('d', $srt);
+
         //$srt = Api::fun()->getXAes('我和你心连心','e',86400);
         //echo $srt.PHP_EOL;
+
         //$srt = Api::fun()->getXAes($srt,'d');
         //echo $srt.PHP_EOL;
         //$baidu1 = Api::fun()->getRSA('re',$data);
@@ -36,7 +39,7 @@ class IndexController {
         //echo $baidu4.PHP_EOL;
         //$baidu4 = Api::fun()->getRSA('tv',$data,$baidu3,'alipay'); // 留空为公共密钥，alipay为第三次密钥
         //echo $baidu4.PHP_EOL;
-        Api::render('index', array('title' => '测试接口','publicKey' => Api::fun()->getKey()));
+        Api::render('index', array('title' => '测试接口', 'token' => Api::fun()->getToken(), 'publicKey' => Api::fun()->getKey()));
     }
 
 }

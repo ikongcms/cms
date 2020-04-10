@@ -12,6 +12,7 @@
 <body>
 <h1>{$title}</h1>
 
+<input id="se_token" type="hidden" value="{$token}" class="btn btn-danger radius" />
 <input id="pubKey" type="hidden" value="{$publicKey}" class="btn btn-danger radius" />
 <label><span class="btn btn-danger radius">选择文件</span><input id="uploader" type="file" multiple="multiple" accept="image/*" style="display: none"></label>
 <input id="uploadel" type="button" value="删除图片" class="btn btn-danger radius" />
