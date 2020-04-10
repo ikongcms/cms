@@ -12,6 +12,7 @@
 <body>
 <h1>{$title}</h1>
 
+<input id="pubKey" type="hidden" value="{$publicKey}" class="btn btn-danger radius" />
 <label><span class="btn btn-danger radius">选择文件</span><input id="uploader" type="file" multiple="multiple" accept="image/*" style="display: none"></label>
 <input id="uploadel" type="button" value="删除图片" class="btn btn-danger radius" />
 <input id="uploadto" type="button" value="提交图片" class="btn btn-danger radius" />
@@ -80,28 +81,25 @@ $(function () {
             }
         }
     }
-});
-</script>
-
-<script type="text/javascript">
-// RSA 数据加密
-$(function () {
-var data = 'my message';
-var publicKey = "{$publicKey}";
-var publicKeyArr = [];
-var publicKeyn = 64;
-var publicKeyReg = new RegExp("-","g");
-var publicKey = publicKey.replace(publicKeyReg,"");
-var publicKey = publicKey.replace("BEGIN PUBLIC KEY","");
-var publicKey = publicKey.replace("END PUBLIC KEY","");
-for (var publicKeyi = 0, publicKeyl = publicKey.length; publicKeyi < (publicKeyl/publicKeyn); publicKeyi++) {
-var publicKeya = publicKey.slice(publicKeyn*publicKeyi, publicKeyn*(publicKeyi+1));
-publicKeyArr.push(publicKeya);}
-var publicKey = "-----BEGIN PUBLIC KEY-----\n"+publicKeyArr.join("\n")+"\n-----END PUBLIC KEY-----";
-var js_encrypt = new JSEncrypt();
-js_encrypt.setPublicKey(publicKey);
-var encrypted = js_encrypt.encrypt(data);
-console.log(encrypted);
+    function get_RsaData(get_data) {
+        var publicKey = $("#pubKey").val();
+        var publicKeyArr = [];
+        var publicKeyn = 64;
+        var publicKeyReg = new RegExp("-","g");
+        var publicKey = publicKey.replace(publicKeyReg,"");
+        var publicKey = publicKey.replace("BEGIN PUBLIC KEY","");
+        var publicKey = publicKey.replace("END PUBLIC KEY","");
+        for (var publicKeyi = 0, publicKeyl = publicKey.length; publicKeyi < (publicKeyl/publicKeyn); publicKeyi++) {
+            var publicKeya = publicKey.slice(publicKeyn*publicKeyi, publicKeyn*(publicKeyi+1));
+            publicKeyArr.push(publicKeya);
+        }
+        var publicKey = "-----BEGIN PUBLIC KEY-----\n"+publicKeyArr.join("\n")+"\n-----END PUBLIC KEY-----";
+        var js_rasEncrypt = new JSEncrypt();
+        js_rasEncrypt.setPublicKey(publicKey);
+        var rasEncrypted = js_rasEncrypt.encrypt(get_data);
+        console.log(rasEncrypted);
+        return rasEncrypted;
+    }
 });
 </script>
 
