@@ -12,6 +12,7 @@ class IndexController {
      * @return [type]       [description]
      */
     public static function index() {
+
         //$data['name'] = '网红';
         //$data['age'] = '26';
         //$data['title'] = '我和你心连心';
