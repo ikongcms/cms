@@ -54,10 +54,10 @@ class Functions extends app\Engine {
     public function getToken($id = 'e', $data = 'public') {
         switch ($id) {
             case 'e':
-                return strtoupper(bin2hex($this->encrypt($data,md5($this->getKey()))));
+                return strtoupper(bin2hex($this->encrypt($data,md5($this->getKey().'WziDyQxstem3bUrf'))));
                 break;
             case 'd':
-                return $this->decrypt(pack("H*",$data),md5($this->getKey()));
+                return $this->decrypt(pack("H*",$data),md5($this->getKey().'WziDyQxstem3bUrf'));
                 break;
             default:
                 return 'TOKEN Error: Data not';

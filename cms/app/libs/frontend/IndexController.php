@@ -12,19 +12,22 @@ class IndexController {
      * @return [type]       [description]
      */
     public static function index() {
+
+        //$srt = Api::fun()->getToken('e', '我和你心连心');
+        //echo $srt.PHP_EOL;
+        //$srt = Api::fun()->getToken('d', $srt);
+        //echo $srt.PHP_EOL;
+
+        //$srt = Api::fun()->getXAes('我和你心连心','e',86400);
+        //echo $srt.PHP_EOL;
+        //$srt = Api::fun()->getXAes($srt,'d');
+        //echo $srt.PHP_EOL;
+
         //$data['name'] = '网红';
         //$data['age'] = '26';
         //$data['title'] = '我和你心连心';
         //$data['english'] = 'baidu.com';
 
-        //echo $srt = Api::fun()->getToken('e', '我和你心连心');
-        //echo Api::fun()->getToken('d', $srt);
-
-        //$srt = Api::fun()->getXAes('我和你心连心','e',86400);
-        //echo $srt.PHP_EOL;
-
-        //$srt = Api::fun()->getXAes($srt,'d');
-        //echo $srt.PHP_EOL;
         //$baidu1 = Api::fun()->getRSA('re',$data);
         //echo $baidu1.PHP_EOL;
         //$baidu2 = Api::fun()->getRSA('ud',$baidu1);
