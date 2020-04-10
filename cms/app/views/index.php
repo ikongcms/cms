@@ -12,7 +12,7 @@
 <body>
 <h1>{$title}</h1>
 
-<label><span class="btn btn-danger radius">选择文件</span><input id="uploader" type="file" style="display: none"></label>
+<label><span class="btn btn-danger radius">选择文件</span><input id="uploader" type="file" multiple="multiple" accept="image/*" style="display: none"></label>
 <input id="uploadel" type="button" value="删除图片" class="btn btn-danger radius" />
 <input id="uploadto" type="button" value="提交图片" class="btn btn-danger radius" />
 <div class="cl imglist" id="img_ul"></div>
@@ -49,6 +49,7 @@ $(function () {
                 if (result.Code == 200) {
                     alert(result.Data);
                 } else {
+                    alert(result.Data);
                 }
             }
         });
@@ -60,18 +61,20 @@ $(function () {
             alert("抱歉，你的浏览器不支持 FileReader，不能将图片转换为Base64，请使用现代浏览器操作！");
         } else {
             try {
-                /*图片转Base64 核心代码*/
-                var file = input_file.files[0];
-                //这里我们判断下类型如果不是图片就返回 去掉就可以上传任意文件
-                if (!/image\/\w+/.test(file.type)) {
-                    alert("请确保文件为图像类型");
-                    return false;
+                for(var i = 0; i<input_file.files.length; i++){
+                    /*图片转Base64 核心代码*/
+                    var file = input_file.files[i];
+                    //这里我们判断下类型如果不是图片就返回 去掉就可以上传任意文件
+                    if (!/image\/\w+/.test(file.type)) {
+                        alert("请确保文件为图像类型");
+                        return false;
+                    }
+                    var reader = new FileReader();
+                    reader.onload = function () {
+                        get_data(this.result);
+                    }
+                    reader.readAsDataURL(file);
                 }
-                var reader = new FileReader();
-                reader.onload = function () {
-                    get_data(this.result);
-                }
-                reader.readAsDataURL(file);
             } catch (e) {
                 alert('图片转Base64出错啦！' + e.toString());
             }
