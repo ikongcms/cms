@@ -1,0 +1,1 @@
+document.write('<a href="/?s=vod-search-wd-%E7%83%AD%E9%97%A8%E5%BD%B1%E7%89%871.html">热门影片1</a> <a href="/?s=vod-search-wd-%E7%83%AD%E9%97%A8%E5%BD%B1%E7%89%872.html">热门影片2</a> <a href="/?s=vod-search-wd-%E7%83%AD%E9%97%A8%E5%BD%B1%E7%89%873.html">热门影片3</a>');
