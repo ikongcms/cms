@@ -41,11 +41,10 @@
         </div>
         <div class="vod_l">
           <p class="pic"><a href="{$vod_playurl}"><img class="lazy" data-original="{$vod_picurl}" src="{$tpl}static/images/no.jpg" alt="{$vod_name}全集观看" /></a></p>
+          <p class="w">电影番号：<span>{$vod_title|default='未知'}</span></p>
           <p class="w">影片类型：<a href="{$list_url}">{$list_name}</a></p>
           <p class="w space">影片主演：<notempty name="vod_actor">{$vod_actor|ff_search_url}<else />未录入</notempty></p>
-          <p class="w">影片导演：<notempty name="vod_director">{$vod_director|ff_search_url}<else />未录入</notempty></p>
           <p class="w">出产地区：<span>{$vod_area|default='未知'}</span></p>
-          <p class="w">上映时间：<span>{$vod_year|default='未录入'}</span></p>
           <p class="w">对白语言：<span>{$vod_language|default='未知'}</span></p>
           <p class="w">更新时间：<span>{$vod_addtime|date='Y-m-d',###}</span></p>
           <p class="up">请您打分：<include file="Home:home_vod_updown" /></p>
@@ -73,7 +72,7 @@
             <volist name="hot_week" id="ppvod">
             <li><a class="thumbnail" href="{$ppvod.vod_readurl}">
             <span class="img">
-              <img src="{$ppvod.vod_picurl}" alt="">
+              <img class="lazy" data-original="{$ppvod.vod_picurl}" src="{$tpl}static/images/no.jpg" alt="点击播放《{$ppvod.vod_name}》">
               <span class="score">{$ppvod.vod_addtime|date='Y-m-d',###}</span>
               <span class="lang"></span>
             </span>
@@ -81,6 +80,8 @@
             <div class="i-item-txt">
                <div class="i-item-low ac">
                  <em><i class="icon-star fl"></i>{$ppvod.vod_gold}</em>
+                 <b>·</b>
+                 <span>{$list_name}</span>
                </div>
              </div>
             </a></li>

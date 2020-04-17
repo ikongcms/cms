@@ -27,7 +27,7 @@
         <gt name="vod_list.0.count" value="0"><volist name="vod_list" id="ppvod">
         <li><a class="thumbnail" href="{$ppvod.vod_readurl}">
           <span class="img">
-            <img src="{$ppvod.vod_picurl}" alt="点击播放《{$ppvod.vod_name}》">
+            <img class="lazy" data-original="{$ppvod.vod_picurl}" src="{$tpl}static/images/no.jpg" alt="点击播放《{$ppvod.vod_name}》">
             <span class="score">{$ppvod.vod_addtime|date='Y-m-d',###}</span>
             <span class="lang"></span>
           </span>

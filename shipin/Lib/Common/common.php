@@ -245,7 +245,7 @@ function ff_letter_first($s0){
 }
 /*-------------------------------------------------采集函数开始------------------------------------------------------------------*/
 // 采集内核
-function ff_file_get_contents($url,$timeout=10,$referer){
+function ff_file_get_contents($url,$timeout=10,$referer=''){
 	if(function_exists('curl_init')){
 		$ch = curl_init();
 		curl_setopt ($ch, CURLOPT_URL, $url);
@@ -511,14 +511,14 @@ function getjifen($fen){
 //分页样式
 function getpage($currentPage,$totalPages,$halfPer=5,$url,$pagego){
     $linkPage .= ( $currentPage > 1 )
-        ? '<li class="page-item"><a class="page-link" href="'.str_replace('{!page!}',1,$url).'">首页</a></li>&nbsp;<li class="page-item"><a class="page-link" href="'.str_replace('{!page!}',($currentPage-1),$url).'">上一页</a></li>&nbsp;' 
-        : '<em>首页</em>&nbsp;<em>上一页</em>&nbsp;';
+        ? '<li class="page-item"><a class="page-link" href="'.str_replace('{!page!}',1,$url).'">首页</a></li>&nbsp;<li class="page-item"><a class="page-link" href="'.str_replace('{!page!}',($currentPage-1),$url).'">&lt;&lt;</a></li>&nbsp;' 
+        : '<em>首页</em>&nbsp;<em>&lt;&lt;</em>&nbsp;';
     for($i=$currentPage-$halfPer,$i>1||$i=1,$j=$currentPage+$halfPer,$j<$totalPages||$j=$totalPages;$i<$j+1;$i++){
         $linkPage .= ($i==$currentPage)?'<li class="page-item disabled"><a class="page-link" href="javascript:;">'.$i.'</a></li>&nbsp;':'<li class="page-item"><a class="page-link" href="'.str_replace('{!page!}',$i,$url).'">'.$i.'</a></li>&nbsp;'; 
     }
     $linkPage .= ( $currentPage < $totalPages )
-        ? '<li class="page-item"><a class="page-link" href="'.str_replace('{!page!}',($currentPage+1),$url).'">下一页</a></li>&nbsp;<li class="page-item"><a class="page-link" href="'.str_replace('{!page!}',$totalPages,$url).'">尾页</a></li>'
-        : '<em>下一页</em>&nbsp;<em>尾页</em>';
+        ? '<li class="page-item"><a class="page-link" href="'.str_replace('{!page!}',($currentPage+1),$url).'">&gt;&gt;</a></li>&nbsp;<li class="page-item"><a class="page-link" href="'.str_replace('{!page!}',$totalPages,$url).'">尾页</a></li>'
+        : '<em>&gt;&gt;</em>&nbsp;<em>尾页</em>';
 	if(!empty($pagego)){
 		$linkPage .='&nbsp;<li class="page-item"><input type="input" name="page" id="page" size=4 class="pagego-control ff-wd"/><input type="button" value="跳 转" onclick="'.$pagego.'" class="pagego-button" /></li>';
 	}

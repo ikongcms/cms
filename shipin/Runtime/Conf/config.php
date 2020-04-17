@@ -73,12 +73,12 @@ return array (
     'home:vod:show' => 
     array (
       0 => '{:module}_{:action}/{$_SERVER.REQUEST_URI|md5}',
-      1 => 5400.0,
+      1 => 5400,
     ),
     'home:news:show' => 
     array (
       0 => '{:module}_{:action}/{$_SERVER.REQUEST_URI|md5}',
-      1 => 5400.0,
+      1 => 5400,
     ),
     'home:vod:read' => 
     array (
@@ -162,7 +162,7 @@ return array (
   'user_replace' => '她妈|它妈|他妈|你妈|去死|贱人',
   'user_gbnum' => '10',
   'user_cmnum' => '10',
-  'user_vcode' => '1',
+  'user_vcode' => '0',
   'user_register' => '0',
   'html_home_suffix' => '.html',
   'upload_ftp_del' => '0',
