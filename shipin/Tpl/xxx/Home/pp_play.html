@@ -12,6 +12,10 @@
 <body class="index">
 <include file="Home:pp_header" />
 
+<!-- // header end--> 
+
+<!-- // content start-->
+<div class="content">
   <div id="wrapper">
     <div class="play">
       <div class="container">
@@ -51,7 +55,7 @@
         <volist name="vod_playlist" id="ppvod">
         <eq name="ppvod.playname" value="$vod_playname">
         <div class="box2">
-          <h3><div><span><a href="{:UU('Home-gb/show',array(id=>$vod_id),false,true)}" target="_blank">报错</a></span><a href="{$vod_playurl}">播放来源：{$ppvod.playername}</a></div></h3>
+          <h3><div><span class="erron"><a href="{:UU('Home-gb/show',array(id=>$vod_id),false,true)}" target="_blank">报错</a></span><a href="{$vod_playurl}">播放来源：{$ppvod.playername}</a></div></h3>
           <div class="playlist"><volist name="ppvod['son']" id="ppvodson"><a href="{$ppvodson.playurl}" <eq name="ppvodson.playpath" value="$vod_playpath">class="on"</eq>>{$ppvodson.playname}</a></volist></div>
           </div>
           </eq></volist>
@@ -97,6 +101,7 @@
     </div>
   </div>
 </div>
+
 <include file="Home:pp_footer" />
 </body>
 </html>

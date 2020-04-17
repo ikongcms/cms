@@ -25,8 +25,9 @@
         </div>
         <div class="vod_r">{:getadsurl('vod300')}</div>
     </div>
-    <div class="box2">
-        <volist name="vod_playlist" id="ppvod" key="playerkey">
+
+    <volist name="vod_playlist" id="ppvod" key="playerkey">
+    <div class="box2">        
         <h3><div><a href="{:ff_play_url($vod_id,($playerkey-1),1,$vod_cid,$vod_name)}">播放来源：{$ppvod.playername}</a></div></h3>
         <div class="playlist wbox">
         	<volist name="ppvod['son']" id="ppvodson"><a href="{$ppvodson.playurl}" target="_blank">{$ppvodson.playname}</a></volist>
@@ -34,8 +35,10 @@
         <eq name="playerkey" value="1">
         	<div class="vod960">{:getadsurl('vod960')}</div>
         </eq>        
-        </volist>
+
 	</div>
+    </volist>
+
     <div class="box2 vod_hot">
         <h3><div><a href="{$vod_playurl}">热播 {$list_name}</a></div></h3>
         <ul class="hot wbox"><php>$hot_week = ff_mysql_vod('cid:'.$list_id.';limit:7;order:vod_hits_month desc,vod_addtime desc');</php>

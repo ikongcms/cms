@@ -1,33 +1,3 @@
-/* @name: 飞飞PHP影视系统JS
- * @version: 2.0.beta4
- * @lasttime: 2012-01-16
- * 	FF.Home
-		.Url;
-		.Getchannel(sid);
-		.Js();
-	FF.UpDown
- 		.Vod(ajaxurl);
-		.News(ajaxurl);
-		.Show(up=100:down=88,model);
-	FF.Comment
-		.Show(ajaxurl);
-		.Post();
-	FF.Gold
-		.Default(ajaxurl);
-		.Show(ajaxurl);
-	FF.Lazyload
-   		.Show();
-   		.Box('idname');		
-	FF.Suggest
-   		.Show(id,limit,ajaxurl,jumpurl);
-	FF.Cookie
- 		.Set(name,value,days);
-		.Get(name);
-		.Del(name);
-	FF.History
-		.Insert(vodname,vodlink,limit,days,cidname,vodpic);
-		.List(id);	
- */
 var FF = {
 	//初始化前端js
 	'Home': {

@@ -90,27 +90,14 @@ CREATE TABLE IF NOT EXISTS ff_list (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 INSERT INTO ff_list (list_id, list_pid, list_oid, list_sid, list_name, list_skin, list_skin_detail, list_skin_play, list_skin_type, list_dir, list_status, list_keywords, list_title, list_description, list_jumpurl) VALUES
-(23, 0, 23, 2, '新闻资讯', 'pp_newslist', 'pp_vod', 'pp_play', 'pp_vodtype', 'xinwenzixun', 1, '', '', '', ''),
-(22, 0, 20, 1, '纪录片', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'jilupian', 0, '', '', '', ''),
-(19, 2, 19, 1, '海外剧', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'haiwaiju', 1, '', '', '', 'http://'),
-(18, 2, 18, 1, '日韩剧', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'ribenju', 1, '', '', '', 'http://'),
-(17, 2, 17, 1, '欧美剧', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'oumeiju', 1, '', '', '', 'http://'),
-(16, 2, 16, 1, '港台剧', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'xianggangju', 1, '', '', '', 'http://'),
-(15, 2, 15, 1, '国产剧', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'guochanju', 1, '', '', '', 'http://'),
-(14, 1, 14, 1, '剧情片', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'juqingpian', 1, '', '', '', ''),
-(13, 1, 13, 1, '战争片', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'zhanzhengpian', 1, '', '', '', ''),
-(12, 1, 12, 1, '恐怖片', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'kongbupian', 1, '', '', '', ''),
-(11, 1, 11, 1, '科幻片', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'kehuanpian', 1, '', '', '', ''),
-(10, 1, 10, 1, '爱情片', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'aiqingpian', 1, '', '', '', ''),
-(9, 1, 9, 1, '喜剧片', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'xijupian', 1, '', '', '', ''),
-(8, 1, 8, 1, '动作片', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'dongzuopian', 1, '', '', '', 'http://'),
-(7, 0, 7, 1, '音乐', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'yinle', 0, '', '', '', ''),
-(6, 0, 6, 1, '游戏', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'youxi', 1, '', '', '', ''),
-(5, 0, 5, 1, '体育', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'tiyu', 0, '', '', '', ''),
-(4, 0, 4, 1, '综艺', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'zongyi', 1, '', '', '', 'http://'),
-(3, 0, 3, 1, '动漫', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'dongman', 1, '', '', '', ''),
-(2, 0, 1, 1, '电视剧', 'pp_vodchannel', 'pp_vod', 'pp_play', 'pp_vodtype', 'dianshiju', 1, '', '', '', 'http://'),
-(1, 0, 2, 1, '电影', 'pp_vodchannel', 'pp_vod', 'pp_play', 'pp_vodtype', 'dianying', 1, '', '', '', '');
+(8, 1, 8, 1, '剧情片', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'juqingpian', 1, '', '', '', ''),
+(7, 1, 7, 1, '战争片', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'zhanzhengpian', 1, '', '', '', ''),
+(6, 1, 6, 1, '恐怖片', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'kongbupian', 1, '', '', '', ''),
+(5, 1, 8, 1, '科幻片', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'kehuanpian', 1, '', '', '', ''),
+(4, 1, 4, 1, '爱情片', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'aiqingpian', 1, '', '', '', ''),
+(3, 0, 3, 1, '游戏', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'youxi', 1, '', '', '', ''),
+(2, 0, 2, 1, '动漫', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'dongman', 1, '', '', '', ''),
+(1, 0, 1, 1, '电影', 'pp_vodchannel', 'pp_vod', 'pp_play', 'pp_vodtype', 'dianying', 1, '', '', '', '');
 
 CREATE TABLE IF NOT EXISTS ff_news (
   news_id mediumint(8) unsigned NOT NULL auto_increment,
