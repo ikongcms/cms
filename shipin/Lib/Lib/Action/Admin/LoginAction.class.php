@@ -30,7 +30,7 @@ class LoginAction extends Action{
         if (NULL == $list) {
             $this->error(L('login_username_not'));
         }
-		if ($list['admin_pwd'] != md5($_POST['user_pwd'])) {
+		if ($list['admin_pwd'] != md5(md5($_POST['user_pwd']).'xEX9ZFBEqcSLaV9u')) {
 			$this->error(L('login_password_not'));
 		}
 		// 缓存访问权限

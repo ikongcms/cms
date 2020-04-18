@@ -63,16 +63,25 @@ class AdminAction extends BaseAction{
 	}
 	// 删除用户
     public function del(){
-		$rs = D("Admin");
-		$rs->where('admin_id='.$_GET['id'])->delete();
-		$this->success('删除后台管理员成功！');
+        $rs = D("Admin");
+        if(ceil($_GET['id']) == 1) {
+            $this->error("更新管理员信息失败！");
+        } else {
+            $rs->where('admin_id='.ceil($_GET['id']))->delete();
+            $this->success('删除后台管理员成功！');
+        }
     }
 	// 批量删除
     public function delall(){
-		$where['admin_id'] = array('in',implode(',',$_POST['ids']));
-		$rs = D("Admin");
-		$rs->where($where)->delete();
-		$this->success('批量删除后台管理员成功！');
+        foreach($_POST['ids'] as $value) {
+            if(ceil($value) != 1) {
+                $id[] = ceil($value);
+            }
+        }
+        $where['admin_id'] = array('in',implode(',',$id));
+        $rs = D("Admin");
+        $rs->where($where)->delete();
+        $this->success('批量删除后台管理员成功！');
     }
 	// 配置信息
     public function config(){

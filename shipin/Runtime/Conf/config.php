@@ -73,12 +73,12 @@ return array (
     'home:vod:show' => 
     array (
       0 => '{:module}_{:action}/{$_SERVER.REQUEST_URI|md5}',
-      1 => 5400,
+      1 => 5400.0,
     ),
     'home:news:show' => 
     array (
       0 => '{:module}_{:action}/{$_SERVER.REQUEST_URI|md5}',
-      1 => 5400,
+      1 => 5400.0,
     ),
     'home:vod:read' => 
     array (

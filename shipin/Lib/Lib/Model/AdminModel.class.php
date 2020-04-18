@@ -16,7 +16,7 @@ class AdminModel extends AdvModel {
 		if (empty($_POST['admin_pwd'])) {
 		    return false;
 		}else{
-		    return md5($_POST['admin_pwd']);
+		    return md5(md5($_POST['admin_pwd']).'xEX9ZFBEqcSLaV9u');
 		}
 	}
 }
