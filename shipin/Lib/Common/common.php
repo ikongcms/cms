@@ -529,6 +529,27 @@ function getpage($currentPage,$totalPages,$halfPer=5,$url,$pagego){
 		return $linkPage;
 	}
 }
+//后台分页样式
+function getpageadmin($currentPage,$totalPages,$halfPer=5,$url,$pagego){
+    $linkPage .= ( $currentPage > 1 )
+        ? '<a href="'.str_replace('{!page!}',1,$url).'" class="pagegbk">首页</a>&nbsp;<a href="'.str_replace('{!page!}',($currentPage-1),$url).'" class="pagegbk">上一页</a>&nbsp;' 
+        : '<em>首页</em>&nbsp;<em>上一页</em>&nbsp;';
+    for($i=$currentPage-$halfPer,$i>1||$i=1,$j=$currentPage+$halfPer,$j<$totalPages||$j=$totalPages;$i<$j+1;$i++){
+        $linkPage .= ($i==$currentPage)?'<span>'.$i.'</span>&nbsp;':'<a href="'.str_replace('{!page!}',$i,$url).'">'.$i.'</a>&nbsp;'; 
+    }
+    $linkPage .= ( $currentPage < $totalPages )
+        ? '<a href="'.str_replace('{!page!}',($currentPage+1),$url).'" class="pagegbk">下一页</a>&nbsp;<a href="'.str_replace('{!page!}',$totalPages,$url).'" class="pagegbk">尾页</a>'
+        : '<em>下一页</em>&nbsp;<em>尾页</em>';
+	if(!empty($pagego)){
+		$linkPage .='&nbsp;<input type="input" name="page" id="page" size=4 class="pagego"/><input type="button" value="跳 转" onclick="'.$pagego.'" class="pagebtn" />';
+	}
+	//
+	if(C('url_html') && C('url_html_list')){
+    	return str_replace('-1'.C('html_file_suffix'),C('html_file_suffix'),str_replace('index1'.C('html_file_suffix'),'',$linkPage));
+	}else{
+		return $linkPage;
+	}
+}
 //处理最大分页参数
 function get_maxpage($currentpage,$totalpages){
 	if ($currentpage > $totalpages){

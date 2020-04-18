@@ -35,7 +35,7 @@
   <div class="top960">{:getadsurl('top960')}</div>
   <php>
     if($list_id){
-        $vod_list = ff_mysql_vod('cid:'.$list_id.';limit:8;page:true;order:vod_addtime desc,vod_id desc');
+        $vod_list = ff_mysql_vod('cid:'.$list_id.';limit:30;page:true;order:vod_addtime desc,vod_id desc');
         $page = $vod_list[0]['page'];
     }
   </php>

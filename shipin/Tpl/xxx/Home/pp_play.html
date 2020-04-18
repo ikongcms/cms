@@ -69,7 +69,7 @@
         </div>
         <div class="panel-body">
           <ul class="thumbnail-group thumbnail-group-sm clearfix">
-          <php>$hot_week = ff_mysql_vod('cid:'.$list_id.';limit:7;order:vod_hits_month desc,vod_addtime desc');</php>
+          <php>$hot_week = ff_mysql_vod('cid:'.$list_id.';limit:6;order:vod_hits_month desc,vod_addtime desc');</php>
           <volist name="hot_week" id="ppvod">
             <li><a class="thumbnail" href="{$ppvod.vod_readurl}">
               <span class="img">

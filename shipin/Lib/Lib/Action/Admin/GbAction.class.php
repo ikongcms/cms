@@ -41,7 +41,7 @@ class GbAction extends BaseAction{
 		$pageurl = U('Admin-Gb/Show',$admin,false,false).'{!page!}';
 		//
 		$admin['p'] = $currentpage;$_SESSION['gb_jumpurl'] = U('Admin-Gb/Show',$admin);
-		$admin['pages'] = '共'.$count.'篇留言&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getpage($currentpage,$totalpages,8,$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
+		$admin['pages'] = '共'.$count.'篇留言&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getpageadmin($currentpage,$totalpages,8,$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
 		$admin['list'] = $rs->where($where)->limit($limit)->page($currentpage)->order('gb_oid desc,gb_addtime desc')->select();
 		$this->assign($admin);
         $this->display('./Public/system/gb_show.html');

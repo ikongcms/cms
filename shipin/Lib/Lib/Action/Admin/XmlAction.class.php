@@ -141,7 +141,7 @@ class XmlAction extends BaseAction{
 			$array_tpl = array();
 			$array_url['p'] = '{!page!}';
 			$array_tpl['pageurl'] = U('Admin-Xml/Feifei',$array_url);
-			$array_tpl['pagelist'] = '共'.$array_page['recordcount'].'条数据&nbsp;页次:'.$array_page['pageindex'].'/'.$array_page['pagecount'].'页&nbsp;'.getpage($array_page['pageindex'],$array_page['pagecount'],5,$array_tpl['pageurl'],'pagego(\''.$array_tpl['pageurl'].'\','.$array_page['pagecount'].')');	
+			$array_tpl['pagelist'] = '共'.$array_page['recordcount'].'条数据&nbsp;页次:'.$array_page['pageindex'].'/'.$array_page['pagecount'].'页&nbsp;'.getpageadmin($array_page['pageindex'],$array_page['pagecount'],5,$array_tpl['pageurl'],'pagego(\''.$array_tpl['pageurl'].'\','.$array_page['pagecount'].')');	
 			// 组合入库数据
 			$array_vod = array();
 			foreach($json->data as $key=>$value){
@@ -202,7 +202,7 @@ class XmlAction extends BaseAction{
 			$xml_page['pageindex'] = $page_array[1];			
 			$array_url['p'] = '{!page!}';
 			$array_tpl['pageurl'] = U('Admin-Xml/Caijia',$array_url);
-			$array_tpl['pagelist'] = '共'.$xml_page['recordcount'].'条数据&nbsp;页次:'.$xml_page['pageindex'].'/'.$xml_page['pagecount'].'页&nbsp;'.getpage($xml_page['pageindex'],$xml_page['pagecount'],5,$array_tpl['pageurl'],'pagego(\''.$array_tpl['pageurl'].'\','.$xml_page['pagecount'].')');
+			$array_tpl['pagelist'] = '共'.$xml_page['recordcount'].'条数据&nbsp;页次:'.$xml_page['pageindex'].'/'.$xml_page['pagecount'].'页&nbsp;'.getpageadmin($xml_page['pageindex'],$xml_page['pagecount'],5,$array_tpl['pageurl'],'pagego(\''.$array_tpl['pageurl'].'\','.$xml_page['pagecount'].')');
 			//组合绑定分类
 			preg_match_all('/<ty id="([0-9]+)">([\s\S]*?)<\/ty>/',$xml,$list_array);
 			foreach($list_array[1] as $key=>$value){

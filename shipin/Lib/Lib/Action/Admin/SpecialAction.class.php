@@ -23,7 +23,7 @@ class SpecialAction extends BaseAction{
 		$currentpage = get_maxpage($currentpage,$totalpages);
 		$pageurl = U('Admin-Special/Show',$admin,false,false).'{!page!}'.C('url_html_suffix');
 		$admin['p'] = $currentpage;
-		$pages = '共'.$count.'篇专题&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getpage($currentpage,$totalpages,8,$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
+		$pages = '共'.$count.'篇专题&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getpageadmin($currentpage,$totalpages,8,$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
 		$admin['pages'] = $pages;
 		//查询数据	
 		$list = $rs->where($where)->page($currentpage)->limit($limit)->order($order)->select();

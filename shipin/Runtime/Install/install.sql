@@ -90,12 +90,13 @@ CREATE TABLE IF NOT EXISTS ff_list (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 INSERT INTO ff_list (list_id, list_pid, list_oid, list_sid, list_name, list_skin, list_skin_detail, list_skin_play, list_skin_type, list_dir, list_status, list_keywords, list_title, list_description, list_jumpurl) VALUES
-(8, 1, 8, 1, '剧情片', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'juqingpian', 1, '', '', '', ''),
-(7, 1, 7, 1, '战争片', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'zhanzhengpian', 1, '', '', '', ''),
-(6, 1, 6, 1, '恐怖片', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'kongbupian', 1, '', '', '', ''),
-(5, 1, 8, 1, '科幻片', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'kehuanpian', 1, '', '', '', ''),
-(4, 1, 4, 1, '爱情片', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'aiqingpian', 1, '', '', '', ''),
-(3, 0, 3, 1, '游戏', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'youxi', 1, '', '', '', ''),
+(9, 1, 9, 1, '无码视频', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'wuma', 1, '', '', '', ''),
+(8, 1, 8, 1, '有码视频', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'youma', 1, '', '', '', ''),
+(7, 1, 7, 1, '欧美视频', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'oumei', 1, '', '', '', ''),
+(6, 1, 6, 1, '亚洲视频', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'yazhou', 1, '', '', '', ''),
+(5, 1, 8, 1, '中文字幕', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'zimu', 1, '', '', '', ''),
+(4, 1, 4, 1, '自拍视频', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'zipai', 1, '', '', '', ''),
+(3, 0, 3, 1, '番号', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'fanhao', 1, '', '', '', ''),
 (2, 0, 2, 1, '动漫', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'dongman', 1, '', '', '', ''),
 (1, 0, 1, 1, '电影', 'pp_vodchannel', 'pp_vod', 'pp_play', 'pp_vodtype', 'dianying', 1, '', '', '', '');
 

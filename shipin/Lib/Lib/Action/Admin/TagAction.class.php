@@ -14,7 +14,7 @@ class TagAction extends BaseAction{
 		$currentpage = get_maxpage($currentpage,$totalpages);//$admin['page'] = $currentpage;
 		$pageurl = U('Admin-Tag/Show',$admin,false,false).'{!page!}'.C('url_html_suffix');
 		$admin['p'] = $currentpage;
-		$pages = '共'.$count.'个标签&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getpage($currentpage,$totalpages,8,$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
+		$pages = '共'.$count.'个标签&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getpageadmin($currentpage,$totalpages,8,$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
 		$admin['pages'] = $pages;
 		//查询数据
 		$rs = D("Tag");
