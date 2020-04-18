@@ -216,7 +216,7 @@ function ff_pinyin($str,$ishead=0,$isclose=1){
 function ff_letter_first($s0){
 	$firstchar_ord=ord(strtoupper(mb_substr($s0,0,1))); 
 	if (($firstchar_ord>=65 and $firstchar_ord<=91)or($firstchar_ord>=48 and $firstchar_ord<=57)) return mb_substr($s0,0,1); 
-	$s=iconv("UTF-8","gb2312", $s0); 
+	$s=iconv("UTF-8","GBK//IGNORE", $s0); 
 	$asc=ord(mb_substr($s,0,1))*256+ord(mb_substr($s,1,1))-65536; 
 	if($asc>=-20319 and $asc<=-20284)return "A";
 	if($asc>=-20283 and $asc<=-19776)return "B";
