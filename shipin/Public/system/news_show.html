@@ -66,7 +66,7 @@ function createhtml(id){
   <tr>
     <td class="r ct"><input name='ids[]' type='checkbox' value='{$ppvod.news_id}' class="noborder" checked></td>
     <td class="l pd">
-    <span style="float:left"><span style="color:#666666">{$ppvod.news_id}、</span><if condition="C('url_html') gt 0"><a href="javascript:createhtml('{$ppvod.news_id}');" id="html_{$ppvod.news_id}"><font color="green">生成</font></a></if> <a href="{$ppvod.news_url}" target="_blank">{$ppvod.news_name|msubstr=0,40,'utf-8',true}</a> <span id="ct_{$ppvod.news_id}"><neq name="ppvod['news_continu']" value="0"><sup onClick="setcontinu({$ppvod.news_id},'{$ppvod.news_continu}');" class="navpoint">{$ppvod.news_continu}</sup><else/><img src="__PUBLIC__/images/admin/ct.gif" style="margin-top:10px" class="navpoint" onClick="setcontinu({$ppvod.news_id},'{$ppvod.news_continu}');"></neq></span></span>
+    <span style="float:left"><span style="color:#666666">{$ppvod.news_id}、</span><if condition="C('url_html') gt 0"><a href="javascript:createhtml('{$ppvod.news_id}');" id="html_{$ppvod.news_id}"><font color="green">生成</font></a></if> <a href="{$ppvod.news_url}" target="_blank">{$ppvod.news_name|msubstr=0,40,'utf-8',true}</a> <notempty name="ppvod['news_continu']"><span id="ct_{$ppvod.news_id}"><neq name="ppvod['news_continu']" value="0"><sup onClick="setcontinu({$ppvod.news_id},'{$ppvod.news_continu}');" class="navpoint">{$ppvod.news_continu}</sup><else/><img src="__PUBLIC__/images/admin/ct.gif" style="margin-top:10px" class="navpoint" onClick="setcontinu({$ppvod.news_id},'{$ppvod.news_continu}');"></neq></span></notempty></span>
     </td>
     <td class="l ct"><a href="{$ppvod.list_url}">{$ppvod.news_cid|getlistname}</a></td>
     <td class="l ct">{$ppvod.news_hits}</td>

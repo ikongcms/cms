@@ -125,8 +125,8 @@ return array (
   'play_height' => '480',
   'play_second' => 10,
   'play_language' => '国语,英语,粤语,闽南语,韩语,日语,国语/粤语,其它',
-  'play_area' => '大陆,香港,台湾,美国,韩国,日本,泰国,新加坡,马来西亚,印度,英国,法国,加拿大,西班牙,俄罗斯,其它',
-  'play_year' => '2013,2012,2011,2010,2009,2008,2007,2006,2005,2004,2003,2002,2001,2000,1990,1980,1970,1960,1950',
+  'play_area' => '大陆,香港,台湾,美国,韩国,日本,其它',
+  'play_year' => '2020,2019,2018,2017,2016,2015',
   'play_server' => 
   array (
     'down_a' => 'http://downa.video.com/',
@@ -157,7 +157,6 @@ return array (
   'url_map' => 'detail/',
   'url_mytpl' => 'detail/',
   'url_special' => 'detail/',
-  'user_gbcm' => false,
   'user_second' => '600',
   'user_replace' => '她妈|它妈|他妈|你妈|去死|贱人',
   'user_gbnum' => '10',

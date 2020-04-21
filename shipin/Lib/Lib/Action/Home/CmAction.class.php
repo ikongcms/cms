@@ -42,7 +42,7 @@ class CmAction extends HomeAction{
 		if($rs->create()){
 			if (false !== $rs->add()) {		
 				setcookie($cookie, 'true', time()+intval(C('user_second')));
-				if (C('user_gbcm')) {
+				if (C('user_check')) {
 					$this->ajaxReturn($result,"评论成功，我们会尽快审核你的评论！",2);
 				}else{
 					$this->ajaxReturn($result,"评论成功，感谢你的参与！",1);

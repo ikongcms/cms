@@ -410,6 +410,9 @@ label{ color:#666666}
     <ul><li class="left">评分人数随机最大值：</li>
     	<li class="right"><input type="text" name="config[rand_golder]" id="rand_golder" value="{$rand_golder}" maxlength="5" class="w70">&nbsp;</li>
     </ul>
+    <ul><li class="left">默认伪原创关键字：</li>
+        <li class="right" style="height:150px"><textarea name="config[play_collect_content]" id="play_collect_content" style="height:133px"><volist name="play_collect_content" id="content">{$content}<php>echo(chr(13));</php></volist></textarea></li>
+    </ul>
 </div>
 <!-- -->
 <div class="add" id="tabs8" style="display:none;">

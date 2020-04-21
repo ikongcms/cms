@@ -64,7 +64,7 @@ $(document).ready(function(){
     </in>
     <td class="l ct">{$ppvod.size|byte_format}</td>
     <td class="l ct">{$ppvod.mtime|getcolordate='Y-m-d H:i:s',###}</td>
-    <td class="r ct"><a href="{$ppvod.path}/{$ppvod.filename}" target="_blank">浏览</a> <a href="?s=Admin-Pic-Del-id-{$ppvod.pathfile}" onClick="return confirm('确定删除该文件吗?')">删除</a></td>
+    <td class="r ct"><a href="{$ppvod.path}/{$ppvod.filename}" target="_blank">浏览</a> <a href="?s=Admin-Pic-Del-id-{:str_replace('-','*',$ppvod['pathfile'])}" onClick="return confirm('确定删除该文件吗?')">删除</a></td>
   </tr>
   </tbody>
   </eq>  

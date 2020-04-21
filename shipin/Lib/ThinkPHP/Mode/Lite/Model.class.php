@@ -386,7 +386,7 @@ class Model extends Think
             if(is_array($val)){
                 $da[$key] = $this->getPOST($val);
             } else {
-                $da[getWD($key)] = getWD($val);
+                $da[trim(getWD($key))] = trim(getWD($val));
             }
          }
          return $da;

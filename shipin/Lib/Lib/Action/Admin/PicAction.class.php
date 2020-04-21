@@ -5,7 +5,7 @@ class PicAction extends BaseAction{
 		C('upload_http',1);
 		$img = D('Img');
 		$rs = D("Vod");
-		if('fail'==trim($_GET['id'])){
+		if(!empty($_GET['id'])&&'fail'==trim($_GET['id'])){
 			$rs->execute('update '.C('db_prefix').'vod set vod_pic=REPLACE(vod_pic,"https://", "http://")');
 		}
 		$count = $rs->where('Left(vod_pic,7)="http://"')->count('vod_id');
@@ -38,9 +38,9 @@ class PicAction extends BaseAction{
     }
 	// 本地附件展示
     public function show(){
-		$id = !empty($_GET['id'])?trim(getWD($_GET['id'])):0;
+		$id = !empty($_GET['id'])?trim($_GET['id']):0;
 		if ($id) {
-			$dirpath = admin_ff_url_repalce(str_replace('*','-',$id));
+			$dirpath = admin_ff_url_repalce(getWD(str_replace('*','-',$id)));
 		}else{
 			$dirpath = './'.C('upload_path');
 		}
@@ -76,9 +76,9 @@ class PicAction extends BaseAction{
 	}	
 	// 删除单个本地附件
     public function del(){
-		$path = trim(admin_ff_url_repalce(str_replace('*','-',getWD($_GET['id']))));
-		@unlink($path);
-		@unlink(str_replace(C('upload_path').'/',C('upload_path').'-s/',$path));
+		$path = trim(admin_ff_url_repalce(trim(getWD(str_replace('*','-',$_GET['id'])))));
+		if(is_file($path)) { @unlink($path); }
+		if(is_file(str_replace(C('upload_path').'/',C('upload_path').'-s/',$path))) { @unlink(str_replace(C('upload_path').'/',C('upload_path').'-s/',$path)); }
 		$this->success('删除附件成功！');
     }
 	// 清理无效图片

@@ -81,7 +81,7 @@ class DataAction extends BaseAction{
 	//导入还原
 	public function back(){
 		$rs = new Model();
-		$pre = getWD($_GET['id']);
+		$pre = trim(getWD($_GET['id']));
 		$fileid = !empty($_GET['fileid']) ? intval($_GET['fileid']) : 1;
 		$filename = $pre.$fileid.'.sql';
 		$filepath = DATA_PATH.'_bak/'.$filename;

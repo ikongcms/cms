@@ -4,15 +4,15 @@ class NewsAction extends BaseAction{
     public function show(){
 		$admin = array();
 		//获取地址栏参数
-		$admin['cid']= $_REQUEST['cid'];
-		$admin['status'] = intval($_REQUEST['status']);
-		$admin['stars'] = intval($_REQUEST['stars']);
+		$admin['cid']= !empty($_REQUEST['cid'])?intval($_REQUEST['cid']):0;
+		$admin['status'] = !empty($_REQUEST['status'])?intval($_REQUEST['status']):0;
+		$admin['stars'] = !empty($_REQUEST['stars'])?intval($_REQUEST['stars']):0;
 		$admin['type'] = !empty($_GET['type'])?$_GET['type']:C('admin_order_type');
 		$admin['order'] = !empty($_GET['order'])?$_GET['order']:'desc';
 		$admin['orders'] = 'news_'.$admin["type"].' '.$admin['order'];
-		$admin['wd'] = urldecode(trim($_REQUEST['wd']));
-		$admin['tag'] = urldecode(trim($_REQUEST['tag']));
-		$admin['tid'] = $_REQUEST['tid'];//专题ID
+		$admin['wd'] = !empty($_GET['wd'])?urldecode(trim($_REQUEST['wd'])):'';
+		$admin['tag'] = !empty($_GET['tag'])?urldecode(trim($_REQUEST['tag'])):'';
+		$admin['tid'] = !empty($_GET['tid'])?intval($_REQUEST['tid']):0;//专题ID
 		$admin['p'] = '';
 		//生成查询参数
 		$limit = C('url_num_admin');
@@ -42,7 +42,7 @@ class NewsAction extends BaseAction{
 			$rs = D("News");
 		}
 		//组合分页信息		
-		$count = $rs->where($where)->count('news_id');
+		$count = $rs->where(!empty($where)?$where:'')->count('news_id');
 		$totalpages = ceil($count/$limit);
 		$currentpage = !empty($_GET['p'])?intval($_GET['p']):1;
 		$currentpage = get_maxpage($currentpage,$totalpages);
@@ -51,12 +51,14 @@ class NewsAction extends BaseAction{
 		$pages = '共'.$count.'篇文章&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getpage($currentpage,$totalpages,8,$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
 		$admin['pages'] = $pages;
 		//查询数据
-		$list = $rs->where($where)->order($order)->limit($limit)->page($currentpage)->select();
-		foreach($list as $key=>$val){
-		    $list[$key]['list_url'] = '?s=Admin-News-Show-cid-'.$list[$key]['news_cid'];
-			$list[$key]['news_url'] = ff_data_url('news',$list[$key]['news_id'],$list[$key]['news_cid'],$list[$key]['news_name'],1,$list[$key]['news_jumpurl']);
-			$list[$key]['news_starsarr'] = admin_star_arr($list[$key]['news_stars']);
-		}				
+		$list = $rs->where(!empty($where)?$where:'')->order($order)->limit($limit)->page($currentpage)->select();
+        if(!empty($list)) {
+            foreach($list as $key=>$val){
+                $list[$key]['list_url'] = '?s=Admin-News-Show-cid-'.$list[$key]['news_cid'];
+                $list[$key]['news_url'] = ff_data_url('news',$list[$key]['news_id'],$list[$key]['news_cid'],$list[$key]['news_name'],1,$list[$key]['news_jumpurl']);
+                $list[$key]['news_starsarr'] = admin_star_arr($list[$key]['news_stars']);
+            }
+        }
 		//dump($rs->getLastSql());
 		//变量赋值并输出模板
 		$this->assign($admin);
@@ -71,19 +73,21 @@ class NewsAction extends BaseAction{
 	// 添加编辑
     public function add(){
 		$rs = D("News");
-		$news_id = intval($_GET['id']);
+		$news_id = !empty($_GET['id'])?intval($_GET['id']):0;
 		if($news_id>0){
             $where['news_id'] = $news_id;
 			$array = $rs->where($where)->relation('Tag')->find();
 			$array['news_tplname'] = '编辑';
-			foreach($array['Tag'] as $key=>$value){
-				$tag[$key] = $value['tag_name'];
-			}			
+            if(!empty($array['Tag'])){
+                foreach($array['Tag'] as $key=>$value){
+                    $tag[$key] = getWD($value['tag_name']);
+                }
+            }
 			$array['news_starsarr'] = admin_star_arr($array['news_stars']);
 			if (C('admin_time_edit')){
 				$array['checktime'] = 'checked';
 			}
-			$array['news_keywords'] = implode(',',$tag);
+			$array['news_keywords'] = !empty($tag)?implode(',',$tag):'';
 			$_SESSION['vod_jumpurl'] = $_SERVER['HTTP_REFERER'];
 		}else{
 		    $array['news_cid'] = cookie('news_cid');
@@ -137,7 +141,7 @@ class NewsAction extends BaseAction{
 					$tag->tag_update($_POST["news_id"],$_POST["news_keywords"],2);
 				}
 				//后置操作条件
-				$rs->$news_id = $_POST["news_id"];
+				$rs->$news_id = !empty($_POST["news_id"])?intval($_POST["news_id"]):0;
 			}else{
 				$this->error("修改新闻信息失败！");
 			}
@@ -148,7 +152,7 @@ class NewsAction extends BaseAction{
 	// 后置操作
 	public function _after_update(){
 		$rs = D("News");
-		$news_id = $rs->$news_id;
+		$news_id = intval($rs->$news_id);
 		if($news_id){
 			$this->_after_add_update($news_id);
 			$this->assign("jumpUrl",$_SESSION['news_jumpurl']);
@@ -175,7 +179,7 @@ class NewsAction extends BaseAction{
 	}		
 	// Ajax设置星级
     public function ajaxstars(){
-		$where['news_id'] = $_GET['id'];
+		$where['news_id'] = intval($_GET['id']);
 		$data['news_stars'] = intval($_GET['stars']);
 		$rs = D("News");
 		$rs->where($where)->save($data);		

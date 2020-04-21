@@ -11,11 +11,11 @@ class VodAction extends BaseAction{
 		$admin['player'] = !empty($_REQUEST['player'])?trim($_REQUEST['player']):0;
 		$admin['stars'] = !empty($_REQUEST['stars'])?intval($_REQUEST['stars']):0;
 		$admin['url'] = !empty($_REQUEST['url'])?intval($_REQUEST['url']):0;
-		$admin['type'] = !empty($_GET['type'])?$_GET['type']:C('admin_order_type');
-		$admin['order'] = !empty($_GET['order'])?$_GET['order']:'desc';
+		$admin['type'] = !empty($_GET['type'])?getWD($_GET['type']):C('admin_order_type');
+		$admin['order'] = !empty($_GET['order'])?getWD($_GET['order']):'desc';
 		$admin['orders'] = 'vod_'.$admin["type"].' '.$admin['order'];
-		$admin['wd'] = !empty($_GET['wd'])?urldecode(trim($_REQUEST['wd'])):'';
-		$admin['tag'] = !empty($_GET['tag'])?urldecode(trim($_REQUEST['tag'])):'';
+		$admin['wd'] = !empty($_GET['wd'])?urldecode(trim(getWD($_REQUEST['wd']))):'';
+		$admin['tag'] = !empty($_GET['tag'])?urldecode(trim(getWD($_REQUEST['tag']))):'';
 		$admin['tid'] = !empty($_GET['tid'])?intval($_REQUEST['tid']):0;//专题ID
 		$admin['p'] = '';
 		//生成查询参数
@@ -60,7 +60,7 @@ class VodAction extends BaseAction{
 			$where['tag_sid'] = 1;
 			$where['tag_name'] = $admin['tag'];
 			$rs = D('TagView');
-			$admin['tag'] = urlencode($_REQUEST['tag']);
+			$admin['tag'] = urlencode(getWD($_REQUEST['tag']));
 		}else{
 			$rs = D("Vod");
 		}
@@ -97,14 +97,16 @@ class VodAction extends BaseAction{
 	// 添加编辑影片
     public function add(){
 		$rs = D("Vod");
-		$vod_id = intval($_GET['id']);
+		$vod_id = !empty($_GET['id'])?intval($_GET['id']):0;
 		if($vod_id){
 			$where = array();
             $where['vod_id'] = $vod_id;
 			$array = $rs->where($where)->relation('Tag')->find();
-			foreach($array['Tag'] as $key=>$value){
-				$tag[$key] = $value['tag_name'];
-			}
+            if(!empty($array['Tag'])) {
+                foreach($array['Tag'] as $key=>$value){
+                    $tag[$key] = $value['tag_name'];
+                }
+            }
 			foreach(explode('$$$',$array['vod_play']) as $key=>$val){
 			    $play[array_search($val,C('play_player'))] = $val;
 			}
@@ -114,7 +116,7 @@ class VodAction extends BaseAction{
 			$array['vod_server'] = explode('$$$',$array['vod_server']);	
 			$array['vod_url'] = explode('$$$',$array['vod_url']);
 			$array['vod_starsarr'] = admin_star_arr($array['vod_stars']);
-			$array['vod_keywords'] = implode(',',$tag);
+			$array['vod_keywords'] = !empty($tag)?implode(',',$tag):'';
 			if (C('admin_time_edit')){
 				$array['checktime'] = 'checked';
 			}
@@ -148,7 +150,7 @@ class VodAction extends BaseAction{
     public function _before_insert(){
 		//自动获取关键词tag
 		if(empty($_POST["vod_keywords"]) && C('rand_tag')){
-			$_POST["vod_keywords"] = ff_tag_auto($_POST["vod_name"],$_POST["vod_content"]);
+			$_POST["vod_keywords"] = ff_tag_auto(getWD($_POST["vod_name"]),getWD($_POST["vod_content"]));
 		}
 		//播放器组与地址组
 		$play = $_POST["vod_play"];
@@ -156,22 +158,22 @@ class VodAction extends BaseAction{
 		foreach($_POST["vod_url"] as $key=>$val){
 			$val = trim($val);
 			if($val){
-			    $vod_play[] = $play[$key];
-				$vod_server[] = $server[$key];
-				$vod_url[] = $val;
+			    $vod_play[] = getWD($play[$key]);
+				$vod_server[] = getWD($server[$key]);
+				$vod_url[] = getWD($val);
 			};
 		}
-		$_POST["vod_play"] = strval(implode('$$$',$vod_play));
-		$_POST["vod_server"] = strval(implode('$$$',$vod_server));
-		$_POST["vod_url"] = strval(implode('$$$',$vod_url));				
+		$_POST["vod_play"] = !empty($vod_play)?strval(implode('$$$',$vod_play)):'';
+		$_POST["vod_server"] = !empty($vod_server)?strval(implode('$$$',$vod_server)):'';
+		$_POST["vod_url"] = !empty($vod_url)?strval(implode('$$$',$vod_url)):'';
 	}
 	// 新增数据
 	public function insert(){
 		$tag = D('Tag');$rs = D("Vod");
 		if($rs->create()){
 			//关联操作>>写入tag
-			if($_POST["vod_keywords"]){
-				$rs->Tag = $tag->tag_array($_POST["vod_keywords"],1);
+			if(!empty($_POST["vod_keywords"])){
+				$rs->Tag = $tag->tag_array(getWD($_POST["vod_keywords"]),1);
 				$id = $rs->relation('Tag')->add();
 			}else{
 				$id = $rs->add();
@@ -184,7 +186,7 @@ class VodAction extends BaseAction{
 	// 数据库写入-后置操作
 	public function _after_insert(){
 		$rs = D("Vod");
-		$vod_id = $rs->$vod_id;
+		$vod_id = intval($rs->$vod_id);
 		if($vod_id){
 			cookie('vod_cid',$vod_id);
 			$this->_after_add_update($vod_id);
@@ -201,11 +203,11 @@ class VodAction extends BaseAction{
 		if($rs->create()){	
 			if(false !==  $rs->save()){
 				//手动更新TAG
-				if($_POST["vod_keywords"]){
-					$tag->tag_update($_POST["vod_id"],$_POST["vod_keywords"],1);
+				if(!empty($_POST["vod_keywords"])){
+					$tag->tag_update(getWD($_POST["vod_id"]),getWD($_POST["vod_keywords"]),1);
 				}
 				//后置操作条件
-				$rs->$vod_id = $_POST["vod_id"];
+				$rs->$vod_id = !empty($_POST["vod_id"])?getWD($_POST["vod_id"]):0;
 			}else{
 				$this->error("修改影片信息失败！");
 			}
@@ -216,7 +218,7 @@ class VodAction extends BaseAction{
 	// 后置操作
 	public function _after_update(){
 		$rs = D("Vod");
-		$vod_id = $rs->$vod_id;
+		$vod_id = intval($rs->$vod_id);
 		if($vod_id){
 			$this->_after_add_update($vod_id);
 			$this->assign("jumpUrl",$_SESSION['vod_jumpurl']);
@@ -244,7 +246,7 @@ class VodAction extends BaseAction{
 	}	
 	// 删除影片
     public function del(){
-		$this->delfile($_GET['id']);
+		$this->delfile(intval($_GET['id']));
 		redirect($_SESSION['vod_jumpurl']);
     }
 	// 删除影片all
@@ -254,7 +256,7 @@ class VodAction extends BaseAction{
 		}	
 		$array = $_POST['ids'];
 		foreach($array as $val){
-			$this->delfile($val);
+			$this->delfile(intval($val));
 		}
 		redirect($_SESSION['vod_jumpurl']);
     }
@@ -301,7 +303,7 @@ class VodAction extends BaseAction{
     }
 	// 批量生成数据
     public function create(){
-		echo'<iframe scrolling="no" src="?s=Admin-Create-vodid-id-'.implode(',',$_POST['ids']).'" frameborder="0" style="display:none"></iframe>';
+		echo'<iframe scrolling="no" src="?s=Admin-Create-vodid-id-'.getWD(implode(',',$_POST['ids'])).'" frameborder="0" style="display:none"></iframe>';
 		$this->assign("jumpUrl",$_SESSION['vod_jumpurl']);
 		$this->success('批量生成数据成功！');
     }	
@@ -314,7 +316,13 @@ class VodAction extends BaseAction{
 		if (getlistson($cid)) {
 			$rs = D("Vod");
 			$data['vod_cid'] = $cid;
-			$where['vod_id'] = array('in',$_POST['ids']);
+		    $array = $_POST['ids'];
+            if(is_array($array)){
+                foreach($array as $key => $val){
+                    $da[intval($key)] = intval($val);
+                }
+            }
+			$where['vod_id'] = array('in', $da);
 			$rs->where($where)->save($data);
 			redirect($_SESSION['vod_jumpurl']);
 		}else{
@@ -323,9 +331,9 @@ class VodAction extends BaseAction{
     }	
 	// 设置状态
     public function status(){
-		$where['vod_id'] = $_GET['id'];
+		$where['vod_id'] = intval($_GET['id']);
 		$rs = D("Vod");
-		if($_GET['value']){
+		if(!empty($_GET['value'])){
 			$rs->where($where)->setField('vod_status',1);
 		}else{
 			$rs->where($where)->setField('vod_status',0);
@@ -334,7 +342,7 @@ class VodAction extends BaseAction{
     }	
 	// Ajax设置星级
     public function ajaxstars(){
-		$where['vod_id'] = $_GET['id'];
+		$where['vod_id'] = intval($_GET['id']);
 		$data['vod_stars'] = intval($_GET['stars']);
 		$rs = D("Vod");
 		$rs->where($where)->save($data);		
@@ -342,8 +350,8 @@ class VodAction extends BaseAction{
     }	
 	// Ajax设置连载
     public function ajaxcontinu(){
-		$where['vod_id'] = $_GET['id'];
-		$data['vod_continu'] = trim($_GET['continu']);
+		$where['vod_id'] = intval($_GET['id']);
+		$data['vod_continu'] = intval($_GET['continu']);
 		$rs = D("Vod");
 		$rs->where($where)->save($data);		
 		echo('ok');

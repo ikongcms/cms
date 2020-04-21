@@ -141,16 +141,17 @@ class Model extends Think
             $type[$key]    =   $val['type'];
             if($val['primary']) {
                 $this->fields['_pk'] = $key;
-                if($val['autoinc']) $this->fields['_autoinc']   =   true;
+                if($val['autoinc']) { $this->fields['_autoinc']   =   true; }
             }
         }
         // 记录字段类型信息
-        if(C('DB_FIELDTYPE_CHECK'))   $this->fields['_type'] =  $type;
+        if(C('DB_FIELDTYPE_CHECK')) { $this->fields['_type'] =  !empty($type)?$type:''; }
 
         // 2008-3-7 增加缓存开关控制
-        if(C('DB_FIELDS_CACHE'))
+        if(C('DB_FIELDS_CACHE')) {
             // 永久缓存数据表信息
             F('_fields/'.$this->name,$this->fields);
+        }
     }
 
     /**
@@ -752,7 +753,7 @@ class Model extends Think
             if(is_array($val)){
                 $da[$key] = $this->getPOST($val);
             } else {
-                $da[getWD($key)] = getWD($val);
+                $da[trim(getWD($key))] = trim(getWD($val));
             }
          }
          return $da;

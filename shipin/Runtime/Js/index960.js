@@ -1,1 +1,0 @@
-document.write("<a href=\"/\"><img src=\"/Tpl/xxx/static/images/app-banner.png\" /></a>");

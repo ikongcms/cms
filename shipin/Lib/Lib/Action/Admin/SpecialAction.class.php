@@ -3,15 +3,15 @@ class SpecialAction extends BaseAction{
 	// 显示专题
     public function show(){
 		//获取地址栏参数
-		$admin['cid']= $_REQUEST['cid'];
-		$admin['continu'] = $_REQUEST['continu'];
-		$admin['status'] = intval($_REQUEST['status']);
-		$admin['player'] = trim($_REQUEST['player']);
-		$admin['stars'] = intval($_REQUEST['stars']);
-		$admin['type'] = !empty($_GET['type'])?$_GET['type']:C('admin_order_type');
-		$admin['order'] = !empty($_GET['order'])?$_GET['order']:'desc';
-		$admin['orders'] = 'special_'.$admin["type"].' '.$admin['order'];
-		$admin['p'] = '';
+        $admin['cid']= !empty($_REQUEST['cid'])?intval($_REQUEST['cid']):0;
+        $admin['continu'] = !empty($_REQUEST['continu'])?intval($_REQUEST['continu']):0;
+        $admin['status'] = !empty($_REQUEST['status'])?intval($_REQUEST['status']):0;
+        $admin['player'] = !empty($_REQUEST['player'])?trim($_REQUEST['player']):0;
+        $admin['stars'] = !empty($_REQUEST['stars'])?intval($_REQUEST['stars']):0;
+        $admin['type'] = !empty($_GET['type'])?$_GET['type']:C('admin_order_type');
+        $admin['order'] = !empty($_GET['order'])?$_GET['order']:'desc';
+        $admin['orders'] = 'special_'.$admin["type"].' '.$admin['order'];
+        $admin['p'] = '';
 		//生成查询参数
 		$limit = C('url_num_admin');
 		$order = 'special_'.$admin["type"].' '.$admin['order'];
@@ -26,26 +26,30 @@ class SpecialAction extends BaseAction{
 		$pages = '共'.$count.'篇专题&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getpage($currentpage,$totalpages,8,$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
 		$admin['pages'] = $pages;
 		//查询数据	
-		$list = $rs->where($where)->page($currentpage)->limit($limit)->order($order)->select();
-		foreach($list as $key=>$val){
-			$list[$key]['special_url'] = ff_data_url('special',$list[$key]['special_id'],0,$list[$key]['special_name'],1,'');
-			$list[$key]['special_starsarr'] = admin_star_arr($list[$key]['special_stars']);	
-		}
+		$list = $rs->where(!empty($where)?$where:'')->page($currentpage)->limit($limit)->order($order)->select();
+        if(!empty($list)) {
+            foreach($list as $key=>$val){
+                $list[$key]['special_url'] = ff_data_url('special',$list[$key]['special_id'],0,$list[$key]['special_name'],1,'');
+                $list[$key]['special_starsarr'] = admin_star_arr($list[$key]['special_stars']);	
+            }
+        }
 		//组合专题收录统计
 		$rs = D("Topic");
 		$list_topic = $rs->select();
-		foreach($list_topic as $key=>$value){
-			$array_topic[$value['topic_sid'].'-'.$value['topic_tid']][$key] = $value['topic_tid'];
-		}
+        if(!empty($list_topic)) {
+		    foreach($list_topic as $key=>$value){
+                $array_topic[$value['topic_sid'].'-'.$value['topic_tid']][$key] = $value['topic_tid'];
+            }
+        }
 		$this->assign($admin);
 		$this->assign('list',$list);
-		$this->assign('array_count',$array_topic);
+		$this->assign('array_count',!empty($array_topic)?$array_topic:'');
 		$this->display('./Public/system/special_show.html');
     }
 	// 添加与编辑专题
     public function add(){
 		$where = array();
-		$where['special_id'] = intval($_GET['id']);
+		$where['special_id'] = !empty($_GET['id'])?intval($_GET['id']):0;
 		if ($where['special_id']) {
 			$rs = D("Special");
 			$array = $rs->where($where)->find();

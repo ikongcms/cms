@@ -7,6 +7,6 @@
 </lt>
 <a href="javascript:void(0);" onclick="special_vod({$ppvod.vod_id},'del',{$ppvod.vod_id});" title="从专题里移除">删</a>
 </span>
-<label>{$ppvod.vod_id}</label><a href="{:ff_data_url('vod',$ppvod['vod_id'],$ppvod['vod_cid'],$ppvod['vod_name'],1,'')}" target="_blank" title="{$ppvod.vod_name} 主演:{$ppvod.vod_actor}">{$ppvod.vod_name|msubstr=0,26}</a></li>
+<label><notempty name="ppvod.vod_id">{$ppvod.vod_id}</notempty></label><a href="{:ff_data_url('vod',$ppvod['vod_id'],!empty($ppvod['vod_cid'])?$ppvod['vod_cid']:0,$ppvod['vod_name'],1,'')}" target="_blank" title="{$ppvod.vod_name} 主演:{$ppvod.vod_actor}">{$ppvod.vod_name|msubstr=0,26}</a></li>
 </volist>
 <script language="javascript">$('#count').html('{$count}');</script>

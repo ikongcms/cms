@@ -23,7 +23,7 @@ class TplAction extends BaseAction{
     }
 	//获取模板当前路径
 	public function dirpath(){
-		$id = admin_ff_url_repalce(trim($_GET['id']));
+		$id = !empty($_GET['id'])?admin_ff_url_repalce(trim(getWD($_GET['id']))):'';
 		if ($id) {
 			$dirpath = $id;
 		}else{
@@ -36,7 +36,7 @@ class TplAction extends BaseAction{
 	}
 	//获取模板上一层路径
 	public function dirlast(){
-		$id = admin_ff_url_repalce(trim($_GET['id']));
+		$id = !empty($_GET['id'])?admin_ff_url_repalce(trim(getWD($_GET['id']))):'';
 		if ($id) {
 			return substr($id,0,strrpos($id, '/'));
 		}else{
@@ -45,7 +45,7 @@ class TplAction extends BaseAction{
 	}		
 	// 编辑模板
 	public function add(){
-		$filename = admin_ff_url_repalce(str_replace('*','.',trim($_GET['id'])));
+		$filename = !empty($_GET['id'])?admin_ff_url_repalce(trim(getWD(str_replace('*','.',trim($_GET['id']))))):'';
 		if (empty($filename)) {
 			$this->error('模板名称不能为空！');
 		}
@@ -81,7 +81,7 @@ class TplAction extends BaseAction{
 	}
 	// 删除模板
     public function del(){
-		$id = admin_ff_url_repalce(str_replace('*','.',trim($_GET['id'])));
+		$id = !empty($_GET['id'])?admin_ff_url_repalce(trim(getWD(str_replace('*','.',trim($_GET['id']))))):'';
 		if (!substr(sprintf("%o",fileperms($id)),-3)){
 			$this->error('无删除权限！');
 		}

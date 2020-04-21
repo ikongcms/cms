@@ -53,7 +53,7 @@ $(document).ready(function(){
     <td class="l ct">{$ppvod.size|byte_format}</td>
     <td class="l ct">{$ppvod.mtime|getcolordate='Y-m-d H:i:s',###}</td>
     <php>if(preg_match("/\.html|\.htm|\.txt|\.css|\.php|\.js/",$ppvod['filename'])){</php>
-    <td class="l ct"><a href="?s=Admin-Tpl-Add-id-{$dirpath|admin_ff_url_repalce=desc}|{:str_replace('.'.$ppvod['ext'],'*'.$ppvod['ext'],$ppvod['filename'])}">编辑</a> <a href="?s=Admin-Tpl-Del-id-{$dirpath|admin_ff_url_repalce=desc}|{:str_replace('.'.$ppvod['ext'],'*'.$ppvod['ext'],$ppvod['filename'])}" onClick="return confirm('确定删除该文件吗?')">删除</a></td>
+    <td class="l ct"><a href="?s=Admin-Tpl-Add-id-{$dirpath|admin_ff_url_repalce='desc'}|{:str_replace('.'.$ppvod['ext'],'*'.$ppvod['ext'],$ppvod['filename'])}">编辑</a> <a href="?s=Admin-Tpl-Del-id-{$dirpath|admin_ff_url_repalce='desc'}|{:str_replace('.'.$ppvod['ext'],'*'.$ppvod['ext'],$ppvod['filename'])}" onClick="return confirm('确定删除该文件吗?')">删除</a></td>
     <php>}else{</php>
     <td class="r ct"><a href="{$dirpath}/{$ppvod.filename}" target="_blank">浏览</a> <a href="?s=Admin-Tpl-Del-id-{$dirpath|admin_ff_url_repalce=desc}|{:str_replace('.'.$ppvod['ext'],'*'.$ppvod['ext'],$ppvod['filename'])}" onClick="return confirm('确定删除该文件吗?')">删除</a></td>
     <php>}</php>

@@ -117,7 +117,6 @@ class AdminAction extends BaseAction{
 		$config['play_second'] = intval($config['play_second']);
 		$config['tmpl_cache_on'] = (bool) $config['tmpl_cache_on'];
 		$config['html_cache_on'] = (bool) $config['html_cache_on'];
-		$config['user_gbcm'] = (bool) $config['user_gbcm'];
 		//播放地址前缀
 		foreach(explode(chr(13),trim($config["play_server"])) as $v){
 			list($key,$val) = explode('$$$',trim($v));

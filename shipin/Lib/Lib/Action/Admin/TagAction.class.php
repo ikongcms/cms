@@ -19,9 +19,11 @@ class TagAction extends BaseAction{
 		//查询数据
 		$rs = D("Tag");
 		$array = $rs->field('*,count(tag_name) as tag_count')->limit($limit)->page($currentpage)->group('tag_sid,tag_name')->order('tag_sid asc,tag_count desc')->select();
-		foreach($array as $key=>$val){
-			$array[$key]['tag_url'] = U('Admin-'.ucfirst(getsidname($array[$key]['tag_sid'])).'/Show',array('tag'=>urlencode($array[$key]['tag_name'])),'',false,true);
-		}		
+        if(!empty($array)) {
+            foreach($array as $key=>$val){
+                $array[$key]['tag_url'] = U('Admin-'.ucfirst(getsidname($array[$key]['tag_sid'])).'/Show',array('tag'=>urlencode($array[$key]['tag_name'])),'',false,true);
+            }
+        }
 		$this->assign($admin);
 		$this->assign('list_tag',$array);
 		$this->display('./Public/system/tag_show.html');

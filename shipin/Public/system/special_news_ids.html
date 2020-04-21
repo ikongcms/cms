@@ -7,6 +7,6 @@
 </lt>
 <a href="javascript:void(0);" onclick="special_news({$ppvod.news_id},'del',{$ppvod.news_id});" title="从专题里移除">删</a>
 </span>
-<label>{$ppvod.news_id}</label><a href="{:ff_data_url('news',$ppvod['news_id'],$ppvod['news_cid'],$ppvod['news_name'],1,'')}" target="_blank" title="{$ppvod.news_name}">{$ppvod.news_name|msubstr=0,26}</a></li>
+<label><notempty name="ppvod.news_id">{$ppvod.news_id}</notempty></label><a href="{:ff_data_url('news',$ppvod['news_id'],!empty($ppvod['news_cid'])?$ppvod['news_cid']:0,$ppvod['news_name'],1,'')}" target="_blank" title="{$ppvod.news_name}">{$ppvod.news_name|msubstr=0,26}</a></li>
 </volist>
 <script language="javascript">$('#count').html('{$count}');</script>
