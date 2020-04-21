@@ -241,7 +241,7 @@ label{ color:#666666}
     <ul><li class="left">自定义模板规则：</li>
     	<li class="right"><input type="text" name="config[rewrite_mytpl]" id="rewrite_mytpl" maxlength="150" value="{$rewrite_mytpl|default='/my-show-id-$id'}" class="w250 diri"> 变量:$id</li>            
     </ul>
-    <ul><li class="right">&nbsp;注意，修改静态格式后您需要修改服务器的 Rewrite 规则设置。如果有使用附加变量，模板调用一定要支持该参数才有效果。</li></ul>
+    <ul><li class="right">&nbsp;注意，修改静态格式后您需要修改服务器的 Rewrite 规则设置。如果有使用附加变量，模板调用一定要支持该参数才有效果 <a href="http://u.daicuo.com/feifei/jump.php?id=5" target="_blank" style="color:red">获取更多帮助</a></li></ul>
     </div>
 </div>
 <!-- -->
@@ -287,6 +287,9 @@ label{ color:#666666}
     </ul>
     <ul><li class="left">播放页缓存有效期：</li>
     	<li class="right"><input type="text" name="config[html_cache_play]" id="html_cache_play" maxlength="2" value="{$html_cache_play}" class="w70"><label>设为0该模块将不启用缓存,可以为小数,单位小时</label></li>
+    </ul>
+    <ul><li class="left">其它页缓存有效期：</li>
+    	<li class="right"><input type="text" name="config[html_cache_time]" id="html_cache_time" maxlength="2" value="{$html_cache_time}" class="w70"><label>设为0该模块将不启用缓存,可以为小数,单位小时</label></li>
     </ul>
     <ul><li class="left">其它缓存有效期：</li>
     	<li class="right"><input type="text" name="config[html_cache_ajax]" id="html_cache_ajax" maxlength="2" value="{$html_cache_ajax}" class="w70"><label>设为0该模块将不启用缓存,可以为小数,单位小时</label></li>
@@ -354,7 +357,7 @@ label{ color:#666666}
     </ul>                      
     </div>
     <ul><li class="left">远程附件访问地址：</li>
-    	<li class="right"><input type="text" name="config[upload_http_prefix]" id="upload_http_prefix" maxlength="100" value="{$upload_http_prefix}" class="w300"><label>(必须/结尾,留空则不使用,如http://www.video.net/upload/)</label></li>
+    	<li class="right"><input type="text" name="config[upload_http_prefix]" id="upload_http_prefix" maxlength="100" value="{$upload_http_prefix}" class="w300"><label>(必须/结尾,留空则不使用,如http://www.video.com/upload/)</label></li>
     </ul>    
 </div>    
 <!-- -->

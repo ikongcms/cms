@@ -129,6 +129,25 @@ class Input extends Think
 
     /**
      +----------------------------------------------------------
+     * 字符MagicQuote转义过滤
+     +----------------------------------------------------------
+     * @access public
+     +----------------------------------------------------------
+     * @return void
+     +----------------------------------------------------------
+     */
+    static public function noGPC()
+    {
+        if ( get_magic_quotes_gpc() ) {
+           $_POST = stripslashes_deep($_POST);
+           $_GET = stripslashes_deep($_GET);
+           $_COOKIE = stripslashes_deep($_COOKIE);
+           $_REQUEST= stripslashes_deep($_REQUEST);
+        }
+    }
+
+    /**
+     +----------------------------------------------------------
      * 处理字符串，以便可以正常进行搜索
      +----------------------------------------------------------
      * @access public
@@ -264,8 +283,11 @@ class Input extends Think
      +----------------------------------------------------------
      */
     static public function addSlashes($string)
-    {   //20201221
-        return addslashes($string);
+    {
+        //if (!get_magic_quotes_gpc()) {
+            $string = addslashes($string);
+        //}
+        return $string;
     }
 
     /**
@@ -296,8 +318,11 @@ class Input extends Think
      +----------------------------------------------------------
      */
     static public function stripSlashes($string)
-    {   //20101221
-        return stripslashes($string);
+    {
+        //if (get_magic_quotes_gpc()) {
+            $string = stripslashes($string);
+        //}
+        return $string;
     }
 
     /**

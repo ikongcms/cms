@@ -80,7 +80,7 @@ class DbMysqli extends Db{
      +----------------------------------------------------------
      */
     public function free() {
-        if (gettype($this->queryID)==="object"){
+        if ( gettype($this->queryID)==="object" ) {
             mysqli_free_result($this->queryID);
         }
         $this->queryID = 0;
@@ -104,7 +104,7 @@ class DbMysqli extends Db{
         if ( !$this->_linkID ) return false;
         $this->queryStr = $str;
         //释放前次的查询结果
-        if ( $this->queryID ) { $this->free(); }
+        if ( gettype($this->queryID)==="object" ) { $this->free(); }
         N('db_query',1);
         // 记录开始执行时间
         G('queryStartTime');
@@ -114,7 +114,7 @@ class DbMysqli extends Db{
             $this->error();
             return false;
         } else {
-            if (gettype($this->queryID)==="object") {
+            if( gettype($this->queryID)==="object" ) {
                 $this->numRows  = mysqli_num_rows($this->queryID);
             }
             return $this->getAll();
@@ -139,7 +139,7 @@ class DbMysqli extends Db{
         if ( !$this->_linkID ) return false;
         $this->queryStr = $str;
         //释放前次的查询结果
-        if ( $this->queryID ) { $this->free(); }
+        if ( gettype($this->queryID)==="object" ) { $this->free(); }
         N('db_write',1);
         // 记录开始执行时间
         G('queryStartTime');
@@ -149,8 +149,8 @@ class DbMysqli extends Db{
             $this->error();
             return false;
         } else {
-            $this->numRows = mysqli_affected_rows($this->_linkID);
-            $this->lastInsID = mysqli_insert_id($this->_linkID);
+            $this->numRows = $this->_linkID->affected_rows;
+            $this->lastInsID = $this->_linkID->insert_id;
             return $this->numRows;
         }
     }
@@ -168,7 +168,6 @@ class DbMysqli extends Db{
      */
     public function startTrans() {
         $this->initConnect(true);
-        if ( !$this->_linkID ) return false;
         //数据rollback 支持
         if ($this->transTimes == 0) {
             $this->_linkID->autocommit(false);
@@ -239,10 +238,11 @@ class DbMysqli extends Db{
         //返回数据集
         $result = array();
         if($this->numRows>0) {
-            while($row = mysqli_fetch_assoc($this->queryID)){
-                $result[]   =   $row;
+            //返回数据集
+            for($i=0;$i<$this->numRows ;$i++ ){
+                $result[$i] = $this->queryID->fetch_assoc();
             }
-            mysqli_data_seek($this->queryID,0);
+            $this->queryID->data_seek(0);
         }
         return $result;
     }
@@ -256,7 +256,7 @@ class DbMysqli extends Db{
      * @throws ThinkExecption
      +----------------------------------------------------------
      */
-    public function getFields($tableName) {
+    function getFields($tableName) {
         $result =   $this->query('SHOW COLUMNS FROM `'.$tableName.'`');
         $info   =   array();
         if($result) {
@@ -283,7 +283,7 @@ class DbMysqli extends Db{
      * @throws ThinkExecption
      +----------------------------------------------------------
      */
-    public function getTables($dbName='') {
+    function getTables($dbName='') {
         $sql    = !empty($dbName)?'SHOW TABLES FROM '.$dbName:'SHOW TABLES ';
         $result =   $this->query($sql);
         $info   =   array();
@@ -360,8 +360,8 @@ class DbMysqli extends Db{
      * @throws ThinkExecption
      +----------------------------------------------------------
      */
-    public function close() {
-        if (gettype($this->queryID)==="object") {
+    function close() {
+        if ( gettype($this->queryID)==="object" ) {
             mysqli_free_result($this->queryID);
         }
         if ($this->_linkID && !$this->_linkID->close()){
@@ -381,7 +381,7 @@ class DbMysqli extends Db{
      * @return string
      +----------------------------------------------------------
      */
-    public function error() {
+    function error() {
         $this->error = $this->_linkID->error;
         if($this->debug && '' != $this->queryStr){
             $this->error .= "\n [ SQL语句 ] : ".$this->queryStr;
@@ -401,7 +401,7 @@ class DbMysqli extends Db{
      * @return string
      +----------------------------------------------------------
      */
-    public function escape_string($str) {
+    function escape_string($str) {
         if($this->_linkID) {
             return  $this->_linkID->real_escape_string($str);
         }else{

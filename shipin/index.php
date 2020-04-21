@@ -1,7 +1,4 @@
 <?php
-//htmlspecialchars($str,ENT_QUOTES);
-//html_entity_decode($str,ENT_QUOTES);
-
 //超时时间
 @set_time_limit(120);
 //内存限制 取消内存限制

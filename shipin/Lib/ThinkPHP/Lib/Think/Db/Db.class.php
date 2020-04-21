@@ -814,9 +814,13 @@ class Db extends Think
     public function select($options=array()) {
         if(isset($options['page'])) {
             // 根据页数计算limit
-            $page='';$listRows='';
-            if(!empty(explode(',',$options['page'])[1])){
+            //list($page,$listRows) =  explode(',',$options['page']);
+            $pageArr = explode(',',$options['page']);
+            if(!empty($pageArr[1])){
                 list($page,$listRows) =  explode(',',$options['page']);
+            } else {
+                $page = $pageArr[0];
+                $listRows = '';
             }
             $page    = $page?$page:1;
             $listRows = $listRows?$listRows:($options['limit']?$options['limit']:20);

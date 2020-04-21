@@ -4,49 +4,49 @@ class VodAction extends BaseAction{
     public function show(){
 		$admin = array();
 		//获取地址栏参数
-		$admin['cid']= $_REQUEST['cid'];
-		$admin['continu'] = $_REQUEST['continu'];
-		$admin['status'] = intval($_REQUEST['status']);
-		$admin['isfilm'] = intval($_REQUEST['isfilm']);
-		$admin['player'] = trim($_REQUEST['player']);
-		$admin['stars'] = intval($_REQUEST['stars']);
-		$admin['url'] = intval($_REQUEST['url']);
+		$admin['cid']= !empty($_REQUEST['cid'])?intval($_REQUEST['cid']):0;
+		$admin['continu'] = !empty($_REQUEST['continu'])?intval($_REQUEST['continu']):0;
+		$admin['status'] = !empty($_REQUEST['status'])?intval($_REQUEST['status']):0;
+		$admin['isfilm'] = !empty($_REQUEST['isfilm'])?intval($_REQUEST['isfilm']):0;
+		$admin['player'] = !empty($_REQUEST['player'])?trim($_REQUEST['player']):0;
+		$admin['stars'] = !empty($_REQUEST['stars'])?intval($_REQUEST['stars']):0;
+		$admin['url'] = !empty($_REQUEST['url'])?intval($_REQUEST['url']):0;
 		$admin['type'] = !empty($_GET['type'])?$_GET['type']:C('admin_order_type');
 		$admin['order'] = !empty($_GET['order'])?$_GET['order']:'desc';
 		$admin['orders'] = 'vod_'.$admin["type"].' '.$admin['order'];
-		$admin['wd'] = urldecode(trim($_REQUEST['wd']));
-		$admin['tag'] = urldecode(trim($_REQUEST['tag']));
-		$admin['tid'] = $_REQUEST['tid'];//专题ID
+		$admin['wd'] = !empty($_GET['wd'])?urldecode(trim($_REQUEST['wd'])):'';
+		$admin['tag'] = !empty($_GET['tag'])?urldecode(trim($_REQUEST['tag'])):'';
+		$admin['tid'] = !empty($_GET['tid'])?intval($_REQUEST['tid']):0;//专题ID
 		$admin['p'] = '';
 		//生成查询参数
 		$limit = C('url_num_admin');
 		$order = 'vod_'.$admin["type"].' '.$admin['order'];
-		if ($admin['cid']) {
+		if (!empty($admin['cid'])) {
 			$where['vod_cid']= getlistsqlin($admin['cid']);
 		}
-		if($admin["continu"] == 1){
+		if(!empty($admin["continu"])&&$admin["continu"] == 1){
 			$where['vod_continu'] = array('neq','0');
 		}
-		if ($admin['status'] == 2) {
+		if (!empty($admin['status'])&&$admin['status'] == 2) {
 			$where['vod_status'] = array('eq',0);
-		}elseif ($admin['status'] == 1) {
+		}elseif (!empty($admin['status'])&&$admin['status'] == 1) {
 			$where['vod_status'] = array('eq',1);
-		}elseif ($admin['status'] == 3) {
+		}elseif (!empty($admin['status'])&&$admin['status'] == 3) {
 			$where['vod_status'] = array('eq',-1);
 		}
-		if($admin["isfilm"]){
+		if (!empty($admin["isfilm"])){
 			$where['vod_isfilm'] = array('eq',$admin["isfilm"]);
 		}				
-		if($admin['player']){
+		if (!empty($admin['player'])){
 			$where['vod_play'] = array('like','%'.trim($admin['player']).'%');
 		}
-		if($admin['stars']){
+		if (!empty($admin['stars'])){
 			$where['vod_stars'] = $admin['stars'];
 		}	
-		if($admin["url"]){
+		if (!empty($admin["url"])){
 			$where['vod_url'] = array('eq','');
 		}			
-		if ($admin['wd']) {
+		if (!empty($admin['wd'])) {
 			$search['vod_name'] = array('like','%'.$admin['wd'].'%');
 			$search['vod_title'] = array('like','%'.$admin['wd'].'%');
 			$search['vod_actor'] = array('like','%'.$admin['wd'].'%');
@@ -56,7 +56,7 @@ class VodAction extends BaseAction{
 			$admin['wd'] = urlencode($admin['wd']);
 		}
 		//根据不同条件加载模型
-		if($admin['tag']){
+		if(!empty($admin['tag'])){
 			$where['tag_sid'] = 1;
 			$where['tag_name'] = $admin['tag'];
 			$rs = D('TagView');
@@ -65,17 +65,17 @@ class VodAction extends BaseAction{
 			$rs = D("Vod");
 		}
 		//组合分页信息
-		$count = $rs->where($where)->count('vod_id');
+		$count = $rs->where((!empty($where)?$where:''))->count('vod_id');
 		$totalpages = ceil($count/$limit);
 		$currentpage = !empty($_GET['p'])?intval($_GET['p']):1;
 		$currentpage = get_maxpage($currentpage,$totalpages);//$admin['page'] = $currentpage;
 		$pageurl = U('Admin-Vod/Show',$admin,false,false).'{!page!}'.C('url_html_suffix');
 		$admin['p'] = $currentpage;$_SESSION['vod_jumpurl'] = U('Admin-Vod/Show',$admin).C('url_html_suffix');
-		$pages = '共'.$count.'部影片&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getpageadmin($currentpage,$totalpages,8,$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
+		$pages = '共'.$count.'部影片&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getpage($currentpage,$totalpages,8,$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
 		$admin['pages'] = $pages;
 		//查询数据
-		$list = $rs->where($where)->order($order)->limit($limit)->page($currentpage)->select();
-        if(!empty($list)){
+        $list = $rs->where((!empty($where)?$where:''))->order($order)->limit($limit)->page($currentpage)->select();
+        if(!empty($list)) {
             foreach($list as $key=>$val){
                 $list[$key]['list_url'] = '?s=Admin-Vod-Show-cid-'.$list[$key]['vod_cid'];
                 $list[$key]['vod_url'] = ff_data_url('vod',$list[$key]['vod_id'],$list[$key]['vod_cid'],$list[$key]['vod_name'],1,$list[$key]['vod_jumpurl']);

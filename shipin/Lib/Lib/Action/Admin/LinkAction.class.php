@@ -11,7 +11,7 @@ class LinkAction extends BaseAction{
     }
 	// 添加友情链接
     public function add(){
-		$id = intval($_GET['id']);
+		$id = !empty($_GET['id'])?intval($_GET['id']):0;
 	    $rs = D("Link");
 		if ($id) {
             $where['link_id'] = $id;

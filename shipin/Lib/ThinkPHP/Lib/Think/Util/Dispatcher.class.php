@@ -99,8 +99,7 @@ class Dispatcher extends Think
             }
             $var[C('VAR_ACTION')]  =   array_shift($paths);
             // 解析剩余的URL参数
-            //preg_replace_callback('/(\w+)\/([^\/]+)/', function ($match) use (&$var) {$var[$match[1]] = strip_tags($match[2]);}, implode('/', $paths));
-            preg_replace_callback('/(\w+)\\'.$depr.'([^\\'.$depr.'\/]+)/', function ($match) use (&$var) {$var[$match[1]] = strip_tags($match[2]);}, implode($depr,$paths));
+            preg_replace_callback('/(\w+)'.$depr.'([^'.$depr.'\/]+)/', function ($match) use (&$var) {$var[$match[1]] = strip_tags($match[2]);}, implode($depr,$paths));
             //$res = preg_replace('@(\w+)'.$depr.'([^'.$depr.'\/]+)@e', '$var[\'\\1\']=strip_tags(\'\\2\');', implode($depr,$paths));
             $_GET   =  array_merge($var,$_GET);
         }

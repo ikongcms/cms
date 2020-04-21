@@ -6,13 +6,13 @@ class InstallAction extends Action{
 			$this->error('Sorry，您已经安装了飞飞PHP影视系统 V'.C('ffvod_version').' 版<br />重新安装请先删除 Runtime/install/install.lock 文件。');
 		}
     }
-    public function index(){	
+    public function index(){
         $this->display('./Public/system/install.html');
     }
-    public function second(){	
+    public function second(){
         $this->display('./Public/system/install.html');
     }
-    public function setup(){	
+    public function setup(){
         $this->display('./Public/system/install.html');
     }
     public function install(){
@@ -32,8 +32,8 @@ class InstallAction extends Action{
 		}
 		// 保存配置文件
 		$config = array(
-            'db_type' => 'mysqli',
 		    'site_path'=>$data['site_path'],
+            'db_type' => 'mysqli',
 			'db_host'=>$data['db_host'],
 			'db_name'=>$data['db_name'],
 			'db_user'=>$data['db_user'], 
@@ -71,10 +71,10 @@ class InstallAction extends Action{
 			$queries = explode("\n", trim($query)); 
             $ret[$id] = '';
 			foreach($queries as $query) { 
-				$ret[$id] .= (($query[0] == '#' || $query[0].$query[1] == '--') ? '' : $query); 
+				$ret[$id] .= $query[0] == '#' || $query[0].$query[1] == '--' ? '' : $query; 
 			} 
-		}
-		unset($sql);
+		} 
+		unset($sql); 
 		foreach($ret as $query) {  
 			if(trim($query)) { 
 			    $db->query($query); 

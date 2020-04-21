@@ -13,15 +13,17 @@ class SlideAction extends BaseAction{
 		}
 		//后台展示
 		$list = $rs->order('slide_cid asc,slide_oid asc')->select();
-		foreach($list as $key=>$val){
-			$list[$key]['slide_pic'] = ff_img_url($list[$key]['slide_pic']);	
+        if(!empty($list)) {
+            foreach($list as $key=>$val){
+                $list[$key]['slide_pic'] = ff_img_url($list[$key]['slide_pic']);	
+            }
 		}
 		$this->assign('list_slide',$list);
 		$this->display('./Public/system/slide_show.html');
     }
 	// 添加与编辑幻灯
     public function add(){
-		$id = intval($_GET['id']);
+		$id = !empty($_GET['id'])?intval($_GET['id']):0;
 	    $rs = D("Slide");
 		if ($id>0) {
             $where['slide_id'] = $id;

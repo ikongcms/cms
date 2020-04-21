@@ -219,13 +219,13 @@ ul.imgh4 li h4 a{ color:#FFF}
 .Comment .form{ margin:10px auto; }
 .Comment .form textarea{ width:95%; padding:5px; height:100px; border:1px solid #d0d0d0; color:#696969; font-size: 12px; margin-bottom:10px;}
 .Comment .form p{clear:both; text-align:right; padding-right:10px}
-.Comment .form p .cm_button {cursor:pointer;padding-left:3px;padding-right:2px;padding-top:2px;border:1px solid #bdbcbd;background:#FFF;font-size:12px;height:24px;}
+.Comment .form p .cm_button {cursor:pointer;padding-left:3px;padding-right:2px;padding-top:2px;border:1px solid #bdbcbd;background:#FFF url(../../Public/images/home/button.gif) left center repeat-x;font-size:12px;height:24px;}
 
 /*pp_guestbook.html*/
 .Gb{ clear:both; text-align:center; position:relative}
 .Gb .form{ margin:10px 20px}
 .Gb .form textarea { width:100%; height:100px; padding:5px 0px; border:1px solid #EBEBEB; color:#666; clear:both; margin-bottom:5px}
-.Gb .form .gb_button { float:right;width:80px;height:25px;border:1px solid #CCC;cursor:pointer;}
+.Gb .form .gb_button { float:right;width:80px;height:25px;background:url(../../Public/images/home/button.gif);border:1px solid #CCC;cursor:pointer;}
 .Gb .form label#gb_tips{ float:right; height:25px; line-height:25px; padding-right:10px; color:#FF0000; font-weight:bold}
 .Gb .form .vcode{ float:right; line-height:25px; padding-right:10px;}
 .Gb .form .vcode .gb_vcode{ width:60px; text-align:center}

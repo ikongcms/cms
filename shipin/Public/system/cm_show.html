@@ -45,8 +45,8 @@ $(document).ready(function(){
   <tr>
     <td class="r ct"><input name='ids[]' type='checkbox' value='{$ppvod.cm_id}' class="noborder" checked="checked"></td>
     <td class="l pd" style="color:#999"><a href="?s=Admin-Cm-Add-id-{$ppvod.cm_id}" title="点击编辑评论">{$ppvod.cm_content|msubstr=0,40,'utf-8',true|htmlspecialchars|remove_xss}</a></td>
-    <td class="l ct"><a href="?s=Admin-Cm-Show-cid-{$cid}-wd-{$ppvod.user_name}">{$ppvod.user_name}</a></td>
-    <td class="l ct"><a href="?s=Admin-Cm-Show-cid-{$cid}-wd-{$ppvod.cm_ip}">{$ppvod.cm_ip}</a></td>
+    <td class="l ct"><a href="?s=Admin-Cm-Show-cid-<notempty name="cid">{$cid}</notempty>-wd-{$ppvod.user_name}">{$ppvod.user_name}</a></td>
+    <td class="l ct"><a href="?s=Admin-Cm-Show-cid-<notempty name="cid">{$cid}</notempty>-wd-{$ppvod.cm_ip}">{$ppvod.cm_ip}</a></td>
     <td class="l ct">{$ppvod.cm_addtime|date='Y-m-d',###}</td>
     <td class="r ct"><eq name="ppvod.cm_status" value="1"><a href="?s=Admin-Cm-Status-id-{$ppvod.cm_id}-value-0" title="点击隐藏评论">隐藏</a><else /><a href="?s=Admin-Cm-Status-id-{$ppvod.cm_id}-value-1" title="点击显示评论"><font color="red">显示</font></a></eq> <a href="?s=Admin-Cm-Add-id-{$ppvod.cm_id}" title="点击编辑评论">编辑</a> <a href="?s=Admin-Cm-Del-id-{$ppvod.cm_id}" onClick="return confirm('确定删除该评论吗?')" title="点击删除评论">删除</a></td>
   </tr>

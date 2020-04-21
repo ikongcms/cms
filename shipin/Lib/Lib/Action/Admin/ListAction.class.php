@@ -2,12 +2,12 @@
 class ListAction extends BaseAction{	
 	// 显示分类
     public function show(){
-	    $sid = $_GET['sid'];
+	    $sid = !empty($_GET['sid'])?intval($_GET['sid']):0;
 		if ($sid) {
 			$where['list_sid'] = $sid;
 		}
 	    $rs = D("Admin.List");
-		$list = $rs->where($where)->order('list_oid asc')->select();
+		$list = $rs->where(!empty($where)?$where:'')->order('list_oid asc')->select();
 		if($list){
 			$this->assign('listtree',list_to_tree($list,'list_id','list_pid','son',0));
 			$this->display('./Public/system/list_show.html');
@@ -18,7 +18,7 @@ class ListAction extends BaseAction{
     }
 	// 添加编辑分类
     public function add(){
-		$cid = intval($_GET['id']);
+		$cid = !empty($_GET['id'])?intval($_GET['id']):0;
 	    $rs = D("Admin.List");
 		if ($cid>0) {
             $where['list_id'] = $cid;
@@ -26,8 +26,8 @@ class ListAction extends BaseAction{
 			$list['tpltitle'] = '编辑';
 		}else{
 		    $list['list_id'] = 0;
-		    $list['list_pid'] = intval($_GET['pid']);
-			$list['list_sid'] = intval($_GET['sid']);
+		    $list['list_pid'] = !empty($_GET['pid'])?intval($_GET['pid']):0;
+			$list['list_sid'] = !empty($_GET['sid'])?intval($_GET['sid']):0;
 		    $list['list_oid'] = $rs->max('list_oid')+1;
 			$list['list_status'] = 1;
 			$list['tpltitle'] = '添加';

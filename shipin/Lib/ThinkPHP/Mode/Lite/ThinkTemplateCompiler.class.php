@@ -270,7 +270,9 @@ class ThinkTemplateCompiler {
         return $content;
     }
     protected function parseCommonTag($tagStr) {
-        $tagStr = stripslashes($tagStr);
+        //if (MAGIC_QUOTES_GPC) {
+            $tagStr = stripslashes($tagStr);
+        //}
         //还原非模板标签
         if(preg_match('/^[\s|\d]/is',$tagStr))
             //过滤空格和数字打头的标签
@@ -381,7 +383,8 @@ class ThinkTemplateCompiler {
     }
     // literal标签
     protected function parseLiteral($content) {
-        if(trim($content)==''){return '';}
+        if(trim($content)=='')
+            return '';
         $content = stripslashes($content);
         $i  =   count($this->literal);
         $parseStr   =   "<!--###literal{$i}###-->";
@@ -491,7 +494,7 @@ class ThinkTemplateCompiler {
         $key     =   !empty($tag['key'])?$tag['key']:'i';
         $mod    =   isset($tag['mod'])?$tag['mod']:'2';
         $name   = $this->autoBuildVar($name);
-        $parseStr  =  '<?php if(is_array('.$name.')): $'.$key.' = 0;';
+        $parseStr  =  '<?php if(!empty('.$name.')&&is_array('.$name.')): $'.$key.' = 0;';
 		if(isset($tag['length']) && '' !=$tag['length'] ) {
 			$parseStr  .= ' $__LIST__ = array_slice('.$name.','.$tag['offset'].','.$tag['length'].');';
 		}elseif(isset($tag['offset'])  && '' !=$tag['offset']){

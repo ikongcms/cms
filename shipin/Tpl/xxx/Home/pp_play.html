@@ -19,22 +19,10 @@
   <div id="wrapper">
     <div class="play">
       <div class="container">
-
+        <div class="top960">{:getadsurl('top960')}</div>
         <div class="player-row">
-          <div class="player-main">
-            <div class="player" id="cms_player">{$vod_player}</div>
-          </div>
-          <div class="player-aside overflow"> 
-            <!--播放器you-->
-            <div class="aa_play_2"> 
-              {:getadsurl('play300')}
-				
-            </div>
-            <div class="aa_play_2"> 
-              {:getadsurl('play300')}
-				
-            </div>
-          </div>
+          <div id="play300" class="play300" style="display:none;">{:getadsurl('play300')}</div>
+          <div class="player" id="cms_player">{$vod_player}</div>
         </div>
         <!--播放器下-->
 		<div class="player-info">
@@ -44,18 +32,17 @@
         </div>
       </div>
     </div>
-	
     <div class="container">
       <div class="panel player-commond">
         <div class="panel-heading clearfix">
           <h3 class="panel-title">影片预览</h3>
         </div>
         <div class="panel-body">
-        <if condition="C(url_html) eq 0">
+        <if condition="C('url_html') eq 0">
         <volist name="vod_playlist" id="ppvod">
         <eq name="ppvod.playname" value="$vod_playname">
         <div class="box2">
-          <h3><div><span class="erron"><a href="{:UU('Home-gb/show',array(id=>$vod_id),false,true)}" target="_blank">报错</a></span><a href="{$vod_playurl}">播放来源：{$ppvod.playername}</a></div></h3>
+          <h3><div><span class="erron"><a href="{:UU('Home-gb/show',array('id'=>$vod_id),false,true)}" target="_blank">报错</a></span><a href="{$vod_playurl}">播放来源：{$ppvod.playername}</a></div></h3>
           <div class="playlist"><volist name="ppvod['son']" id="ppvodson"><a href="{$ppvodson.playurl}" <eq name="ppvodson.playpath" value="$vod_playpath">class="on"</eq>>{$ppvodson.playname}</a></volist></div>
           </div>
           </eq></volist>

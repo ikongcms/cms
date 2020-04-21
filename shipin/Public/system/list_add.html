@@ -72,42 +72,42 @@ $(document).ready(function(){
     <li class="right"><select name="list_sid" id="list_sid" class="w120"><option value="1" <eq name="list_sid" value="1">selected</eq>>视频模型 | vod</option><option value="2" <eq name="list_sid" value="2">selected</eq>>新闻模块 | news</option><option value="9" <eq name="list_sid" value="9">selected</eq>>外部链接 | url</option></select>&nbsp;</li>
 </ul>
 <ul><li class="left">栏目排序：</li>
-    <li class="right"><input type="text" name="list_oid" id="list_oid" value="{$list_oid}" maxlength="3" class="w120"><label>越小越前面</label></li>
+    <li class="right"><input type="text" name="list_oid" id="list_oid" value="<notempty name="list_oid">{$list_oid}</notempty>" maxlength="3" class="w120"><label>越小越前面</label></li>
 </ul>
 <ul><li class="left">栏目中文名称：</li>
-    <li class="right"><input type="text" name="list_name" id="list_name" value="{$list_name}" maxlength="20" error="* 栏目名称不能为空!" class="w120"><span id="list_name_error">*</span></li>
+    <li class="right"><input type="text" name="list_name" id="list_name" value="<notempty name="list_name">{$list_name}</notempty>" maxlength="20" error="* 栏目名称不能为空!" class="w120"><span id="list_name_error">*</span></li>
 </ul>
 <ul><li class="left">栏目英文别名：</li>
-     <li class="right"><input type="text" name="list_dir" id="list_dir" value="{$list_dir}" maxlength="40" class="w120"><label>留空则自动转为拼音</label></li>
+     <li class="right"><input type="text" name="list_dir" id="list_dir" value="<notempty name="list_dir">{$list_dir}</notempty>" maxlength="40" class="w120"><label>留空则自动转为拼音</label></li>
 </ul>
 <ul><li class="left">本栏目使用的模板名：</li>
-     <li class="right"><input type="text" name="list_skin" id="list_skin" value="{$list_skin|default='pp_vodlist'}" maxlength="40" error="* 使用模板名不能为空!" class="w120"><label><a href="javascript:" onClick="list_skin.value='pp_vodchannel';">影视大类</a> <a href="javascript:" onClick="list_skin.value='pp_vodlist';">影视小类</a> <a href="javascript:" onClick="list_skin.value='pp_newschannel';">新闻大类</a> <a href="javascript:" onClick="list_skin.value='pp_newslist';">新闻小类</a></label><span id="list_skin_error"></span></li>
+     <li class="right"><input type="text" name="list_skin" id="list_skin" value="<notempty name="list_skin">{$list_skin}<else />pp_vodlist</notempty>" maxlength="40" error="* 使用模板名不能为空!" class="w120"><label><a href="javascript:" onClick="list_skin.value='pp_vodchannel';">影视大类</a> <a href="javascript:" onClick="list_skin.value='pp_vodlist';">影视小类</a> <a href="javascript:" onClick="list_skin.value='pp_newschannel';">新闻大类</a> <a href="javascript:" onClick="list_skin.value='pp_newslist';">新闻小类</a></label><span id="list_skin_error"></span></li>
 </ul>
 <ul><li class="left">本栏目详情页模板名：</li>
-     <li class="right"><input type="text" name="list_skin_detail" id="list_skin_detail" value="{$list_skin_detail|default='pp_vod'}" maxlength="40" class="w120"></li>
+     <li class="right"><input type="text" name="list_skin_detail" id="list_skin_detail" value="<notempty name="list_skin_detail">{$list_skin_detail}<else />pp_vod</notempty>" maxlength="40" class="w120"></li>
 </ul>
 <ul><li class="left">本栏目播放页模板名：</li>
-     <li class="right"><input type="text" name="list_skin_play" id="list_skin_play" value="{$list_skin_play|default='pp_play'}" maxlength="40" class="w120"></li>
+     <li class="right"><input type="text" name="list_skin_play" id="list_skin_play" value="<notempty name="list_skin_play">{$list_skin_play}<else />pp_play</notempty>" maxlength="40" class="w120"></li>
 </ul>
 <ul><li class="left">本栏目筛选页模板名：</li>
-     <li class="right"><input type="text" name="list_skin_type" id="list_skin_type" value="{$list_skin_type|default='pp_type'}" maxlength="40" class="w120"></li>
+     <li class="right"><input type="text" name="list_skin_type" id="list_skin_type" value="<notempty name="list_skin_type">{$list_skin_type}<else />pp_type</notempty>" maxlength="40" class="w120"></li>
 </ul>
 <div id="listseo">
 <ul><li class="left">栏目SEO标题：</li>
-     <li class="right"><input type="text" name="list_title" id="list_title" value="{$list_title}" maxlength="80" class="w400">&nbsp;</li>
+     <li class="right"><input type="text" name="list_title" id="list_title" value="<notempty name="list_title">{$list_title}</notempty>" maxlength="80" class="w400">&nbsp;</li>
 </ul>
 <ul><li class="left">栏目SEO关键词：</li>
-     <li class="right"><input type="text" name="list_keywords" id="list_keywords" value="{$list_keywords}" maxlength="150" class="w400">&nbsp;</li>
+     <li class="right"><input type="text" name="list_keywords" id="list_keywords" value="<notempty name="list_keywords">{$list_keywords}</notempty>" maxlength="150" class="w400">&nbsp;</li>
 </ul>
 <ul><li class="left" style="line-height:40px">栏目SEO描述：</li>
-     <li class="right"><textarea name="list_description" id="list_description">{$list_description}</textarea></li>
+     <li class="right"><textarea name="list_description" id="list_description"><notempty name="list_description">{$list_description}</notempty></textarea></li>
 </ul>
 </div>
 <ul id="listjumpurl" style="display:none"><li class="left">外部链接地址：</li>
-     <li class="right"><input type="text" name="list_jumpurl" id="list_jumpurl" value="{$list_jumpurl|default='http://'}" maxlength="150" class="w400"></li>
+     <li class="right"><input type="text" name="list_jumpurl" id="list_jumpurl" value="<notempty name="list_jumpurl">{$list_jumpurl}</notempty>" maxlength="150" class="w400"></li>
 </ul>
 <ul class="footer">
-<input type="submit" name="submit" value="提交"> <input type="reset" name="reset" value="重置"> <gt name="admin_id" value="0">注：不修改密码请留空</gt>
+<input type="submit" name="submit" value="提交"> <input type="reset" name="reset" value="重置">
 </ul>
 </div>
 </form>

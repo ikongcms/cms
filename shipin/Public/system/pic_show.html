@@ -51,7 +51,7 @@ $(document).ready(function(){
   	<td class="l pd"><img src="__PUBLIC__/images/file/folder.gif" width="16" height="16"> <a href="?s=Admin-Pic-Show-id-{$ppvod.pathfile}">{$ppvod.filename}</a></td>
     <td class="l ct">{:byte_format(getdirsize($ppvod['path'].'/'.$ppvod['filename']))}</td>
     <td class="l ct">{$ppvod.mtime|getcolordate='Y-m-d H:i:s',###}</td>
-    <td class="l ct"><a href="?s=Admin-Pic-Show-id-{$ppvod.path}/{:str_replace('-','*',$ppvod['filename'])}">下级目录</a> <a href="?s=Admin-Pic-Ajaxpic-id-{$ppvod.path}/{:str_replace('-','*',$ppvod['filename'])}" class="del">清理</a></td>
+    <td class="l ct"><a href="?s=Admin-Pic-Show-id-{$ppvod.pathfile}">下级目录</a> <a href="?s=Admin-Pic-Ajaxpic-id-{$ppvod.pathfile}" class="del">清理</a></td>
   </tr>
   </tbody>
   <else />
@@ -64,7 +64,7 @@ $(document).ready(function(){
     </in>
     <td class="l ct">{$ppvod.size|byte_format}</td>
     <td class="l ct">{$ppvod.mtime|getcolordate='Y-m-d H:i:s',###}</td>
-    <td class="r ct"><a href="{$ppvod.path}/{$ppvod.filename}" target="_blank">浏览</a> <a href="?s=Admin-Pic-Del-id-{$ppvod.path}/{:str_replace('-','*',$ppvod['filename'])}" onClick="return confirm('确定删除该文件吗?')">删除</a></td>
+    <td class="r ct"><a href="{$ppvod.path}/{$ppvod.filename}" target="_blank">浏览</a> <a href="?s=Admin-Pic-Del-id-{$ppvod.pathfile}" onClick="return confirm('确定删除该文件吗?')">删除</a></td>
   </tr>
   </tbody>
   </eq>  

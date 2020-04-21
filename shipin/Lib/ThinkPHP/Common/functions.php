@@ -94,7 +94,7 @@ function U($url, $params=array(), $redirect=false, $suffix=true) {
     if (C('URL_MODEL') > 0) {
         $depr = C('URL_PATHINFO_MODEL') == 2 ? C('URL_PATHINFO_DEPR') : '/';
         $str = $depr;
-        if(!empty($params)) {
+        if(is_array($params)) {
             foreach ($params as $var => $val) {
                 $str .= $var . $depr . $val . $depr;
             }
@@ -260,7 +260,7 @@ function dump($var, $echo=true, $label=null, $strict=true) {
         }
     } else {
         ob_start();
-        var_dump($var);
+        //var_dump($var);
         $output = ob_get_clean();
         if (!extension_loaded('xdebug')) {
             $output = preg_replace("/\]\=\>\n(\s+)/m", "] => ", $output);
@@ -307,7 +307,7 @@ function get_instance_of($name, $method='', $args=array()) {
  * @return void
   +----------------------------------------------------------
  */
-spl_autoload_register(function ($name) {
+spl_autoload_register( function ($name) {
     // 检查是否存在别名定义
     if (alias_import($name))
         return;

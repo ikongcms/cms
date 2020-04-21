@@ -59,7 +59,7 @@ $(document).ready(function(){
     </tr>   
   <tfoot>
     <tr>
-      <td colspan="9" class="r"><input type="button" value="全选" class="submit" onClick="checkall('all');"> <input name="" type="button" value="反选" class="submit" onClick="checkall();"> <input type="button" value="批量审核" class="submit" onClick="post('?s=Admin-Gb-Statusall-value-1');"> <input type="button" value="取消审核" class="submit" onClick="post('?s=Admin-Gb-Statusall-value-0');"> <input type="button" value="批量删除" class="submit" onClick="if(confirm('删除后将无法还原,确定要删除吗?')){post('?s=Admin-Gb-Delall');}else{return false;}"> <input type="button" value="清空留言" class="submit" onClick="if(confirm('清空后将无法还原,确定要清空吗?')){post('?s=Admin-Gb-Delclear');}else{return false;}"></td>
+      <td colspan="9" class="r"><input type="button" value="全选" class="submit" onClick="checkall('all');"> <input name="" type="button" value="反选" class="submit" onClick="checkall();"> <input type="button" value="批量审核" class="submit" onClick="post('?s=Admin-Gb-Statusall-value-1');"> <input type="button" value="取消审核" class="submit" onClick="post('?s=Admin-Gb-Statusall-value-0');"> <input type="button" value="批量删除" class="submit" onClick="if(confirm('删除后将无法还原,确定要删除吗?')){post('?s=Admin-Gb-Delall');}else{return false;}"> <input type="button" value="清空留言" class="submit" onClick="if(confirm('清空后将无法还原,确定要清空吗?')){post('?s=Admin-Gb-Delclear<notempty name="cid">-cid-1</notempty>');}else{return false;}"></td>
     </tr>  
   </tfoot>
 </table>

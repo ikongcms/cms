@@ -135,7 +135,7 @@ class TagLibCx extends TagLib
         }else{
             $name   = $this->autoBuildVar($name);
         }
-        $parseStr  .=  'if(is_array('.$name.')): $'.$key.' = 0;';
+        $parseStr  .=  'if(!empty('.$name.')&&is_array('.$name.')): $'.$key.' = 0;';
 		if(isset($tag['length']) && '' !=$tag['length'] ) {
 			$parseStr  .= ' $__LIST__ = array_slice('.$name.','.$tag['offset'].','.$tag['length'].',true);';
 		}elseif(isset($tag['offset'])  && '' !=$tag['offset']){

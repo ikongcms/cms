@@ -12,11 +12,11 @@ class AdminAction extends BaseAction{
 	// 用户添加
     public function add(){
 		$array = array();
-		$where['admin_id'] = $_GET['id'];
+		$where['admin_id'] = !empty($_GET['id'])?intval($_GET['id']):'';
 		$rs = D("Admin");
 		$array = $rs->where($where)->find();
-		$type = explode(',',$array['admin_ok']);
-		$this->assign('admin',$type);
+		$type = !empty($array['admin_ok'])?explode(',',$array['admin_ok']):'';
+		$this->assign('admin',!empty($type)?$type:'');
 		$this->assign($array);
         $this->display('./Public/system/admin_add.html');
     }	
@@ -24,8 +24,8 @@ class AdminAction extends BaseAction{
 	public function _before_insert(){
 		$ok = $_POST['ids'];
 		for($i=0;$i<20;$i++){
-			if($ok[$i]){
-				$rs[$i]=$ok[$i];
+			if(!empty($ok[$i])){
+				$rs[$i]=intval($ok[$i]);
 			}else{
 				$rs[$i]=0;
 			}
@@ -63,7 +63,7 @@ class AdminAction extends BaseAction{
 	}
 	// 删除用户
     public function del(){
-        $rs = D("Admin");
+		$rs = D("Admin");
         if(ceil($_GET['id']) == 1) {
             $this->error("更新管理员信息失败！");
         } else {
@@ -72,16 +72,20 @@ class AdminAction extends BaseAction{
         }
     }
 	// 批量删除
-    public function delall(){
+    public function delall() {
         foreach($_POST['ids'] as $value) {
             if(ceil($value) != 1) {
                 $id[] = ceil($value);
             }
         }
-        $where['admin_id'] = array('in',implode(',',$id));
-        $rs = D("Admin");
-        $rs->where($where)->delete();
-        $this->success('批量删除后台管理员成功！');
+        if(!empty($id)) {
+            $where['admin_id'] = array('in',implode(',',$id));
+            $rs = D("Admin");
+            $rs->where($where)->delete();
+            $this->success('批量删除后台管理员成功！');
+        } else {
+            $this->error("更新管理员信息失败！");
+        }
     }
 	// 配置信息
     public function config(){
@@ -157,16 +161,16 @@ class AdminAction extends BaseAction{
 		    $config['_htmls_']['home:my:show'] = NULL;
 		}
 		if(0==$config['url_html']){
-			@unlink('./index'.C('html_file_suffix'));//动态模式则删除首页静态文件
+			if(is_file('./index'.C('html_file_suffix'))) { @unlink('./index'.C('html_file_suffix')); } //动态模式则删除首页静态文件
 		}else{
 			$config['html_home_suffix'] = $config['html_file_suffix'];//将静态后缀写入配置供前台生成的路径的时候调用
 		}
 		$config_old = require './Runtime/Conf/config.php';
 		$config_new = array_merge($config_old,$config);
 		arr2file('./Runtime/Conf/config.php',$config_new);
-		if(is_file('./Runtime/~app.php')){@unlink('./Runtime/~app.php');}
+		if(is_file('./Runtime/~app.php')){ @unlink('./Runtime/~app.php'); }
 		//
-		$pp_play.= 'var ff_root="'.$config['site_path'].'";';
+		$pp_play = 'var ff_root="'.$config['site_path'].'";';
 		$pp_play.= 'var ff_width='.$config['play_width'].';';
 		$pp_play.= 'var ff_height='.$config['play_height'].';';
 		$pp_play.= 'var ff_showlist='.$config['play_show'].';';

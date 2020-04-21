@@ -3,10 +3,10 @@ class GbAction extends BaseAction{
 	// 用户留言管理
     public function show(){
 		$admin = array();$where = array();
-		$admin['cid']    = intval($_REQUEST['cid']);
-		$admin['status'] = intval($_GET['status']);
-		$admin['intro']     = intval($_GET['intro']);
-		$admin['wd']     = urldecode(trim($_REQUEST['wd']));
+		$admin['cid']    = !empty($_REQUEST['cid'])?intval($_REQUEST['cid']):0;
+		$admin['status'] = !empty($_GET['status'])?intval($_GET['status']):0;
+		$admin['intro']     = !empty($_GET['intro'])?intval($_GET['intro']):0;
+		$admin['wd']     = !empty($_REQUEST['wd'])?urldecode(trim($_REQUEST['wd'])):0;
 		if ($admin['cid']) {
 			$where['gb_cid'] = array('gt',0);
 			$admin['gb_title'] = '报错';
@@ -41,7 +41,7 @@ class GbAction extends BaseAction{
 		$pageurl = U('Admin-Gb/Show',$admin,false,false).'{!page!}';
 		//
 		$admin['p'] = $currentpage;$_SESSION['gb_jumpurl'] = U('Admin-Gb/Show',$admin);
-		$admin['pages'] = '共'.$count.'篇留言&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getpageadmin($currentpage,$totalpages,8,$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
+		$admin['pages'] = '共'.$count.'篇留言&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getpage($currentpage,$totalpages,8,$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
 		$admin['list'] = $rs->where($where)->limit($limit)->page($currentpage)->order('gb_oid desc,gb_addtime desc')->select();
 		$this->assign($admin);
         $this->display('./Public/system/gb_show.html');
@@ -75,7 +75,7 @@ class GbAction extends BaseAction{
 		redirect($_SERVER['HTTP_REFERER']);
     }
 	// 删除留言All
-    public function delall($uid){
+    public function delall($uid=''){
 		if(empty($_POST['ids'])){
 			$this->error('请选择需要删除的留言信息！');
 		}
@@ -87,7 +87,7 @@ class GbAction extends BaseAction{
 	// 清空留言
     public function delclear(){
 		$rs = D('Gb');
-		if ($_REQUEST['cid']) {
+		if (!empty($_REQUEST['cid'])) {
 			$rs->where('gb_cid > 0')->delete();
 		}else{
 			$rs->where('gb_cid = 0')->delete();

@@ -1,1 +1,1 @@
-document.write("扩展工具>网站广告管理>index960");
+document.write("<a href=\"/\"><img src=\"/Tpl/xxx/static/images/app-banner.png\" /></a>");

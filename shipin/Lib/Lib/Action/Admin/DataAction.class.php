@@ -34,12 +34,12 @@ class DataAction extends BaseAction{
                     if (strlen($sql) >= $filesize*1000) {
                         $filename = $file.date('Ymd').'_'.$random.'_'.$p.'.sql';
                         write_file($filename,$sql);
-					    $p++;
-					    $sql='';
-				    }
-			    }
+                        $p++;
+                        $sql='';
+                    }
+                }
             }
-		}
+        }
 		if(!empty($sql)){
 			$filename = $file.date('Ymd').'_'.$random.'_'.$p.'.sql';
 			write_file($filename,$sql);
@@ -52,7 +52,7 @@ class DataAction extends BaseAction{
 		$sql = "INSERT INTO `{$table}` VALUES ("; 
 		$values = array(); 
 		foreach ($row as $value) { 
-			$values[] = "'" . htmlspecialchars($value, ENT_QUOTES) . "'"; 
+			$values[] = "'" . htmlspecialchars($value,ENT_QUOTES) . "'"; 
 		} 
 		$sql .= implode(', ', $values) . ");\n"; 
 		return $sql;
@@ -81,13 +81,13 @@ class DataAction extends BaseAction{
 	//导入还原
 	public function back(){
 		$rs = new Model();
-		$pre = $_GET['id'];
-		$fileid = $_GET['fileid'] ? intval($_GET['fileid']) : 1;
+		$pre = getWD($_GET['id']);
+		$fileid = !empty($_GET['fileid']) ? intval($_GET['fileid']) : 1;
 		$filename = $pre.$fileid.'.sql';
 		$filepath = DATA_PATH.'_bak/'.$filename;
 		if(file_exists($filepath)){
 			$sql = read_file($filepath);
-			$sql = str_replace("\r\n", "\n", $sql); 
+			$sql = str_replace("\r\n", "\n", html_entity_decode($sql,ENT_QUOTES)); 
 			foreach(explode(";\n", trim($sql)) as $query) {
 				$rs->query(trim($query));
 			}
@@ -175,7 +175,8 @@ class DataAction extends BaseAction{
 				if(!is_int($key)){
 					break;
 				}
-				if (preg_match("/cfile|username|userpwd|user|pwd|adm/",$val)){
+                // if (ereg("cfile|username|userpwd|user|pwd",$val)){
+				if (preg_match("/cfile|username|userpwd|user|pwd/",$val)){
 					continue;
 				}
 				echo "<a href=\"javascript:rpfield('".$val."')\">".$val."</a>\r\n";

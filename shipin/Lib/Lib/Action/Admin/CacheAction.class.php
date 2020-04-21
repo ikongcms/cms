@@ -9,8 +9,12 @@ class CacheAction extends BaseAction{
 		import("ORG.Io.Dir");
 		$dir = new Dir;
 		$this->ppvod_list();
-		if(is_file('./Runtime/~app.php')){@unlink('./Runtime/~app.php');}
-		if(is_file('./Runtime/~runtime.php')){@unlink('./Runtime/~runtime.php');}
+        if(is_file('./Runtime/~app.php')) {
+            @unlink('./Runtime/~app.php');
+        }
+        if(is_file('./Runtime/~runtime.php')) {
+            @unlink('./Runtime/~runtime.php');
+        }
 		if(!$dir->isEmpty('./Runtime/Data/_fields')){$dir->del('./Runtime/Data/_fields');}
 		if(!$dir->isEmpty('./Runtime/Temp')){$dir->delDir('./Runtime/Temp');}
 		if(!$dir->isEmpty('./Runtime/Cache')){$dir->delDir('./Runtime/Cache');}
@@ -86,9 +90,9 @@ class CacheAction extends BaseAction{
 	//循环标签调用
     public function dataforeach(){
 		$config_old = require './Runtime/Conf/config.php';
-		$config_new = array_merge($config_old, array('data_cache_foreach'=>md5(uniqid())) );
+		$config_new = array_merge($config_old, array('data_cache_foreach'=>uniqid()) );
 		arr2file('./Runtime/Conf/config.php',$config_new);
-		if(is_file('./Runtime/~app.php')){@unlink('./Runtime/~app.php');}
+		@unlink('./Runtime/~app.php');
 		echo('清除成功');
     }
 	//当天视频

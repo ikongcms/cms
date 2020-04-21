@@ -1,4 +1,4 @@
-﻿SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 CREATE TABLE IF NOT EXISTS ff_admin (
   admin_id smallint(6) unsigned NOT NULL auto_increment,
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS ff_admin (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 INSERT INTO ff_admin (admin_id, admin_name, admin_pwd, admin_count, admin_ok, admin_del, admin_ip, admin_email, admin_logintime) VALUES
-(1, 'admin', '7fef6171469e80d32c0559f88b377245', 0, '1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1', 0, '127.0.0.1', 'admin@qq.com', 1311954804);
+(1, 'admin', 'd0763d18c2534bc412ff5736742e0293', 0, '1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1', 0, '127.0.0.1', 'admin@qq.com', 1311954804);
 
 CREATE TABLE IF NOT EXISTS ff_ads (
   ads_id smallint(4) unsigned NOT NULL auto_increment,
@@ -25,13 +25,13 @@ CREATE TABLE IF NOT EXISTS ff_ads (
 
 INSERT INTO `ff_ads` (`ads_id`, `ads_name`, `ads_content`) VALUES
 (1, 'play300', '扩展工具>网站广告管理>play300'),
-(2, 'list300', '扩展工具>网站广告管理>list300'),
-(3, 'vod960', '扩展工具>网站广告管理>vod960'),
+(2, 'list300', '留空>扩展工具>网站广告管理>list300'),
+(3, 'vod960', '留空>扩展工具>网站广告管理>vod960'),
 (4, 'vod300', '扩展工具>网站广告管理>vod300'),
 (5, 'top960', '扩展工具>网站广告管理>top960'),
-(6, 'play960', '扩展工具>网站广告管理>play960'),
+(6, 'play960', '留空>扩展工具>网站广告管理>play960'),
 (7, 'index960', '扩展工具>网站广告管理>index960'),
-(8, 'banner468', '扩展工具>网站广告管理>play468');
+(8, 'float960', '扩展工具>网站广告管理>float960');
 
 CREATE TABLE IF NOT EXISTS ff_cm (
   cm_id mediumint(8) unsigned NOT NULL auto_increment,
@@ -94,7 +94,7 @@ INSERT INTO ff_list (list_id, list_pid, list_oid, list_sid, list_name, list_skin
 (8, 1, 8, 1, '有码视频', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'youma', 1, '', '', '', ''),
 (7, 1, 7, 1, '欧美视频', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'oumei', 1, '', '', '', ''),
 (6, 1, 6, 1, '亚洲视频', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'yazhou', 1, '', '', '', ''),
-(5, 1, 8, 1, '中文字幕', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'zimu', 1, '', '', '', ''),
+(5, 1, 5, 1, '中文字幕', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'zimu', 1, '', '', '', ''),
 (4, 1, 4, 1, '自拍视频', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'zipai', 1, '', '', '', ''),
 (3, 0, 3, 1, '番号', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'fanhao', 1, '', '', '', ''),
 (2, 0, 2, 1, '动漫', 'pp_vodlist', 'pp_vod', 'pp_play', 'pp_vodtype', 'dongman', 1, '', '', '', ''),

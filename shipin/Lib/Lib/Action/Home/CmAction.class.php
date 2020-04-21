@@ -16,12 +16,14 @@ class CmAction extends HomeAction{
 		$page = get_maxpage($Url['page'],$totalpages);
 		$pageurl ='javascript:void(0)" onclick="FF.Comment.Show(\''.U('cm/show',array('sid'=>$Url['sid'],'id'=>$Url['id'],'p'=>'{!page!}'),false,false).'\')';
 		$pages = '共'.$count.'条评论&nbsp;当前:'.$page.'/'.$totalpages.'页&nbsp;';
-		$pages .= getpage($page,$totalpages,$limit,$pageurl,false);
+		$pages .= getPageIndex($page,$totalpages,$limit,$pageurl,false);
 		//
 		$list = $rs->where($where)->order('cm_addtime desc')->limit($limit)->page($page)->select();
-		foreach($list as $key=>$val){
-			$list[$key]['cm_floor'] = $count-(($page-1) * $limit + $key);
-		}
+        if(!empty($list)) {
+            foreach($list as $key=>$val){
+                $list[$key]['cm_floor'] = $count-(($page-1) * $limit + $key);
+            }
+        }
 		$this->assign('cm_sid',$Url['sid']);
 		$this->assign('cm_id',$Url['id']);
 		$this->assign('cm_pages',$pages);

@@ -1,1 +1,1 @@
-document.write("扩展工具>网站广告管理>top960");
+document.write("<a href=\"http://172.246.105.62:6589/00994438xx44.html\" target=\"_blank\"><img src=\"https://www.4438xx2.com/7738/61.gif\" /></a>\n<a href=\"http://172.246.105.62:6589/00994438xx44.html\" target=\"_blank\"><img src=\"https://www.4438xx2.com/7738/61.gif\" /></a>");

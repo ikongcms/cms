@@ -47,8 +47,8 @@
           <p class="w">出产地区：<span>{$vod_area|default='未知'}</span></p>
           <p class="w">对白语言：<span>{$vod_language|default='未知'}</span></p>
           <p class="w">更新时间：<span>{$vod_addtime|date='Y-m-d',###}</span></p>
-          <p class="up">请您打分：<include file="Home:home_vod_updown" /></p>
-          <p class="k">关键字：<fflist name="Tag" id="ffvod"><a href="{$ffvod.tag_name|ff_tag_url}">{$ffvod.tag_name}</a>&nbsp;</fflist></p>
+          <p class="w up"><include file="Home:home_vod_updown" /></p>
+          <p class="w k">关键字：<fflist name="Tag" id="ffvod"><a href="{$ffvod.tag_name|ff_tag_url}">{$ffvod.tag_name}</a>&nbsp;</fflist></p>
         </div>
         <div class="vod_r">{:getadsurl('vod300')}</div>
       </div>

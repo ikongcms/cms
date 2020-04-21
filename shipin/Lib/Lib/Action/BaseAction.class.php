@@ -23,7 +23,7 @@ class BaseAction extends AllAction{
     }		
 	//生成播放器列表
     public function ppvod_play(){
-	    $this->assign('countplayer',count(C('PP_PLAYER')));
+	    $this->assign('countplayer',count(C('play_player')));
 		$this->assign('playtree',C('play_player'));
     }	
 	//生成前台分类缓存

@@ -38,8 +38,9 @@ function getcmcid($id,$sid){
 }
 // 安装测试写入文件
 function testwrite($d){
-	$tfile = '_ppvod.txt';
-	$d = preg_replace('/\/\$/','',$d);
+    $tfile = '_ppvod.txt';
+    //$d = ereg_replace('/$','',$d);
+    $d = preg_replace('/\/\$/','',$d);
 	$fp = @fopen($d.'/'.$tfile,'w');
 	if(!$fp){
 		return false;
@@ -152,8 +153,8 @@ function gettablename($tablename){
 }
 // 获取文件夹大小
 function getdirsize($dir){ 
-	$dirlist = opendir($dir);
     $dirsize = 0;
+	$dirlist = opendir($dir);
 	while (false !==  ($folderorfile = readdir($dirlist))){ 
 		if($folderorfile != "." && $folderorfile != "..") { 
 			if (is_dir("$dir/$folderorfile")) { 
@@ -171,7 +172,7 @@ function admin_ff_hot_key($string){
 	$array_hot = array();
 	foreach(explode(chr(13),trim($string)) as $key=>$value){
 		$array = explode('|',$value);
-		if($array[1]){
+		if(!empty($array[1])){
 			$array_hot[$key] = '<a href="'.$array[1].'" target="_blank">'.trim($array[0]).'</a>';
 		}else{
 			$array_hot[$key] = '<a href="'.UU('Home-vod/search',array('wd'=>urlencode(trim($value))),false,true).'">'.trim($value).'</a>';

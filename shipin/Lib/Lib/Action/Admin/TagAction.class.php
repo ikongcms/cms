@@ -14,16 +14,14 @@ class TagAction extends BaseAction{
 		$currentpage = get_maxpage($currentpage,$totalpages);//$admin['page'] = $currentpage;
 		$pageurl = U('Admin-Tag/Show',$admin,false,false).'{!page!}'.C('url_html_suffix');
 		$admin['p'] = $currentpage;
-		$pages = '共'.$count.'个标签&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getpageadmin($currentpage,$totalpages,8,$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
+		$pages = '共'.$count.'个标签&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getpage($currentpage,$totalpages,8,$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
 		$admin['pages'] = $pages;
 		//查询数据
 		$rs = D("Tag");
 		$array = $rs->field('*,count(tag_name) as tag_count')->limit($limit)->page($currentpage)->group('tag_sid,tag_name')->order('tag_sid asc,tag_count desc')->select();
-        if(!empty($array)){
-            foreach($array as $key=>$val){
-                $array[$key]['tag_url'] = U('Admin-'.ucfirst(getsidname($array[$key]['tag_sid'])).'/Show',array('tag'=>urlencode($array[$key]['tag_name'])),'',false,true);
-            }
-        }
+		foreach($array as $key=>$val){
+			$array[$key]['tag_url'] = U('Admin-'.ucfirst(getsidname($array[$key]['tag_sid'])).'/Show',array('tag'=>urlencode($array[$key]['tag_name'])),'',false,true);
+		}		
 		$this->assign($admin);
 		$this->assign('list_tag',$array);
 		$this->display('./Public/system/tag_show.html');

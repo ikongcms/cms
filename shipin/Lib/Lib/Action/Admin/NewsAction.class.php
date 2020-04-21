@@ -48,7 +48,7 @@ class NewsAction extends BaseAction{
 		$currentpage = get_maxpage($currentpage,$totalpages);
 		$pageurl = U('Admin-News/Show',$admin,false,false).'{!page!}'.C('url_html_suffix');
 		$admin['p'] = $currentpage;$_SESSION['news_jumpurl'] = U('Admin-News/Show',$admin).C('url_html_suffix');
-		$pages = '共'.$count.'篇文章&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getpageadmin($currentpage,$totalpages,8,$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
+		$pages = '共'.$count.'篇文章&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getpage($currentpage,$totalpages,8,$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
 		$admin['pages'] = $pages;
 		//查询数据
 		$list = $rs->where($where)->order($order)->limit($limit)->page($currentpage)->select();

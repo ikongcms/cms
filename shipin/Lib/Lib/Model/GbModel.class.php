@@ -20,7 +20,7 @@ class GbModel extends AdvModel {
 		return true;
 	}	
 	public function check_cookie(){
-		$cookie = 'gbook-'.intval($_POST['gb_cid']);
+		$cookie = 'gbook-'.(!empty($_POST['gb_cid'])?intval($_POST['gb_cid']):0);
 		if(isset($_COOKIE[$cookie])){
 			return false;
 		}
@@ -30,7 +30,7 @@ class GbModel extends AdvModel {
 		return trim(str_replace($array,'***',nb(nr($str))));
 	}
 	public function get_uid(){
-		$userid = intval($_COOKIE['ff_userid']);
+		$userid = !empty($_COOKIE['ff_userid'])?intval($_COOKIE['ff_userid']):1;
 		if ($userid) {
 			return $userid;
 		}

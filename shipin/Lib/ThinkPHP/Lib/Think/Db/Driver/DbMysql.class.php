@@ -89,7 +89,9 @@ class DbMysql extends Db{
      +----------------------------------------------------------
      */
     public function free() {
-        @mysql_free_result($this->queryID);
+        if (!empty($this->queryID)) {
+            @mysql_free_result($this->queryID);
+        }
         $this->queryID = 0;
     }
 
@@ -362,8 +364,9 @@ class DbMysql extends Db{
      +----------------------------------------------------------
      */
     public function close() {
-        if (!empty($this->queryID))
+        if (!empty($this->queryID)) {
             mysql_free_result($this->queryID);
+        }
         if ($this->_linkID && !mysql_close($this->_linkID)){
             throw_exception($this->error());
         }

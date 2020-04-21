@@ -1,1 +1,1 @@
-document.write("扩展工具>网站广告管理>play300");
+document.write("<a href=\"http://888.w77777777.com:8188/f254.html\" target=\"_blank\"><img src=\"https://www.4438xx2.com/7738/4438dtapp.gif\" /></a>");

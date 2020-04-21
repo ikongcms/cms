@@ -380,10 +380,22 @@ class Model extends Think
      * @return mixed
      +----------------------------------------------------------
      */
+     public function getPOST($data) {
+         $da = array();
+         foreach ($data as $key => $val) {
+            if(is_array($val)){
+                $da[$key] = $this->getPOST($val);
+            } else {
+                $da[getWD($key)] = getWD($val);
+            }
+         }
+         return $da;
+     }
+
      public function create($data='',$type='') {
         // 如果没有传值默认取POST数据
         if(empty($data)) {
-            $data    =   $_POST;
+            $data   =   $this->getPOST($_POST);
         }elseif(is_object($data)){
             $data   =   get_object_vars($data);
         }elseif(!is_array($data)){
@@ -397,7 +409,8 @@ class Model extends Think
             $val = isset($data[$name])?$data[$name]:null;
             //保证赋值有效
             if(!is_null($val)){
-                $vo[$name] = (is_string($val))? stripslashes($val)  :  $val;
+                //$vo[$name] = (MAGIC_QUOTES_GPC && is_string($val))?   stripslashes($val)  :  $val;
+                $vo[$name] = (is_string($val))?   stripslashes($val)  :  $val;
                 if(C('DB_FIELDTYPE_CHECK')) {
                     // 字段类型检查
                     $fieldType = strtolower($this->fields['_type'][$name]);

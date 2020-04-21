@@ -34,9 +34,9 @@ class Dir extends Think implements IteratorAggregate
 	 * @param string $path  目录路径
 	 +----------------------------------------------------------
 	 */
-	function __construct($path='',$pattern='*')
+	function __construct($path = '',$pattern='*')
 	{
-		if(substr($path, -1) != "/")    $path .= "/";
+		if(substr($path, -1) != "/") { $path .= "/"; }
 		$this->listFile($path,$pattern);
 	}
 
@@ -83,11 +83,6 @@ class Dir extends Think implements IteratorAggregate
 			//return  $a[$k]>$b[$k]?-1:1;
 			//');
 			// 对结果排序 保证目录在前面
-            //usort($dir, function ($a, $b) {
-            //$k = "isDir";
-            //if ($a[$k] == $b[$k]) return 0;
-                //return $a[$k] > $b[$k] ? -1 : 1;
-            //});
 			//usort($dir,$cmp_func);
 			$this->_values = $dir;
 			$_listDirs[$guid] = $dir;

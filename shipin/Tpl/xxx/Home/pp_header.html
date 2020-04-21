@@ -28,7 +28,7 @@
                   <div class="container">
                     <ul class="navbar-subnav clearfix">
                       <volist name="list_menu" id="ppvod">
-                        <volist name="ppvod.son" id="ppvod"><li><a href="{$ppvod.list_url}" <eq name="ppvod.list_id" value="$list_id">class="active"</eq><eq name="ppvod.list_id" value="$list_pid">class="active"</eq>><span>{$ppvod.list_name}</span></a></li></volist>
+                        <volist name="ppvod.son" id="ppvod"><li><a href="{$ppvod.list_url}" <notempty name="list_id"><eq name="ppvod.list_id" value="$list_id">class="active"</eq></notempty> <notempty name="list_pid"><eq name="ppvod.list_id" value="$list_pid">class="active"</eq></notempty> data-hover="dropdown"><span>{$ppvod.list_name}</span></a></li></volist>
                       </volist>
 
 				    </ul>
@@ -36,7 +36,7 @@
                 </div>
               </li>
             <volist name="list_menu" id="ppvod">
-              <if condition="getlistson($ppvod['list_id']) eq 1"><li><a href="{$ppvod.list_url}" <eq name="ppvod.list_id" value="$list_id">class="active"</eq><eq name="ppvod.list_id" value="$list_pid">class="active"</eq> <eq name="ppvod.list_id" value="$list_pid">class="active"</eq> data-hover="dropdown"><span class="icon"> <img class="normal" src="{$tpl}static/images/av.png" alt="{$ppvod.list_name}"> <img class="active" src="{$tpl}static/images/av-fill.png" alt="{$ppvod.list_name}"> </span> <span class="text">{$ppvod.list_name}</span> </a></li>
+              <if condition="getlistson($ppvod['list_id']) eq 1"><li><a href="{$ppvod.list_url}" <notempty name="list_id"><eq name="ppvod.list_id" value="$list_id">class="active"</eq></notempty> <notempty name="list_pid"><eq name="ppvod.list_id" value="$list_pid">class="active"</eq></notempty> data-hover="dropdown"><span class="icon"> <img class="normal" src="{$tpl}static/images/av.png" alt="{$ppvod.list_name}"> <img class="active" src="{$tpl}static/images/av-fill.png" alt="{$ppvod.list_name}"> </span> <span class="text">{$ppvod.list_name}</span> </a></li>
               </if>
             </volist>
 

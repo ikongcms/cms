@@ -88,16 +88,16 @@ class AllAction extends Action{
 		$array['vod_playerkey'] = $player[$array['vod_playname']][0];
 		$array['vod_jiname'] = $array['vod_playlist'][$array['vod_playerkey'].'-'.$array_play['sid']]['son'][$array_play['pid']-1]['playname'];
 		$array['vod_playpath']= $array['vod_playlist'][$array['vod_playerkey'].'-'.$array_play['sid']]['son'][$array_play['pid']-1]['playpath'];
-		$array['vod_nextpath']= $array['vod_playlist'][$array['vod_playerkey'].'-'.$array_play['sid']]['son'][$array_play['pid']]['playpath'];
+		$array['vod_nextpath']= !empty($array['vod_playlist'][$array['vod_playerkey'].'-'.$array_play['sid']]['son'][$array_play['pid']])?$array['vod_playlist'][$array['vod_playerkey'].'-'.$array_play['sid']]['son'][$array_play['pid']]['playpath']:'';
 		$array['vod_count'] = $array['vod_playlist'][$array['vod_playerkey'].'-'.$array_play['sid']]['son'][0]['playcount'];
 		$array['title'] = '正在播放 '.$array['vod_name'].'-'.$array['vod_jiname'].'-'.C('site_name');
 		//播放器调用
 		if($createplayone){
 			//适用于静态网页生成每一集
 			$player_jsdir = C('site_path').ff_play_url_dir($array['vod_id'],0,1,$array['vod_cid'],$array['vod_name']).'.js?'.uniqid();
-			$array['vod_player'] = '<script language="javascript">var player_sid='.ceil($array_play['sid']).';var player_pid='.ceil($array_play['pid']).';</script><script charset="utf-8" src="'.$player_jsdir.'"></script><script charset="utf-8" src="'.C('site_path').'Runtime/Player/play.js?'.date("mdHis").'"></script><script charset="utf-8" src="'.C('site_path').'Public/player2.9/play.js?'.date("mdHis").'"></script>'."\n";
+			$array['vod_player'] = '<script language="javascript">var player_sid='.ceil($array_play['sid']).';var player_pid='.ceil($array_play['pid']).';</script><script charset="utf-8" src="'.$player_jsdir.'"></script><script charset="utf-8" src="'.C('site_path').'Runtime/Player/play.js"></script><script charset="utf-8" src="'.C('site_path').'Public/player2.9/play.js"></script>'."\n";
 		}else{
-			$array['vod_player'] = '<script language="javascript">var player_sid='.ceil($array_play['sid']).';var player_pid='.ceil($array_play['pid']).';</script><script language="javascript">'.$array['vod_player'].'</script><script charset="utf-8" src="'.C('site_path').'Runtime/Player/play.js?'.date("mdHis").'"></script><script charset="utf-8" src="'.C('site_path').'Public/player2.9/play.js?'.date("mdHis").'"></script>'."\n";
+			$array['vod_player'] = '<script language="javascript">var player_sid='.ceil($array_play['sid']).';var player_pid='.ceil($array_play['pid']).';</script><script language="javascript">'.$array['vod_player'].'</script><script charset="utf-8" src="'.C('site_path').'Runtime/Player/play.js"></script><script charset="utf-8" src="'.C('site_path').'Public/player2.9/play.js?"></script>'."\n";
 		}
 		//点击数调用
 		$array['vod_hits_month'] = ff_get_hits('vod','vod_hits_month',$array,C('url_html_play'));
@@ -114,9 +114,11 @@ class AllAction extends Action{
 		$array_urllist = explode('$$$',$array['vod_url']);
 		$player = C('play_player');
 		$server = C('play_server');
-		foreach($array_player as $sid=>$val){
-			$playlist[$player[$val][0].'-'.$sid] = array('servername' => $array_server[$sid],'serverurl' => $server[$array_server[$sid]],'playername'=>$player[$val][1],'playname'=>$val,'son' => $this->ff_playlist_one($array_urllist[$sid],$array['vod_id'],$sid,$array['vod_cid'],$array['vod_name']));
-		}
+        if(!empty($array_player)) {
+            foreach($array_player as $sid=>$val){
+                $playlist[$player[$val][0].'-'.$sid] = array('servername' =>$array_server[$sid],'serverurl' =>!empty($server[$array_server[$sid]])?$server[$array_server[$sid]]:'','playername'=>$player[$val][1],'playname'=>$val,'son' => $this->ff_playlist_one($array_urllist[$sid],$array['vod_id'],$sid,$array['vod_cid'],$array['vod_name']));
+            }
+        }
 		//ksort($playlist);
 	    return $playlist;
 	}
@@ -150,7 +152,7 @@ class AllAction extends Action{
 			}
 			$key++;
 		}
-		return json_encode(array('Vod'=>$vod_info_array,'Data'=>$array_urls),JSON_UNESCAPED_UNICODE);
+		return json_encode(array('Vod'=>$vod_info_array,'Data'=>$array_urls));
 	}
 	//资讯栏目页变量定义
 	public function Lable_News_List($param,$array_list){
@@ -253,20 +255,23 @@ class AllAction extends Action{
 	//搜索页变量定义
 	public function Lable_Search($param,$sidname = 'vod'){
 		$array_search = array();
+        if(empty($param['wd'])) {
+            $this->error('对不起，搜索关键词不能为空！');
+        }
 		if($sidname == 'vod'){
 			$array_search['search_actor'] = $param['actor'];
 			$array_search['search_director'] = $param['director'];			
 			$array_search['search_area'] = $param['area'];
-			$array_search['search_langaue'] = $param['langaue'];
+			$array_search['search_langaue'] = !empty($param['langaue'])?$param['langaue']:'';
 			$array_search['search_year'] = $param['year'];
 			$array_search['sid'] = 1;
 		}else{
 			$array_search['sid'] = 2;
 		}
-		$array_search['search_wd'] = $param['wd'];
-		$array_search['search_name'] = $param['name'];
-		$array_search['search_title'] = $param['title'];
-		$array_search['search_page'] = $param['page'];
+		$array_search['search_wd'] = !empty($param['wd'])?getWD($param['wd']):'';
+		$array_search['search_name'] = !empty($param['name'])?$param['name']:'';
+		$array_search['search_title'] = !empty($param['title'])?$param['title']:'';
+		$array_search['search_page'] = intval($param['page']);
 		$array_search['search_letter'] = $param['letter'];
 		$array_search['search_order'] = $param['order'];
 		$array_search['search_skin'] = 'pp_'.$sidname.'search';

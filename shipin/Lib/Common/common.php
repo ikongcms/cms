@@ -1,59 +1,4 @@
 <?php
-/*-------------------------------------------------老函数兼容开始------------------------------------------------------------------*/
-function getfirstchar($s0){
-	return ff_letter_first($s0);
-}
-function getpinyin($str,$ishead=0,$isclose=1){
-	return ff_pinyin($str,$ishead=0,$isclose=1);
-}
-function getsitepath($filename){
-	return get_site_path($filename);
-}
-function getbaseurl($baseurl,$url){
-	return get_base_url($baseurl,$url);
-}
-function getfile($url){
-	return ff_file_get_contents($url);
-}
-function getvoddata($rule,$html){
-	return ff_preg_match($rule,$html);
-}
-function getvodall($rule,$html){
-	return ff_preg_match_all($rule,$html);
-}
-function getreurl($listurl){
-   return ff_krsort_url($listurl);
-}
-function getreplace($arr){
-	return ff_implode_rule($arr);
-}
-function getrole($str){
-	return ff_replace_rule($str);
-}
-function getrandstr($string){
-	return  ff_rand_str($string);
-}
-function getpicurl($file){
-	return ff_img_url($file);
-}
-function getpicurl_s($file){
-	return ff_img_url_small($file);	
-}
-function getplayurl($vodid){
-	return ff_play_url($vodid,0,1);
-}
-function getactorurl($str,$type="actor"){
-	return ff_search_url($str,$type);	
-}
-function ppvodurl($model,$params,$indexphp,$redirect=false,$suffix=false){
-	return UU($model,$params,$redirect=false,$suffix=false);
-};
-function getletter($file='vod',$str=''){
-	return ff_letter_url($file='vod',$str='');
-}
-function ppvodpage($currentPage,$totalPages,$halfPer=5,$url,$pagego){
-	return getpage($currentPage,$totalPages,$halfPer=5,$url,$pagego);
-}
 /*-------------------------------------------------文件夹与文件操作开始------------------------------------------------------------------*/
 //读取文件
 function read_file($l1){
@@ -100,7 +45,7 @@ function get_site_path($filename){
 function get_base_url($baseurl,$url){
 	if("#" == $url){
 		return "";
-	}elseif(FALSE !== stristr($url,"https://")||FALSE !== stristr($url,"http://")){
+	}elseif(FALSE !== stristr($url,"http://")){
 		return $url;
 	}elseif( "/" == substr($url,0,1) ){
 		$tmp = parse_url($baseurl);
@@ -116,6 +61,11 @@ function get_domain($url){
 	return $arr_domain[1];
 }
 /*-------------------------------------------------字符串处理开始------------------------------------------------------------------*/
+// 过滤字符串
+function getWD($str){
+    preg_match_all('/([a-zA-Z0-9\_\～\！\：\。\，\《\》\-\,\.\|\/\s]+|[\x{4e00}-\x{9fff}]+|[\x{0800}-\x{4e00}]+|[\x{AC00}-\x{D7A3}]+|[\x{4e00}-\x{9fa5}]+)/u', $str, $match);
+    return !empty($match[1])?implode($match[1]):'';
+}
 // UT*转GBK
 function u2g($str){
 	return iconv("UTF-8","GBK",$str);
@@ -137,12 +87,14 @@ function nr($str){
 //去掉连续空白
 function nb($str){
 	$str = str_replace("　",' ',str_replace("&nbsp;",' ',$str));
-	$str = preg_replace("/[\r\n\t ]{1,}/",' ',$str);
+	//$str = ereg_replace("[\r\n\t ]{1,}",' ',$str);
+    $str = preg_replace("/[\r\n\t ]{1,}/",' ',$str);
 	return trim($str);
 }
 //字符串截取(同时去掉HTML与空白)
 function msubstr($str, $start=0, $length, $suffix=false){
-	return ff_msubstr(preg_replace('/<[^>]+>/i','',preg_replace("/[\r\n\t ]{1,}/",' ',nb($str))),$start,$length,'utf-8',$suffix);
+    return ff_msubstr(preg_replace('/<[^>]+>/i','',preg_replace("/[\r\n\t ]{1,}/",' ',nb($str))),$start,$length,'utf-8',$suffix);
+	//return ff_msubstr(eregi_replace('<[^>]+>','',ereg_replace("[\r\n\t ]{1,}",' ',nb($str))),$start,$length,'utf-8',$suffix);
 }
 function ff_msubstr($str, $start=0, $length, $charset="utf-8", $suffix=true){
 	$re['utf-8']   = "/[\x01-\x7f]|[\xc2-\xdf][\x80-\xbf]|[\xe0-\xef][\x80-\xbf]{2}|[\xf0-\xff][\x80-\xbf]{3}/";
@@ -151,8 +103,9 @@ function ff_msubstr($str, $start=0, $length, $charset="utf-8", $suffix=true){
 	$re['big5']   = "/[\x01-\x7f]|[\x81-\xfe]([\x40-\x7e]|\xa1-\xfe])/";
 	preg_match_all($re[$charset], $str, $match);
 	$length_new = $length;
+    $length_chi = 0;
 	for($i=$start; $i<$length; $i++){
-		if (ord($match[0][$i]) > 0xa0){
+		if (!empty($match[0][$i])&&ord($match[0][$i]) > 0xa0){
 			//中文
 		}else{
 			$length_new++;
@@ -171,14 +124,13 @@ function ff_msubstr($str, $start=0, $length, $charset="utf-8", $suffix=true){
 // 汉字转拼单
 function ff_pinyin($str,$ishead=0,$isclose=1){
 	$str = u2g($str);//转成GBK
-	global $pinyins;
 	$restr = '';
 	$str = trim($str);
 	$slen = strlen($str);
 	if($slen<2){
 		return $str;
 	}
-	if(count($pinyins)==0){
+	if(empty($pinyins)){
 		$fp = fopen('./Lib/Common/pinyin.dat','r');
 		while(!feof($fp)){
 			$line = trim(fgets($fp));
@@ -200,7 +152,8 @@ function ff_pinyin($str,$ishead=0,$isclose=1){
 			}else{
 				//$restr .= "_";
 			}
-		}else if( preg_match("/[a-z0-9]/i",$str[$i]) ){
+        // }else if( eregi("[a-z0-9]",$str[$i]) ){
+        }else if( preg_match("/[a-z0-9]/i",$str[$i]) ){
 			$restr .= $str[$i];
 		}
 		else{
@@ -363,7 +316,7 @@ function ff_xml_vodname($vodname){
 function ff_xml_vodactor($vodactor){
 	return str_replace(array(',','/','，','|','、'),',',$vodactor);	
 }
-/*-------------------------------------------------飞飞系统栏目相关函数开始------------------------------------------------------------------*/
+/*-------------------------------------------------栏目相关函数开始------------------------------------------------------------------*/
 //通过栏目名名获取对应的栏目ID
 function getlistid($str){
     $arr = list_search(F('_ppvod/list'),'list_name='.$str);
@@ -376,7 +329,7 @@ function getlistid($str){
 //通过栏目ID获取对应的栏目名称/别名等
 function getlistname($cid,$type='list_name'){
     $arr=list_search(F('_ppvod/list'),'list_id='.$cid);
-	if(is_array($arr)){
+	if(!empty($arr[0])){
 		return $arr[0][$type];
 	}else{
 	    return '未知ID'.$cid;
@@ -503,24 +456,30 @@ function getcolordate($type='Y-m-d H:i:s',$time,$color='red'){
 	    return '<font color="'.$color.'">'.date($type,$time).'</font>';
 	}
 }
+// 读出qvod地址的文件名
+function ff_qvod_name($jiname){
+	$jiname = ff_preg_match('3$$$(.*)\|(.*)\|(.*)\.(.*)\|',$jiname);
+	return $jiname;
+}
 // 处理积分样式
 function getjifen($fen){
 	$array = explode('.',$fen);
 	return '<strong>'.$array[0].'</strong>.'.$array[1];
 }
 //分页样式
-function getpage($currentPage,$totalPages,$halfPer=5,$url,$pagego){
+function getPageIndex($currentPage,$totalPages,$halfPer=5,$url,$pagego){
+    $linkPage = '';
     $linkPage .= ( $currentPage > 1 )
-        ? '<li class="page-item"><a class="page-link" href="'.str_replace('{!page!}',1,$url).'">首页</a></li>&nbsp;<li class="page-item"><a class="page-link" href="'.str_replace('{!page!}',($currentPage-1),$url).'">&lt;&lt;</a></li>&nbsp;' 
+        ? '<li class="page-item"><a href="'.str_replace('{!page!}',1,$url).'" class="page-link">首页</a></li><li class="page-item"><a href="'.str_replace('{!page!}',($currentPage-1),$url).'" class="page-link">&lt;&lt;</a></li>' 
         : '<em>首页</em>&nbsp;<em>&lt;&lt;</em>&nbsp;';
     for($i=$currentPage-$halfPer,$i>1||$i=1,$j=$currentPage+$halfPer,$j<$totalPages||$j=$totalPages;$i<$j+1;$i++){
-        $linkPage .= ($i==$currentPage)?'<li class="page-item disabled"><a class="page-link" href="javascript:;">'.$i.'</a></li>&nbsp;':'<li class="page-item"><a class="page-link" href="'.str_replace('{!page!}',$i,$url).'">'.$i.'</a></li>&nbsp;'; 
+        $linkPage .= ($i==$currentPage)?'<li class="page-item disabled"><a class="page-link" href="javascript:;">'.$i.'</a></li>&nbsp;':'<li class="page-item"><a href="'.str_replace('{!page!}',$i,$url).'" class="page-link">'.$i.'</a></li>'; 
     }
     $linkPage .= ( $currentPage < $totalPages )
-        ? '<li class="page-item"><a class="page-link" href="'.str_replace('{!page!}',($currentPage+1),$url).'">&gt;&gt;</a></li>&nbsp;<li class="page-item"><a class="page-link" href="'.str_replace('{!page!}',$totalPages,$url).'">尾页</a></li>'
-        : '<em>&gt;&gt;</em>&nbsp;<em>尾页</em>';
+        ? '<li class="page-item"><a href="'.str_replace('{!page!}',($currentPage+1),$url).'" class="page-link">&gt;&gt;</a></li><li class="page-item"><a href="'.str_replace('{!page!}',$totalPages,$url).'" class="page-link">尾页</a></li>'
+        : '<em>&gt;&gt;</em>&nbsp;<em></em>';
 	if(!empty($pagego)){
-		$linkPage .='&nbsp;<li class="page-item"><input type="input" name="page" id="page" size=4 class="pagego-control ff-wd"/><input type="button" value="跳 转" onclick="'.$pagego.'" class="pagego-button" /></li>';
+		$linkPage .='<li class="page-item"><input type="input" name="page" id="page" size=4 class="pagego-control ff-wd"/><input type="button" value="跳 转" onclick="'.$pagego.'" class="pagego-button" /></li>';
 	}
 	//
 	if(C('url_html') && C('url_html_list')){
@@ -530,7 +489,8 @@ function getpage($currentPage,$totalPages,$halfPer=5,$url,$pagego){
 	}
 }
 //后台分页样式
-function getpageadmin($currentPage,$totalPages,$halfPer=5,$url,$pagego){
+function getpage($currentPage,$totalPages,$halfPer=5,$url,$pagego){
+    $linkPage = '';
     $linkPage .= ( $currentPage > 1 )
         ? '<a href="'.str_replace('{!page!}',1,$url).'" class="pagegbk">首页</a>&nbsp;<a href="'.str_replace('{!page!}',($currentPage-1),$url).'" class="pagegbk">上一页</a>&nbsp;' 
         : '<em>首页</em>&nbsp;<em>上一页</em>&nbsp;';
@@ -567,7 +527,7 @@ function ff_hot_key($string){
 		$array = explode('|',$value);
 		if(!empty($array[1])){
 			$array_hot[$key] = '<a href="'.$array[1].'" target="_blank">'.trim($array[0]).'</a>';
-		}else{
+		} else {
 			$array_hot[$key] = '<a href="'.UU('Home-vod/search',array('wd'=>urlencode(trim($value))),false,true).'">'.trim($value).'</a>';
 		}
 	}
@@ -624,7 +584,7 @@ function ff_detail_array($sid='vod', $type='next', $id, $cid, $field='vod_id,vod
 	}
 	return $array;
 }
-/*-------------------------------------------------飞飞系统访问路径函数开始------------------------------------------------------------------*/
+/*-------------------------------------------------访问路径函数开始------------------------------------------------------------------*/
 // 重写动态路径
 function UU($model,$params,$redirect=false,$suffix=false){
 	//rewrite重写
@@ -810,11 +770,11 @@ function ff_special_url_dir($page){
 	return $listdir;
 }
 // 获取某图片的访问地址
-function ff_img_url($file,$content,$number=1){
+function ff_img_url($file,$content='',$number=1){
 	if(!$file){
 		return ff_img_url_preg($file,$content,$number);
 	}
-	if(strpos($file,'https://') !== false||strpos($file,'http://') !== false){
+	if(strpos($file,'http://') !== false||strpos($file,'https://') !== false){
 		return $file;
 	}
 	$prefix = C('upload_http_prefix');
@@ -829,7 +789,7 @@ function ff_img_url_small($file,$content,$number=1){
 	if(!$file){
 		return ff_img_url_preg($file,$content,$number);
 	}
-	if(strpos($file,'https://') !== false||strpos($file,'http://') !== false){
+	if(strpos($file,'http://') !== false||strpos($file,'https://') !== false){
 		return $file;
 	}	
 	$prefix = C('upload_http_prefix');
@@ -928,19 +888,19 @@ function ff_play_url_end($vod_url){
 //路径参数处理函数
 function ff_param_url(){
 	$where = array();
-	$where['sid'] = intval($_REQUEST['sid']);
-	$where['id'] = intval($_REQUEST['id']);
-	$where['year'] = intval($_REQUEST['year']);
-	$where['language'] = htmlspecialchars(urldecode(trim($_REQUEST['language'])));
-	$where['area'] = htmlspecialchars(urldecode(trim($_REQUEST['area'])));
-	$where['letter'] = htmlspecialchars($_REQUEST['letter']);
-	$where['actor'] = htmlspecialchars(urldecode(trim($_REQUEST['actor'])));
-	$where['director'] = htmlspecialchars(urldecode(trim($_REQUEST['director'])));
-	$where['wd'] = htmlspecialchars(urldecode(trim($_REQUEST['wd'])));
+	$where['sid'] = !empty($_REQUEST['sid']) ? intval($_REQUEST['sid']) : 0;
+	$where['id'] = !empty($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+	$where['year'] = !empty($_REQUEST['year']) ? intval($_REQUEST['year']) : 0;
+	$where['language'] = !empty($_REQUEST['language']) ? htmlspecialchars(urldecode(trim($_REQUEST['language']))) : '';
+	$where['area'] = !empty($_REQUEST['area']) ? htmlspecialchars(urldecode(trim($_REQUEST['area']))) : '';
+	$where['letter'] = !empty($_REQUEST['letter']) ? htmlspecialchars($_REQUEST['letter']) : '';
+	$where['actor'] = !empty($_REQUEST['actor']) ? htmlspecialchars(urldecode(trim($_REQUEST['actor']))) : '';
+	$where['director'] = !empty($_REQUEST['director']) ? htmlspecialchars(urldecode(trim($_REQUEST['director']))) : '';
+	$where['wd'] = !empty($_REQUEST['wd']) ? htmlspecialchars(urldecode(trim($_REQUEST['wd']))) : '';
 	//
 	$where['limit'] = !empty($_GET['limit']) ? intval($_GET['limit']) : 10;
 	$where['page'] = !empty($_GET['p']) ? intval($_GET['p']) : 1;
-	$where['order'] = ff_order_by($_GET['order']);
+	$where['order'] = !empty($_GET['order']) ? ff_order_by($_GET['order']) : 'addtime';
 	return $where;
 }
 //分页跳转参数处理
@@ -1005,7 +965,7 @@ function ff_param_lable($tag = ''){
 	$array = explode(';',str_replace('num:','limit:',$tag));
 	foreach ($array as $v){
 		list($key,$val) = explode(':',trim($v));
-		$param[trim($key)] = trim($val);
+		$param[trim(getWD($key))] = trim(getWD($val));
 	}
 	return $param;
 }
@@ -1044,10 +1004,10 @@ function ff_mysql_vod($tag){
 	}
 	//根据参数生成查询条件
 	$where['vod_status'] = array('eq',1);	
-	if ($tag['ids']) {
+	if (!empty($tag['ids'])) {
 		$where['vod_id'] = array('in',$tag['ids']);
 	}	
-	if ($tag['cid']) {
+	if (!empty($tag['cid'])) {
 		$cids = explode(',',trim($tag['cid']));
 		if (count($cids)>1) {
 			$where['vod_cid'] = array('in',getlistarr_tag($cids));
@@ -1055,30 +1015,30 @@ function ff_mysql_vod($tag){
 			$where['vod_cid'] = getlistsqlin($tag['cid']);
 		}
 	}
-	if ($tag['day']) {
+	if (!empty($tag['day'])) {
 		$where['vod_addtime'] = array('gt',getxtime($tag['day']));
 	}
-	if ($tag['stars']) {
+	if (!empty($tag['stars'])) {
 		$where['vod_stars'] = array('in',$tag['stars']);
 	}
-	if ($tag['letter']) {
+	if (!empty($tag['letter'])) {
 		$where['vod_letter'] = array('in',$tag['letter']);
 	}
-	if($tag['isfiml']){
+	if (!empty($tag['isfiml'])) {
 		$where['vod_isfiml'] = array('eq',$tag['isfiml']);
 	}	
-	if ($tag['area']) {
+	if (!empty($tag['area'])) {
 		$where['vod_area'] = array('eq',''.$tag['area'].'');
 	}
-	if ($tag['language']) {
+	if (!empty($tag['language'])) {
 		$where['vod_language'] = array('eq',''.$tag['language'].'');
 	}
-	if($tag['lz'] == 1){
+	if (!empty($tag['lz']) && $tag['lz'] == 1) {
 		$where['vod_continu'] = array('neq','0');
-	}elseif($tag['lz'] == 2){
+	} elseif (!empty($tag['lz']) && $tag['lz'] == 2){
 		$where['vod_continu'] = 0;
 	}	
-	if ($tag['year']) {
+	if (!empty($tag['year'])) {
 		$year = explode(',',$tag['year']);
 		if (count($year) > 1) {
 			$where['vod_year'] = array('between',$year[0].','.$year[1]);
@@ -1086,7 +1046,7 @@ function ff_mysql_vod($tag){
 			$where['vod_year'] = array('eq',$tag['year']);
 		}
 	}
-	if ($tag['hits']) {
+	if (!empty($tag['hits'])) {
 		$hits = explode(',',$tag['hits']);
 		if (count($hits) > 1) {
 			$where['vod_hits'] = array('between',$hits[0].','.$hits[1]);
@@ -1094,7 +1054,7 @@ function ff_mysql_vod($tag){
 			$where['vod_hits'] = array('gt',$hits[0]);
 		}
 	}
-	if ($tag['up']) {
+	if (!empty($tag['up'])) {
 		$up = explode(',',$tag['up']);
 		if (count($up)>1) {
 			$where['vod_up'] = array('between',$up[0].','.$up[1]);
@@ -1102,7 +1062,7 @@ function ff_mysql_vod($tag){
 			$where['vod_up'] = array('gt',$up[0]);
 		}
 	}
-	if ($tag['down']) {
+	if (!empty($tag['down'])) {
 		$down = explode(',',$tag['down']);
 		if (count($down)>1) {
 			$where['vod_down'] = array('between',$down[0].','.$down[1]);
@@ -1110,7 +1070,7 @@ function ff_mysql_vod($tag){
 			$where['vod_down'] = array('gt',$down[0]);
 		}
 	}
-	if ($tag['gold']) {
+	if (!empty($tag['gold'])) {
 		$gold = explode(',',$tag['gold']);
 		if (count($gold)>1) {
 			$where['vod_gold'] = array('between',$gold[0].','.$gold[1]);
@@ -1118,7 +1078,7 @@ function ff_mysql_vod($tag){
 			$where['vod_gold'] = array('gt',$gold[0]);
 		}
 	}
-	if ($tag['golder']) {
+	if (!empty($tag['golder'])) {
 		$golder = explode(',',$tag['golder']);
 		if (count($golder)>1) {
 			$where['vod_golder'] = array('between',$golder[0].','.$golder[1]);
@@ -1126,25 +1086,25 @@ function ff_mysql_vod($tag){
 			$where['vod_golder'] = array('gt',$golder[0]);
 		}
 	}
-	if ($tag['name']) {
+	if (!empty($tag['name'])) {
 		$where['vod_name'] = array('like','%'.$tag['name'].'%');
 	}
-	if ($tag['title']) {
+	if (!empty($tag['title'])) {
 		$where['vod_title'] = array('like','%'.$tag['title'].'%');
 	}
-	if ($tag['actor']) {
+	if (!empty($tag['actor'])) {
 		$where['vod_actor'] = array('like','%'.$tag['actor'].'%');
 	}
-	if ($tag['director']) {
+	if (!empty($tag['director'])) {
 		$where['vod_director'] = array('like','%'.$tag['director'].'%');
 	}
-	if ($tag['play']) {
+	if (!empty($tag['play'])) {
 		$where['vod_play'] = array('eq',$tag['play']);
 	}
-	if ($tag['inputer']) {
+	if (!empty($tag['inputer'])) {
 		$where['vod_inputer'] = array('eq',$tag['inputer']);
 	}	
-	if ($tag['wd']) {
+	if (!empty($tag['wd'])) {
 		$search['vod_name'] = array('like','%'.$tag['wd'].'%');
 		$search['vod_title'] = array('like','%'.$tag['wd'].'%');
 		$search['vod_actor'] = array('like','%'.$tag['wd'].'%');
@@ -1153,14 +1113,14 @@ function ff_mysql_vod($tag){
 		$where['_complex'] = $search;		
 	}
 	//查询数据开始
-	if($tag['tag']){//视图模型查询
+	if(!empty($tag['tag'])){//视图模型查询
 		$where['tag_sid'] = 1;
 		$where['tag_name'] = $tag['tag'];
 		$rs = D('TagView');
 	}else{
 		$rs = M('Vod');
 	}
-	if($tag['page']){
+	if(!empty($tag['page'])){
 		//组合分页信息
 		$count = $rs->where($where)->count('vod_id');if(!$count){return false;}
 		$totalpages = ceil($count/$limit);
@@ -1168,7 +1128,7 @@ function ff_mysql_vod($tag){
 		//生成分页列表
 		//$pageurl = ff_list_url('vod',C('jumpurl'),9999);
 		$pageurl = C('jumpurl');
-		$pages = '共'.$count.'部影片&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getpage($currentpage,$totalpages,C('home_pagenum'),$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
+		$pages = '共'.$count.'部影片&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getPageIndex($currentpage,$totalpages,C('home_pagenum'),$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
 		//数据列表
 		$list = $rs->field($field)->where($where)->order($order)->limit($limit)->page($currentpage)->select();
 		$list[0]['count'] = count($list);
@@ -1178,15 +1138,17 @@ function ff_mysql_vod($tag){
 	}
 	//dump($rs->getLastSql());
 	//循环赋值
-	foreach($list as $key=>$val){
-		$list[$key]['list_id'] = $list[$key]['vod_cid'];
-		$list[$key]['list_name'] = getlistname($list[$key]['list_id'],'list_name');
-		$list[$key]['list_url'] = getlistname($list[$key]['list_id'],'list_url');
-		$list[$key]['vod_readurl'] = ff_data_url('vod',$list[$key]['vod_id'],$list[$key]['vod_cid'],$list[$key]['vod_name'],1,$list[$key]['vod_jumpurl']);
-		$list[$key]['vod_playurl'] = ff_play_url($list[$key]['vod_id'],0,1,$list[$key]['vod_cid'],$list[$key]['vod_name']);
-		$list[$key]['vod_picurl'] = ff_img_url($list[$key]['vod_pic'],$list[$key]['vod_content']);
-		$list[$key]['vod_picurl_small'] = ff_img_url_small($list[$key]['vod_pic'],$list[$key]['vod_content']);		
-	}
+    if(!empty($list)) {
+        foreach($list as $key=>$val){
+            $list[$key]['list_id'] = $list[$key]['vod_cid'];
+            $list[$key]['list_name'] = getlistname($list[$key]['list_id'],'list_name');
+            $list[$key]['list_url'] = getlistname($list[$key]['list_id'],'list_url');
+            $list[$key]['vod_readurl'] = ff_data_url('vod',$list[$key]['vod_id'],$list[$key]['vod_cid'],$list[$key]['vod_name'],1,$list[$key]['vod_jumpurl']);
+            $list[$key]['vod_playurl'] = ff_play_url($list[$key]['vod_id'],0,1,$list[$key]['vod_cid'],$list[$key]['vod_name']);
+            $list[$key]['vod_picurl'] = ff_img_url($list[$key]['vod_pic'],$list[$key]['vod_content']);
+            $list[$key]['vod_picurl_small'] = ff_img_url_small($list[$key]['vod_pic'],$list[$key]['vod_content']);		
+        }
+    }
 	//是否写入数据缓存
 	if(C('data_cache_vodforeach') && C('currentpage') < 2 ){
 		S($data_cache_name,$list,intval(C('data_cache_vodforeach')));
@@ -1297,7 +1259,7 @@ function ff_mysql_news($tag){
 		$currentpage = get_maxpage(C('currentpage'),$totalpages);
 		//生成分页列表
 		$pageurl = C('jumpurl');
-		$pages = '共'.$count.'篇资讯&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getpage($currentpage,$totalpages,C('home_pagenum'),$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
+		$pages = '共'.$count.'篇资讯&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getPageIndex($currentpage,$totalpages,C('home_pagenum'),$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
 		//数据列表
 		$list = $rs->field($field)->where($where)->order($order)->limit($limit)->page($currentpage)->select();
 		$list[0]['count'] = count($list);
@@ -1360,7 +1322,7 @@ function ff_mysql_special($tag){
 		$currentpage = get_maxpage(C('currentpage'),$totalpages);
 		//生成分页列表
 		$pageurl = C('jumpurl');
-		$pages = '共'.$count.'篇专题&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getpage($currentpage,$totalpages,C('home_pagenum'),$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
+		$pages = '共'.$count.'篇专题&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getPageIndex($currentpage,$totalpages,C('home_pagenum'),$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
 		//数据列表
 		$list = $rs->field($field)->where($where)->order($order)->limit($limit)->page($currentpage)->select();
 		$list[0]['count'] = count($list);
@@ -1381,11 +1343,6 @@ function ff_mysql_special($tag){
 	}	
 	return $list;
 }
-
-
-
-
-
 /*---------------------------------------ThinkPhp扩展函数库开始------------------------------------------------------------------
  * @category   Think
  * @package  Common

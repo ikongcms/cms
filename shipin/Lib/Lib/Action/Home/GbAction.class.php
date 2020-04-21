@@ -15,11 +15,13 @@ class GbAction extends HomeAction{
 			$page = $totalpages;
 		}
 		$pageurl = UU('Home-gb/show',array('p'=>'{!page!}'),false,true);
-		$pages = '共'.$count.'篇留言&nbsp;当前:'.$page.'/'.$totalpages.'页&nbsp;'.getpage($page,$totalpages,C('home_pagenum'),$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
+		$pages = '共'.$count.'篇留言&nbsp;当前:'.$page.'/'.$totalpages.'页&nbsp;'.getPageIndex($page,$totalpages,C('home_pagenum'),$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
 		// 查询数据
 		$list = $rs->where($where)->limit($limit)->order('gb_oid desc,gb_addtime desc')->page($page)->select();
-		foreach($list as $key=>$val){
-			$list[$key]['gb_floor'] = $count-(($page-1) * $limit + $key);
+        if(!empty($list)) {
+            foreach($list as $key=>$val){
+                $list[$key]['gb_floor'] = $count-(($page-1) * $limit + $key);
+            }
 		}
 		// 是否报错	
 		$vodid = intval($_GET['id']);

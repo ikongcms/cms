@@ -3,8 +3,8 @@ class CmAction extends BaseAction{
 	// 用户评论管理
     public function show(){
 		$admin = array();$where = array();
-		$admin['status'] = intval($_GET['status']);
-		$admin['wd']     = urldecode(trim($_REQUEST['wd']));
+		$admin['status'] = !empty($_GET['status'])?intval($_GET['status']):0;
+		$admin['wd']     = !empty($_REQUEST['wd'])?urldecode(trim($_REQUEST['wd'])):'';
 		if ($admin['status'] == 2) {
 			$where['cm_status'] = array('eq',0);
 		}elseif ($admin['status'] == 1) {
@@ -29,7 +29,7 @@ class CmAction extends BaseAction{
 		$pageurl = U('Admin-Cm/Show',$admin,false,false).'{!page!}';
 		//
 		$admin['p'] = $currentpage;$_SESSION['cm_jumpurl'] = U('Admin-Cm/Show',$admin);
-		$admin['pages'] = '共'.$count.'篇评论&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getpageadmin($currentpage,$totalpages,8,$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
+		$admin['pages'] = '共'.$count.'篇评论&nbsp;当前:'.$currentpage.'/'.$totalpages.'页&nbsp;'.getpage($currentpage,$totalpages,8,$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
 		$admin['list'] = $rs->where($where)->limit($limit)->page($currentpage)->order('cm_addtime desc')->select();
 		$this->assign($admin);
         $this->display('./Public/system/cm_show.html');
@@ -63,7 +63,7 @@ class CmAction extends BaseAction{
 		redirect($_SERVER['HTTP_REFERER']);
     }
 	// 删除评论All
-    public function delall($uid){
+    public function delall($uid=''){
 		if(empty($_POST['ids'])){
 			$this->error('请选择需要删除的评论信息！');
 		}

@@ -454,6 +454,7 @@ class CreateAction extends BaseAction{
 		$list_dir = $dir->toArray();
 		$array_tpl = array();
 		foreach($list_dir as $key=>$value){
+            // if(ereg("my_(.*)\.html",$value['filename'])){
 			if(preg_match("/my_(.*)\.html/",$value['filename'])){
 				C('html_file_suffix',$suffix);
 				$this->buildHtml(str_replace(array('my_','.html'),'',$value['filename']),'./'.C('url_mytpl'),'Home:'.str_replace('.html','',$value['filename']));

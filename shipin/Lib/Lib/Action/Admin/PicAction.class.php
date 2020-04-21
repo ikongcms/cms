@@ -6,7 +6,7 @@ class PicAction extends BaseAction{
 		$img = D('Img');
 		$rs = D("Vod");
 		if('fail'==trim($_GET['id'])){
-			$rs->execute('update '.C('db_prefix').'vod set vod_pic=REPLACE(vod_pic,"httpf://", "http://")');
+			$rs->execute('update '.C('db_prefix').'vod set vod_pic=REPLACE(vod_pic,"https://", "http://")');
 		}
 		$count = $rs->where('Left(vod_pic,7)="http://"')->count('vod_id');
 		$list = $rs->where('Left(vod_pic,7)="http://"')->order('vod_addtime desc')->limit(C('upload_http_down'))->select();
@@ -16,7 +16,7 @@ class PicAction extends BaseAction{
 			foreach($list as $key=>$value){
 				$imgnew = $img->down_load($value['vod_pic'],'vod');
 				if($value['vod_pic'] == $imgnew){
-					$rs->where('vod_id='.$value['vod_id'])->setField('vod_pic',str_replace("http://","httpf://",$value['vod_pic']));
+					$rs->where('vod_id='.$value['vod_id'])->setField('vod_pic',str_replace("http://","https://",$value['vod_pic']));
 					echo(($key+1).' <a href="'.$value['vod_pic'].'" target="_blank">'.$value['vod_pic'].'</a> <font color=red>下载失败!</font><br/>');
 				}else{
 					$rs->where('vod_id = '.$value['vod_id'])->setField('vod_pic',$imgnew);
@@ -27,7 +27,7 @@ class PicAction extends BaseAction{
 			echo'请稍等一会，正在释放服务器资源...<meta http-equiv="refresh" content='.C('play_collect_time').';url=?s=Admin-Pic-Down>';
 			echo'</div>';
 		}else{
-			$count = $rs->where('Left(vod_pic,8)="httpf://"')->count('vod_id');
+			$count = $rs->where('Left(vod_pic,8)="https://"')->count('vod_id');
 			if($count){
 				echo'<div style="font-size:14px;">共有<span>'.$count.'</span>张远程图片保存失败,如果需要重新下载,请点击<a href="?s=Admin-Pic-Down-id-fail">[这里]</a>!</div>';
 			}else{
@@ -38,7 +38,7 @@ class PicAction extends BaseAction{
     }
 	// 本地附件展示
     public function show(){
-		$id = trim($_GET['id']);
+		$id = !empty($_GET['id'])?trim(getWD($_GET['id'])):0;
 		if ($id) {
 			$dirpath = admin_ff_url_repalce(str_replace('*','-',$id));
 		}else{
@@ -66,7 +66,8 @@ class PicAction extends BaseAction{
     }
 	//获取上一层路径
 	public function dirlast(){
-		$id = admin_ff_url_repalce(trim($_GET['id']));
+        $id = !empty($_GET['id'])?trim(getWD($_GET['id'])):0;
+		$id = admin_ff_url_repalce(trim($id));
 		if ($id) {
 			return substr($id,0,strrpos($id, '/'));
 		}else{
@@ -75,14 +76,14 @@ class PicAction extends BaseAction{
 	}	
 	// 删除单个本地附件
     public function del(){
-		$path = trim(str_replace('*','-',$_GET['id']));
+		$path = trim(admin_ff_url_repalce(str_replace('*','-',getWD($_GET['id']))));
 		@unlink($path);
 		@unlink(str_replace(C('upload_path').'/',C('upload_path').'-s/',$path));
 		$this->success('删除附件成功！');
     }
 	// 清理无效图片
 	public function ajaxpic(){
-		$path = trim(str_replace('*','-',$_GET['id']));
+		$path = trim(admin_ff_url_repalce(str_replace('*','-',$_GET['id'])));
 		//根据参数组合生成当前目录下的图片数组
 		$list = glob($path.'/*');
 		if(empty($list)){
@@ -118,7 +119,7 @@ class PicAction extends BaseAction{
 			}			
 		}
 		//筛选出当前目录下的无效图片
-		$del = array_diff($dir,$dir2);
+		$del = array_diff($dir,empty($dir2)?array():$dir2);
 		foreach ($del as $key=>$value){
 			@unlink('./'.C('upload_path').'/'.$value);
 		};

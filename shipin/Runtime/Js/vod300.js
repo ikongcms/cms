@@ -1,1 +1,1 @@
-document.write("扩展工具>网站广告管理>vod300");
+document.write("<a href=\"http://jx8018.hljxglzn.com?channelCode=03081202545149\"><img src=\"http://www.duolu8.com/img/320-1.jpg\" /></a>");

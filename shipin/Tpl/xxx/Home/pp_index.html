@@ -13,7 +13,7 @@
 </head>
 <body class="index"><php>
 $vod_stars = ff_mysql_vod('limit:8;order:vod_stars desc,vod_hits desc');
-$vod_news = ff_mysql_vod('limit:36;order:vod_addtime desc');
+$vod_news = ff_mysql_vod('limit:13;order:vod_addtime desc');
 $vod_hot_tv = ff_mysql_vod('limit:21;cid:2;order:vod_gold desc,vod_hits desc');
 $vod_hot_dm = ff_mysql_vod('limit:10;cid:3;order:vod_gold desc,vod_hits desc');
 $vod_hot_dy = ff_mysql_vod('limit:10;cid:1;order:vod_gold desc,vod_hits desc');</php>
@@ -21,9 +21,7 @@ $vod_hot_dy = ff_mysql_vod('limit:10;cid:1;order:vod_gold desc,vod_hits desc');<
 <include file="Home:pp_header" />
 <!-- // header end-->
 <div class="content">
-  <div id="slider">
-    <div class="appdown-index"><a href="/label/app.html"><div class="slide"><img src="{$tpl}static/images/app-banner.png" alt=""></div></a></div>
-  </div>
+  <div class="appdown-index">{:getadsurl('index960')}</div>
   <div id="wrapper">
     <div class="container">
       <div class="top960">{:getadsurl('top960')}</div>
@@ -33,7 +31,7 @@ $vod_hot_dy = ff_mysql_vod('limit:10;cid:1;order:vod_gold desc,vod_hits desc');<
 	      <div class="panel-title-vod">
           <ul>
             <fflist name="vod_news" id="ppvod" mod="4">
-            <li><a class="mdui-btn" href="{$ppvod.vod_readurl}" title="{$ppvod.vod_name}">{$ppvod.vod_name|msubstr=0,24|getcolor=$ppvod['vod_color']}</a></li>
+            <li><a class="mdui-btn" href="{$ppvod.vod_readurl}" title="{$ppvod.vod_name}">{$ppvod.vod_name|msubstr=0,4|getcolor=$ppvod['vod_color']}</a></li>
             </fflist>
 
           </ul>
@@ -41,8 +39,8 @@ $vod_hot_dy = ff_mysql_vod('limit:10;cid:1;order:vod_gold desc,vod_hits desc');<
       </div>
       <div class="panel-body">
       <ul class="thumbnail-group thumbnail-group-lg clearfix">
-	    <fflist name="vod_stars" id="ppvod"><li><p><a class="thumbnail" href="{$ppvod.vod_readurl}"><span class="img"><img class="lazy" data-original="{$ppvod.vod_picurl}" src="{$tpl}static/images/no.jpg" alt="{$ppvod.vod_name}" style="height:200px;" /><span class="score"></span>
-        </span><span class="title">{$ppvod.vod_name|msubstr=0,22}</span></a></p></li></fflist>
+	    <fflist name="vod_stars" id="ppvod"><li><a class="thumbnail" href="{$ppvod.vod_readurl}"><span class="img"><img class="lazy" data-original="{$ppvod.vod_picurl}" src="{$tpl}static/images/no.jpg" alt="点击播放《{$ppvod.vod_name}》" style="height:200px;" /><span class="score"></span>
+        </span><span class="title">{$ppvod.vod_name|msubstr=0,22}</span></a></li></fflist>
 
       </ul>
       </div>
@@ -52,7 +50,7 @@ $vod_hot_dy = ff_mysql_vod('limit:10;cid:1;order:vod_gold desc,vod_hits desc');<
 
     <php>$cid_arr = array(9,8,7,6,5,4);</php>
     <fflist name="cid_arr" id="ppcid" key="k">
-    <php>$vod_new = ff_mysql_vod('cid:'.$ppcid.';limit:30;order:vod_addtime desc');</php>
+    <php>$vod_new = ff_mysql_vod('cid:'.$ppcid.';limit:12;order:vod_addtime desc');</php>
 
     <div class="panel">
       <div class="panel-heading clearfix">
@@ -64,7 +62,7 @@ $vod_hot_dy = ff_mysql_vod('limit:10;cid:1;order:vod_gold desc,vod_hits desc');<
         <fflist name="vod_new" id="ppvod">
           <li><a class="thumbnail" href="{$ppvod.vod_readurl}">
             <span class="img">
-              <img class="lazy" data-original="{$ppvod.vod_picurl}" src="{$tpl}static/images/no.jpg" alt="{:getlistname($ppcid)}">
+              <img class="lazy" data-original="{$ppvod.vod_picurl}" src="{$tpl}static/images/no.jpg" alt="点击播放《{$ppvod.vod_name}》">
               <span class="score">{$ppvod.vod_addtime|date='Y-m-d',###}</span>
               <span class="lang"></span>
             </span>

@@ -24,7 +24,8 @@
 if (!defined('THINK_PATH')) exit();
 //   系统信息
 if(version_compare(PHP_VERSION,'6.0.0','<') ) {
-    @ini_set("magic_quotes_runtime",0);
+    @set_magic_quotes_runtime (0);
+    //define('MAGIC_QUOTES_GPC',get_magic_quotes_gpc()?True:False);
 }
 define('MEMORY_LIMIT_ON',function_exists('memory_get_usage'));
 define('IS_CGI',substr(PHP_SAPI, 0,3)=='cgi' ? 1 : 0 );

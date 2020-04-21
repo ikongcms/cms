@@ -145,13 +145,12 @@ class Model extends Think
             }
         }
         // 记录字段类型信息
-        if(C('DB_FIELDTYPE_CHECK')) { $this->fields['_type'] =  $type; }
+        if(C('DB_FIELDTYPE_CHECK'))   $this->fields['_type'] =  $type;
 
         // 2008-3-7 增加缓存开关控制
-        if(C('DB_FIELDS_CACHE')) {
+        if(C('DB_FIELDS_CACHE'))
             // 永久缓存数据表信息
             F('_fields/'.$this->name,$this->fields);
-		}
     }
 
     /**
@@ -747,10 +746,22 @@ class Model extends Think
      * @return mixed
      +----------------------------------------------------------
      */
+     public function getPOST($data) {
+         $da = array();
+         foreach ($data as $key => $val) {
+            if(is_array($val)){
+                $da[$key] = $this->getPOST($val);
+            } else {
+                $da[getWD($key)] = getWD($val);
+            }
+         }
+         return $da;
+     }
+
      public function create($data='',$type='') {
         // 如果没有传值默认取POST数据
         if(empty($data)) {
-            $data    =   $_POST;
+            $data   =   $this->getPOST($_POST);
         }elseif(is_object($data)){
             $data   =   get_object_vars($data);
         }elseif(!is_array($data)){
@@ -786,7 +797,8 @@ class Model extends Think
             $val = isset($data[$name])?$data[$name]:null;
             //保证赋值有效
             if(!is_null($val)){
-                $vo[$name] = (is_string($val))? stripslashes($val) : $val;
+                //$vo[$name] = (MAGIC_QUOTES_GPC && is_string($val))?   stripslashes($val)  :  $val;
+                $vo[$name] = (is_string($val))?   stripslashes($val)  :  $val;
             }
         }
         // 创建完成对数据进行自动处理
@@ -862,27 +874,29 @@ class Model extends Think
                 // array('field','填充内容','填充条件','附加规则',[额外参数])
                 if(empty($auto[2])) $auto[2] = self::MODEL_INSERT; // 默认为新增的时候自动填充
                 if( $type == $auto[2] || $auto[2] == self::MODEL_BOTH) {
-                    switch($auto[3]) {
-                        case 'function':    //  使用函数进行填充 字段的值作为参数
-                        case 'callback': // 使用回调方法
-                            $args = isset($auto[4])?$auto[4]:array();
-                            if(isset($data[$auto[0]])) {
-                                array_unshift($args,$data[$auto[0]]);
-                            }
-                            if('function'==$auto[3]) {
-                                $data[$auto[0]]  = call_user_func_array($auto[1], $args);
-                            }else{
-                                $data[$auto[0]]  =  call_user_func_array(array(&$this,$auto[1]), $args);
-                            }
-                            break;
-                        case 'field':    // 用其它字段的值进行填充
-                            $data[$auto[0]] = $data[$auto[1]];
-                            break;
-                        case 'string':
-                        default: // 默认作为字符串填充
-                            $data[$auto[0]] = $auto[1];
+                    if(!empty($auto[3])) {
+                        switch($auto[3]) {
+                            case 'function':    //  使用函数进行填充 字段的值作为参数
+                            case 'callback': // 使用回调方法
+                                $args = isset($auto[4])?$auto[4]:array();
+                                if(isset($data[$auto[0]])) {
+                                    array_unshift($args,$data[$auto[0]]);
+                                }
+                                if('function'==$auto[3]) {
+                                    $data[$auto[0]]  = call_user_func_array($auto[1], $args);
+                                }else{
+                                    $data[$auto[0]]  =  call_user_func_array(array(&$this,$auto[1]), $args);
+                                }
+                                break;
+                            case 'field':    // 用其它字段的值进行填充
+                                $data[$auto[0]] = $data[$auto[1]];
+                                break;
+                            case 'string':
+                            default: // 默认作为字符串填充
+                                $data[$auto[0]] = $auto[1];
+                        }
                     }
-                    if(false === $data[$auto[0]] )   unset($data[$auto[0]]);
+                    if(!empty($data[$auto[0]])&&false === $data[$auto[0]] ) { unset($data[$auto[0]]); }
                 }
             }
         }
@@ -964,7 +978,7 @@ class Model extends Think
             case 'function':// 使用函数进行验证
             case 'callback':// 调用方法进行验证
                 $args = isset($val[6])?$val[6]:array();
-                array_unshift($args,$data[$val[0]]);
+                array_unshift($args,!empty($data[$val[0]])?$data[$val[0]]:array());
                 if('function'==$val[4]) {
                     return call_user_func_array($val[1], $args);
                 }else{
