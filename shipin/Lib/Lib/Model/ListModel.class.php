@@ -13,9 +13,9 @@ class ListModel extends AdvModel {
 	//处理英文名
 	public function listdir(){
 		if (empty($_POST['list_dir'])) {
-		    return ff_pinyin(trim($_POST['list_name']));
+		    return ff_pinyin(trim(getWDSrt($_POST['list_name'])));
 		}else{
-		    return trim($_POST['list_dir']);
+		    return trim(getWDSrt($_POST['list_dir']));
 		}
 	}	
 }

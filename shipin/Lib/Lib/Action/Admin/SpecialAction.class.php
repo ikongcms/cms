@@ -8,8 +8,8 @@ class SpecialAction extends BaseAction{
         $admin['status'] = !empty($_REQUEST['status'])?intval($_REQUEST['status']):0;
         $admin['player'] = !empty($_REQUEST['player'])?trim($_REQUEST['player']):0;
         $admin['stars'] = !empty($_REQUEST['stars'])?intval($_REQUEST['stars']):0;
-        $admin['type'] = !empty($_GET['type'])?$_GET['type']:C('admin_order_type');
-        $admin['order'] = !empty($_GET['order'])?$_GET['order']:'desc';
+        $admin['type'] = !empty($_GET['type'])?getWDSrt($_GET['type']):C('admin_order_type');
+        $admin['order'] = !empty($_GET['order'])?getWDSrt($_GET['order']):'desc';
         $admin['orders'] = 'special_'.$admin["type"].' '.$admin['order'];
         $admin['p'] = '';
 		//生成查询参数
@@ -132,7 +132,7 @@ class SpecialAction extends BaseAction{
 		}	
 		$array = $_POST['ids'];
 		foreach($array as $val){
-			$this->delfile($val);
+			$this->delfile(getWDSrt($val));
 		}
 		redirect($_SERVER['HTTP_REFERER']);
     }
@@ -147,8 +147,8 @@ class SpecialAction extends BaseAction{
 		$data = array(); $where = array();
 		$did = intval($_GET['did']);
 		$tid = intval($_GET['tid']);
-		$sid = !empty($_GET['sid'])?$_GET['sid']:1;
-		$type = trim($_GET['type']);//AJAX操作模块 add/del/up/down
+		$sid = !empty($_GET['sid'])?getWDSrt($_GET['sid']):1;
+		$type = trim(getWDSrt($_GET['type']));//AJAX操作模块 add/del/up/down
 		$lastdid = intval($_GET['lastdid']);//需要处理排序的下一个ID
 		//执行添加或删除操作
 		if($did && $tid){

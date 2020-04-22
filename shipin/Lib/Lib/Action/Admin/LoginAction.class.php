@@ -24,13 +24,13 @@ class LoginAction extends Action{
 	//登陆检测
     public function check(){
         $where = array();
-		$where['admin_name'] = trim($_POST['user_name']);
+		$where['admin_name'] = trim(getWDSrt($_POST['user_name']));
 		$rs = D("Admin.Admin");
 		$list = $rs->where($where)->find();
         if (NULL == $list) {
             $this->error(L('login_username_not'));
         }
-		if ($list['admin_pwd'] != md5(md5($_POST['user_pwd']).'xEX9ZFBEqcSLaV9u')) {
+		if ($list['admin_pwd'] != md5(md5(getWDSrt($_POST['user_pwd'])).'xEX9ZFBEqcSLaV9u')) {
 			$this->error(L('login_password_not'));
 		}
 		// 缓存访问权限

@@ -268,7 +268,7 @@ class AllAction extends Action{
 		}else{
 			$array_search['sid'] = 2;
 		}
-		$array_search['search_wd'] = !empty($param['wd'])?trim(getWD($param['wd'])):'';
+		$array_search['search_wd'] = !empty($param['wd'])?trim(getWDSrt($param['wd'])):'';
 		$array_search['search_name'] = !empty($param['name'])?$param['name']:'';
 		$array_search['search_title'] = !empty($param['title'])?$param['title']:'';
 		$array_search['search_page'] = intval($param['page']);

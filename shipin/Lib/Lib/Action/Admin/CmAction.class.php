@@ -4,7 +4,7 @@ class CmAction extends BaseAction{
     public function show(){
 		$admin = array();$where = array();
 		$admin['status'] = !empty($_GET['status'])?intval($_GET['status']):0;
-		$admin['wd']     = !empty($_REQUEST['wd'])?urldecode(trim($_REQUEST['wd'])):'';
+		$admin['wd']     = !empty($_REQUEST['wd'])?urldecode(trim(getWDSrt($_REQUEST['wd']))):'';
 		if ($admin['status'] == 2) {
 			$where['cm_status'] = array('eq',0);
 		}elseif ($admin['status'] == 1) {
@@ -37,7 +37,7 @@ class CmAction extends BaseAction{
 	// 用户评论编辑
     public function add(){
 		$rs = D('Cm');
-		$where['cm_id'] = $_GET['id'];
+		$where['cm_id'] = intval($_GET['id']);
 		$array = $rs->where($where)->find();
 		$this->assign($array);	
         $this->display('./Public/system/cm_add.html');
@@ -58,7 +58,7 @@ class CmAction extends BaseAction{
 	// 删除评论BY-ID
     public function del(){
 		$rs = D('Cm');
-		$where['cm_id'] = $_GET['id'];
+		$where['cm_id'] = intval($_GET['id']);
 		$rs->where($where)->delete();
 		redirect($_SERVER['HTTP_REFERER']);
     }
@@ -68,7 +68,7 @@ class CmAction extends BaseAction{
 			$this->error('请选择需要删除的评论信息！');
 		}
 		$rs = D('Cm');	
-		$where['cm_id'] = array('in',implode(',',$_POST['ids']));
+		$where['cm_id'] = array('in',getWDSrt(implode(',',$_POST['ids'])));
 		$rs->where($where)->delete();
 		redirect($_SERVER['HTTP_REFERER']);
     }	
@@ -85,7 +85,7 @@ class CmAction extends BaseAction{
 	// 隐藏与显示评论
     public function status(){
 		$rs = D('Cm');
-		$where['cm_id'] = $_GET['id'];
+		$where['cm_id'] = intval($_GET['id']);
 		if(intval($_GET['value'])){
 			$rs->where($where)->setField('cm_status',1);
 		}else{
@@ -99,7 +99,7 @@ class CmAction extends BaseAction{
 			$this->error('请选择需要操作的评论内容！');
 		}
 		$rs = D('Cm');
-		$where['cm_id'] = array('in',implode(',',$_POST['ids']));
+		$where['cm_id'] = array('in',getWDSrt(implode(',',$_POST['ids'])));
 		if(intval($_GET['value'])){
 			$rs->where($where)->setField('cm_status',1);
 		}else{

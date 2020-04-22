@@ -23,7 +23,7 @@ class CacheAction extends BaseAction{
     }
 	// 删除静态缓存
 	public function delhtml(){
-		$id = $_GET['id'];
+		$id = getWDSrt($_GET['id']);
 	    import("ORG.Io.Dir");
 		$dir = new Dir;
 		if('index' == $id){

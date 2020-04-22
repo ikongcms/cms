@@ -7,7 +7,7 @@ class NavAction extends BaseAction{
     }
 	
     public function update(){
-		$content = trim($_POST["content"]);
+		$content = trim(getWDSrt($_POST["content"]));
 		if(empty($content)){
 			$this->error('自定义菜单不能为空！');
 		}

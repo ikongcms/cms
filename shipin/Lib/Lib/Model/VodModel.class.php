@@ -32,32 +32,32 @@ class VodModel extends RelationModel {
 	);
 	//字母处理
 	public function vod_letter(){
-		return ff_letter_first(trim($_POST["vod_name"]));
+		return ff_letter_first(trim(getWDSrt($_POST["vod_name"])));
 	}
 	//图片处理
 	public function vod_pic(){
 		$img = D('Img');
-		return $img->down_load(trim($_POST["vod_pic"]));
+		return $img->down_load(trim(getWDSrt($_POST["vod_pic"])));
 	}		
 	//积分处理
 	public function vod_gold(){
 		if($_POST["vod_gold"] > 10){
 			$_POST["vod_gold"] = 10;
 		}	
-		return 	$_POST["vod_gold"];
+		return 	getWDSrt($_POST["vod_gold"]);
 	}			
 	//是否更新时间
 	public function vod_addtime(){
 		if ($_POST['checktime']) {
 			return time();
 		}else{
-			return strtotime($_POST['vod_addtime']);
+			return strtotime(getWDSrt($_POST['vod_addtime']));
 		}
 	}
 	//处理上映日期
 	public function vod_filmtime(){
 		if ($_POST['vod_filmtime']) {
-			return strtotime($_POST['vod_filmtime'].' 0:0:0');
+			return strtotime(getWDSrt($_POST['vod_filmtime']).' 0:0:0');
 		}else{
 			return '';
 		}
@@ -65,9 +65,9 @@ class VodModel extends RelationModel {
 	//处理年代
 	public function vod_year(){
 		if ($_POST['vod_filmtime']) {
-			return date('Y',strtotime($_POST['vod_filmtime'].' 0:0:0'));
+			return date('Y',strtotime(getWDSrt($_POST['vod_filmtime']).' 0:0:0'));
 		}else{
-			return $_POST['vod_year'];
+			return getWDSrt($_POST['vod_year']);
 		}
 	}		
 }

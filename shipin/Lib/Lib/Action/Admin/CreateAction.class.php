@@ -27,7 +27,7 @@ class CreateAction extends BaseAction{
 		$jump = intval($_REQUEST['jump']);
 		$this->check(C('url_html_list'),getsidname($sid).'列表页','?s=Admin-Create-Index-jump-'.$jump);
 		$array_list = F('_ppvod/list');
-		$array_listids = explode(',',$_REQUEST['ids_list_'.$sid]);
+		$array_listids = explode(',',getWDSrt($_REQUEST['ids_list_'.$sid]));
 		$k = 0;
 		foreach($array_listids as $key=>$value){
 			$list = list_search($array_list,'list_id='.$value);
@@ -108,7 +108,7 @@ class CreateAction extends BaseAction{
 	//读取资讯内容按分类
 	public function newsclass(){
 		$jump = intval($_REQUEST['jump']);
-		$ids = trim($_REQUEST['ids_2']);
+		$ids = trim(getWDSrt($_REQUEST['ids_2']));
 		$page = !empty($_GET['page']) ? intval($_GET['page']) : 1;
 		//检测是否需要生成
 		$this->check(C('url_html'),'资讯内容页','?s=Admin-Create-Newslist-ids_2-'.$ids.'-jump-'.$jump);
@@ -148,7 +148,7 @@ class CreateAction extends BaseAction{
 	}
 	//读取资讯内容按时间
 	public function newsday(){
-		$jump = intval($_REQUEST['jump']);
+		$jump = !empty($_REQUEST['jump'])?intval($_REQUEST['jump']):0;
 		$this->check(C('url_html'),'资讯内容页');
 		//查询数据开始
 		$rs = D("News");
@@ -201,7 +201,7 @@ class CreateAction extends BaseAction{
 	public function newsid(){
 		$where = array();
 		$rs = D("News");
-		$where['news_id'] = array('in',$_REQUEST["id"]);
+		$where['news_id'] = array('in',getWDSrt($_REQUEST["id"]));
 		$where['news_status'] = 1;
 		$where['news_cid'] = array('gt',0);
 		$array = $rs->where($where)->relation('Tag')->select();
@@ -223,7 +223,7 @@ class CreateAction extends BaseAction{
 	//读取视频内容按分类
 	public function vodclass(){
 		$jump = intval($_REQUEST['jump']);
-		$ids = trim($_REQUEST['ids_1']);
+		$ids = trim(getWDSrt($_REQUEST['ids_1']));
 		$page = !empty($_GET['page']) ? intval($_GET['page']) : 1;
 		$this->check(C('url_html'),'视频内容页','?s=Admin-Create-Vodlist-ids_1-'.$ids.'-jump-'.$jump);
 		//断点生成(写入缓存)
@@ -312,7 +312,7 @@ class CreateAction extends BaseAction{
 	public function vodid(){
 		$where = array();
 		$rs = D("Vod");
-		$where['vod_id'] = array('in',$_REQUEST["id"]);
+		$where['vod_id'] = array('in',getWDSrt($_REQUEST["id"]));
 		$where['vod_cid'] = array('gt',0);
 		$where['vod_status'] = 1;
 		$array = $rs->where($where)->relation('Tag')->select();
@@ -431,7 +431,7 @@ class CreateAction extends BaseAction{
     }
     //生成网站首页
     public function index(){
-		$jump = intval($_GET['jump']);
+		$jump = !empty($_GET['jump'])?intval($_GET['jump']):0;
 		$this->check(C('url_html'),'网站首页');
 		F('_create/nextcreate',NULL);
 	    $this->assign($this->Lable_Index());
@@ -447,7 +447,7 @@ class CreateAction extends BaseAction{
     //生成自定义模板
     public function mytpl(){
 		$suffix = C('html_file_suffix');
-		$jump = intval($_GET['jump']);
+		$jump = !empty($_GET['jump'])?intval($_GET['jump']):0;
 		$this->check(C('url_html'),'自定义模板');
 		import("ORG.Io.Dir");
 		$dir = new Dir(TEMPLATE_PATH.'/Home');
@@ -559,8 +559,8 @@ class CreateAction extends BaseAction{
 		}
 		$this->assign($array);
 		$this->assign('jumpurl',F('_create/nextcreate'));
-		$this->assign('list_vod_all',implode(',',$list[1]));
-		$this->assign('list_news_all',implode(',',$list[2]));
+		$this->assign('list_vod_all',!empty($list[1])?getWDSrt(implode(',',$list[1])):'');
+		$this->assign('list_news_all',!empty($list[2])?getWDSrt(implode(',',$list[2])):'');
 	    $this->assign('list_vod',F('_ppvod/listvod'));
 		$this->assign('list_news',F('_ppvod/listnews'));
         $this->display('./Public/system/html_show.html');

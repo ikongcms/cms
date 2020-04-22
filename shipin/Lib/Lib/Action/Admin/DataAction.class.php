@@ -81,7 +81,7 @@ class DataAction extends BaseAction{
 	//导入还原
 	public function back(){
 		$rs = new Model();
-		$pre = trim(getWD($_GET['id']));
+		$pre = trim(getWDSrt($_GET['id']));
 		$fileid = !empty($_GET['fileid']) ? intval($_GET['fileid']) : 1;
 		$filename = $pre.$fileid.'.sql';
 		$filepath = DATA_PATH.'_bak/'.$filename;
@@ -102,7 +102,7 @@ class DataAction extends BaseAction{
 	}
 	//下载还原
 	public function down(){
-		$filepath = DATA_PATH.'_bak/'.$_GET['id'];
+		$filepath = DATA_PATH.'_bak/'.getWDSrt($_GET['id']);
 		if (file_exists($filepath)) {
 			$filename = $filename ? $filename : basename($filepath);
 			$filetype = trim(substr(strrchr($filename, '.'), 1));
@@ -121,7 +121,7 @@ class DataAction extends BaseAction{
 	}
 	//删除分卷文件
 	public function del(){
-		$filename = trim($_GET['id']);
+		$filename = trim(getWDSrt($_GET['id']));
 		@unlink(DATA_PATH.'_bak/'.$filename);
 		$this->success($filename.'已经删除！');
 	}
@@ -165,7 +165,7 @@ class DataAction extends BaseAction{
     }	
 	//Ajax展示字段信息
     public function ajaxfields(){
-		$id = str_replace(C('db_prefix'),'',$_GET['id']);
+		$id = str_replace(C('db_prefix'),'',getWDSrt($_GET['id']));
 		if (!empty($id)) {
 			$rs = D("Admin.".$id);
 			$array = $rs->getDbFields();

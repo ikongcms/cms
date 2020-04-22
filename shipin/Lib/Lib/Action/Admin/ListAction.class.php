@@ -58,7 +58,7 @@ class ListAction extends BaseAction{
 	}	
 	// 更新数据
 	public function _before_update(){//前置
-		$where['list_dir'] = trim($_POST['list_dir']);
+		$where['list_dir'] = trim(getWDSrt($_POST['list_dir']));
 		$rs = D("Admin.List");
 		$list = $rs->field('id,cfile')->where($where)->find();
 		if(!empty($list)){
@@ -88,7 +88,7 @@ class ListAction extends BaseAction{
 			$this->error('请选择需要修改的栏目！');
 		}
 		$rs = D("Admin.List");
-		$array = $_POST;
+		$array = getWDSrt($_POST);
 		foreach($array['ids'] as $key=>$value){
 		    $data['list_oid'] = intval($array['list_oid'][$value]);
 			$data['list_name'] = $array['list_name'][$value];
@@ -121,8 +121,8 @@ class ListAction extends BaseAction{
 	// 删除数据
     public function del(){
 		$rs = D("Admin.List");
-		$where['list_id'] = $_GET['id'];
-		if (!getlistson($_GET['id'])) {
+		$where['list_id'] = intval($_GET['id']);
+		if (!getlistson(intval($_GET['id']))) {
 			$this->error("请先删除本类下面的子栏目！");
 		}
 		$rs->where($where)->delete();
@@ -147,7 +147,7 @@ class ListAction extends BaseAction{
 			$this->error('请选择需要删除的栏目！');
 		}	
 		$list = D("Admin.List");
-		$array = $_POST;
+		$array = getWDSrt($_POST);
 		foreach($array['ids'] as $value){
 			$id = intval($value);
 			$sid = getlistname($id,'list_id');

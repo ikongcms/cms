@@ -66,6 +66,22 @@ function getWD($str){
     preg_match_all('/([a-zA-Z0-9\_\～\！\：\。\，\《\》\-\,\.\:\|\/\s]+|[\x{4e00}-\x{9fff}]+|[\x{0800}-\x{4e00}]+|[\x{AC00}-\x{D7A3}]+|[\x{4e00}-\x{9fa5}]+)/u', $str, $match);
     return !empty($match[1])?implode($match[1]):'';
 }
+// 过滤字符串无限循环
+function getWDSrt($data) {
+    $da = array();
+    if(is_array($data)) {
+        foreach ($data as $key => $val) {
+            if(is_array($val)){
+                $da[$key] = getWDSrt($val);
+            } else {
+                $da[trim(getWD($key))] = trim(getWD($val));
+            }
+        }
+    } else {
+        $da = getWD($data);
+    }
+    return $da;
+}
 // UT*转GBK
 function u2g($str){
 	return iconv("UTF-8","GBK",$str);
@@ -332,7 +348,7 @@ function getlistname($cid,$type='list_name'){
 	if(!empty($arr[0])){
 		return $arr[0][$type];
 	}else{
-	    return '未知ID'.$cid;
+	    return '';
 	}
 }
 // 检查当前栏目是否没有小类
@@ -891,16 +907,16 @@ function ff_param_url(){
 	$where['sid'] = !empty($_REQUEST['sid']) ? intval($_REQUEST['sid']) : 0;
 	$where['id'] = !empty($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 	$where['year'] = !empty($_REQUEST['year']) ? intval($_REQUEST['year']) : 0;
-	$where['language'] = !empty($_REQUEST['language']) ? htmlspecialchars(urldecode(trim($_REQUEST['language']))) : '';
-	$where['area'] = !empty($_REQUEST['area']) ? htmlspecialchars(urldecode(trim($_REQUEST['area']))) : '';
-	$where['letter'] = !empty($_REQUEST['letter']) ? htmlspecialchars($_REQUEST['letter']) : '';
-	$where['actor'] = !empty($_REQUEST['actor']) ? htmlspecialchars(urldecode(trim($_REQUEST['actor']))) : '';
-	$where['director'] = !empty($_REQUEST['director']) ? htmlspecialchars(urldecode(trim($_REQUEST['director']))) : '';
-	$where['wd'] = !empty($_REQUEST['wd']) ? htmlspecialchars(urldecode(trim($_REQUEST['wd']))) : '';
+	$where['language'] = !empty($_REQUEST['language']) ? htmlspecialchars(urldecode(trim(getWDSrt($_REQUEST['language'])))) : '';
+	$where['area'] = !empty($_REQUEST['area']) ? htmlspecialchars(urldecode(trim(getWDSrt($_REQUEST['area'])))) : '';
+	$where['letter'] = !empty($_REQUEST['letter']) ? htmlspecialchars(getWDSrt($_REQUEST['letter'])) : '';
+	$where['actor'] = !empty($_REQUEST['actor']) ? htmlspecialchars(urldecode(trim(getWDSrt($_REQUEST['actor'])))) : '';
+	$where['director'] = !empty($_REQUEST['director']) ? htmlspecialchars(urldecode(trim(getWDSrt($_REQUEST['director'])))) : '';
+	$where['wd'] = !empty($_REQUEST['wd']) ? htmlspecialchars(urldecode(trim(getWDSrt($_REQUEST['wd'])))) : '';
 	//
 	$where['limit'] = !empty($_GET['limit']) ? intval($_GET['limit']) : 10;
 	$where['page'] = !empty($_GET['p']) ? intval($_GET['p']) : 1;
-	$where['order'] = !empty($_GET['order']) ? ff_order_by($_GET['order']) : 'addtime';
+	$where['order'] = !empty($_GET['order']) ? ff_order_by(getWDSrt($_GET['order'])) : 'addtime';
 	return $where;
 }
 //分页跳转参数处理
@@ -965,7 +981,7 @@ function ff_param_lable($tag = ''){
 	$array = explode(';',str_replace('num:','limit:',$tag));
 	foreach ($array as $v){
 		list($key,$val) = explode(':',trim($v));
-		$param[trim(getWD($key))] = trim(getWD($val));
+		$param[trim(getWDSrt($key))] = trim(getWDSrt($val));
 	}
 	return $param;
 }
@@ -1523,19 +1539,20 @@ function list_search($list,$condition) {
         parse_str($condition,$condition);
     // 返回的结果集合
     $resultSet = array();
-    foreach ($list as $key=>$data){
-        $find   =   false;
-        foreach ($condition as $field=>$value){
-            if(isset($data[$field])) {
-                if(0 === strpos($value,'/')) {
-                    $find   =   preg_match($value,$data[$field]);
-                }elseif($data[$field]==$value){
-                    $find = true;
+    if(!empty($list)) {
+        foreach ($list as $key=>$data){
+            $find   =   false;
+            foreach ($condition as $field=>$value){
+                if(isset($data[$field])) {
+                    if(0 === strpos($value,'/')) {
+                        $find   =   preg_match($value,$data[$field]);
+                    }elseif($data[$field]==$value){
+                        $find = true;
+                    }
                 }
             }
+        if($find) { $resultSet[]     =   &$list[$key]; }
         }
-        if($find)
-            $resultSet[]     =   &$list[$key];
     }
     return $resultSet;
 }

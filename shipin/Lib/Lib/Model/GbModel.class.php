@@ -13,7 +13,7 @@ class GbModel extends AdvModel {
 	);
 	public function check_vcode(){
 		if(C('user_vcode')){
-			if($_SESSION['verify'] != md5($_POST['gb_code'])){
+			if($_SESSION['verify'] != md5(getWDSrt($_POST['gb_code']))){
 				return false;
 			}
 		}

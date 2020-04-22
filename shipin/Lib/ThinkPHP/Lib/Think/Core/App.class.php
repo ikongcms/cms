@@ -219,7 +219,7 @@ class App
         if(C('TMPL_DETECT_THEME')) {// 自动侦测模板主题
             $t = C('VAR_TEMPLATE');
             if (isset($_GET[$t])){
-                $templateSet = $_GET[$t];
+                $templateSet = getWDSrt($_GET[$t]);
             }elseif(cookie('think_template')){
                 $templateSet = cookie('think_template');
             }

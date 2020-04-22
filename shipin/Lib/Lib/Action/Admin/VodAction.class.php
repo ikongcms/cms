@@ -11,11 +11,11 @@ class VodAction extends BaseAction{
 		$admin['player'] = !empty($_REQUEST['player'])?trim($_REQUEST['player']):0;
 		$admin['stars'] = !empty($_REQUEST['stars'])?intval($_REQUEST['stars']):0;
 		$admin['url'] = !empty($_REQUEST['url'])?intval($_REQUEST['url']):0;
-		$admin['type'] = !empty($_GET['type'])?getWD($_GET['type']):C('admin_order_type');
-		$admin['order'] = !empty($_GET['order'])?getWD($_GET['order']):'desc';
+		$admin['type'] = !empty($_GET['type'])?getWDSrt($_GET['type']):C('admin_order_type');
+		$admin['order'] = !empty($_GET['order'])?getWDSrt($_GET['order']):'desc';
 		$admin['orders'] = 'vod_'.$admin["type"].' '.$admin['order'];
-		$admin['wd'] = !empty($_GET['wd'])?urldecode(trim(getWD($_REQUEST['wd']))):'';
-		$admin['tag'] = !empty($_GET['tag'])?urldecode(trim(getWD($_REQUEST['tag']))):'';
+		$admin['wd'] = !empty($_GET['wd'])?urldecode(trim(getWDSrt($_REQUEST['wd']))):'';
+		$admin['tag'] = !empty($_GET['tag'])?urldecode(trim(getWDSrt($_REQUEST['tag']))):'';
 		$admin['tid'] = !empty($_GET['tid'])?intval($_REQUEST['tid']):0;//专题ID
 		$admin['p'] = '';
 		//生成查询参数
@@ -60,7 +60,7 @@ class VodAction extends BaseAction{
 			$where['tag_sid'] = 1;
 			$where['tag_name'] = $admin['tag'];
 			$rs = D('TagView');
-			$admin['tag'] = urlencode(getWD($_REQUEST['tag']));
+			$admin['tag'] = urlencode(getWDSrt($_REQUEST['tag']));
 		}else{
 			$rs = D("Vod");
 		}
@@ -150,7 +150,7 @@ class VodAction extends BaseAction{
     public function _before_insert(){
 		//自动获取关键词tag
 		if(empty($_POST["vod_keywords"]) && C('rand_tag')){
-			$_POST["vod_keywords"] = ff_tag_auto(getWD($_POST["vod_name"]),getWD($_POST["vod_content"]));
+			$_POST["vod_keywords"] = ff_tag_auto(getWDSrt($_POST["vod_name"]),getWDSrt($_POST["vod_content"]));
 		}
 		//播放器组与地址组
 		$play = $_POST["vod_play"];
@@ -158,9 +158,9 @@ class VodAction extends BaseAction{
 		foreach($_POST["vod_url"] as $key=>$val){
 			$val = trim($val);
 			if($val){
-			    $vod_play[] = getWD($play[$key]);
-				$vod_server[] = getWD($server[$key]);
-				$vod_url[] = getWD($val);
+			    $vod_play[] = getWDSrt($play[$key]);
+				$vod_server[] = getWDSrt($server[$key]);
+				$vod_url[] = getWDSrt($val);
 			};
 		}
 		$_POST["vod_play"] = !empty($vod_play)?strval(implode('$$$',$vod_play)):'';
@@ -173,7 +173,7 @@ class VodAction extends BaseAction{
 		if($rs->create()){
 			//关联操作>>写入tag
 			if(!empty($_POST["vod_keywords"])){
-				$rs->Tag = $tag->tag_array(getWD($_POST["vod_keywords"]),1);
+				$rs->Tag = $tag->tag_array(getWDSrt($_POST["vod_keywords"]),1);
 				$id = $rs->relation('Tag')->add();
 			}else{
 				$id = $rs->add();
@@ -204,10 +204,10 @@ class VodAction extends BaseAction{
 			if(false !==  $rs->save()){
 				//手动更新TAG
 				if(!empty($_POST["vod_keywords"])){
-					$tag->tag_update(getWD($_POST["vod_id"]),getWD($_POST["vod_keywords"]),1);
+					$tag->tag_update(getWDSrt($_POST["vod_id"]),getWDSrt($_POST["vod_keywords"]),1);
 				}
 				//后置操作条件
-				$rs->$vod_id = !empty($_POST["vod_id"])?getWD($_POST["vod_id"]):0;
+				$rs->$vod_id = !empty($_POST["vod_id"])?getWDSrt($_POST["vod_id"]):0;
 			}else{
 				$this->error("修改影片信息失败！");
 			}
@@ -303,7 +303,7 @@ class VodAction extends BaseAction{
     }
 	// 批量生成数据
     public function create(){
-		echo'<iframe scrolling="no" src="?s=Admin-Create-vodid-id-'.getWD(implode(',',$_POST['ids'])).'" frameborder="0" style="display:none"></iframe>';
+		echo'<iframe scrolling="no" src="?s=Admin-Create-vodid-id-'.getWDSrt(implode(',',$_POST['ids'])).'" frameborder="0" style="display:none"></iframe>';
 		$this->assign("jumpUrl",$_SESSION['vod_jumpurl']);
 		$this->success('批量生成数据成功！');
     }	

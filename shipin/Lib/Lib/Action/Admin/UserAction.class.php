@@ -12,7 +12,7 @@ class UserAction extends BaseAction{
 	// 用户添加与编辑表单
     public function add(){
 		$rs = D("Admin.User");
-		$user_id = $_GET['id'];
+		$user_id = intval($_GET['id']);
 		if ($user_id>0) {
             $where['user_id'] = $user_id;
 			$array = $rs->where($where)->find();
@@ -60,7 +60,7 @@ class UserAction extends BaseAction{
 	// 删除用户
 	public function del(){
 		$rs = D("Admin.User");
-		$rs->where('user_id = '.$_GET['id'])->delete();
+		$rs->where('user_id = '.intval($_GET['id']))->delete();
 		$this->success('删除用户成功！');
 	}			
 	// 用户组列表
@@ -72,7 +72,7 @@ class UserAction extends BaseAction{
     }	
 	// 用户组添加与编辑表单
     public function addgroup(){
-		$group_id = $_GET['id'];
+		$group_id = getWDSrt($_GET['id']);
 		if ($group_id>0) {
 			$rs = D("Admin.Group");
             $where['group_id'] = $group_id;

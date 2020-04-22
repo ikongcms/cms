@@ -12,7 +12,7 @@ class DswinAction extends Action{
 		$this->assign($array);
 		$this->assign('list_vod_all',implode(',',$list[1]));
 		//
-		$array = $_REQUEST['ds'];
+		$array = getWDSrt($_REQUEST['ds']);
 		$array['min'] = $array['caiji']+$array['data'];
 		$this->assign($array);
 		$this->display('./Public/plus/ds/ds_wait.html');

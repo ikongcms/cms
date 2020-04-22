@@ -134,8 +134,8 @@ class App
     {
         $var  =  C('VAR_MODULE');
         $module = !empty($_POST[$var]) ?
-            $_POST[$var] :
-            (!empty($_GET[$var])? $_GET[$var]:C('DEFAULT_MODULE'));
+            getWDSrt($_POST[$var]) :
+            (!empty($_GET[$var])?getWDSrt($_GET[$var]):C('DEFAULT_MODULE'));
         if(C('URL_CASE_INSENSITIVE')) {
             // URL地址不区分大小写
             define('P_MODULE_NAME',strtolower($module));
@@ -159,8 +159,8 @@ class App
     {
         $var  =  C('VAR_ACTION');
         $action   = !empty($_POST[$var]) ?
-            $_POST[$var] :
-            (!empty($_GET[$var])?$_GET[$var]:C('DEFAULT_ACTION'));
+            getWDSrt($_POST[$var]) :
+            (!empty($_GET[$var])?getWDSrt($_GET[$var]):C('DEFAULT_ACTION'));
         unset($_POST[$var],$_GET[$var]);
         return $action;
     }

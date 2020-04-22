@@ -52,7 +52,7 @@ class Dispatcher extends Think
 			// 获取PATHINFO信息
             self::getPathInfo();
             if (!empty($_GET)) {
-                $_GET  =  array_merge (self :: parsePathInfo(),$_GET);
+                $_GET  =  array_merge (self :: parsePathInfo(),getWDSrt($_GET));
                 $_varModule =   C('VAR_MODULE');
                 $_varAction =   C('VAR_ACTION');
                 $_depr  =   C('URL_PATHINFO_DEPR');
@@ -81,9 +81,9 @@ class Dispatcher extends Think
                 redirect(PHP_FILE.$_URL);
             }else{
                 //给_GET赋值 以保证可以按照正常方式取_GET值
-                $_GET = array_merge(self :: parsePathInfo(),$_GET);
+                $_GET = array_merge(self :: parsePathInfo(),getWDSrt($_GET));
                 //保证$_REQUEST正常取值
-                $_REQUEST = array_merge($_POST,$_GET);
+                $_REQUEST = array_merge(getWDSrt($_POST),getWDSrt($_GET));
             }
         }
     }
@@ -112,7 +112,8 @@ class Dispatcher extends Think
                 }
             }
         }else {
-            $res = preg_replace('@(\w+)'.C('URL_PATHINFO_DEPR').'([^,\/]+)@e', '$pathInfo[\'\\1\']="\\2";', $_SERVER['PATH_INFO']);
+            $res = preg_replace_callback('/(\w+)'.C('URL_PATHINFO_DEPR').'([^,\/]+)/', function ($match) use (&$pathInfo) {$pathInfo[$match[1]] = $match[2];}, $_SERVER['PATH_INFO']);
+            //$res = preg_replace('@(\w+)'.C('URL_PATHINFO_DEPR').'([^,\/]+)@e', '$pathInfo[\'\\1\']="\\2";', $_SERVER['PATH_INFO']);
         }
         return $pathInfo;
     }

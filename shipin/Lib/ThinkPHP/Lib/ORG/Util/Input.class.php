@@ -138,12 +138,12 @@ class Input extends Think
      */
     static public function noGPC()
     {
-        if ( get_magic_quotes_gpc() ) {
-           $_POST = stripslashes_deep($_POST);
-           $_GET = stripslashes_deep($_GET);
-           $_COOKIE = stripslashes_deep($_COOKIE);
-           $_REQUEST= stripslashes_deep($_REQUEST);
-        }
+        //if ( get_magic_quotes_gpc() ) {
+           $_POST = stripslashes_deep(getWDSrt($_POST));
+           $_GET = stripslashes_deep(getWDSrt($_GET));
+           $_COOKIE = stripslashes_deep(getWDSrt($_COOKIE));
+           $_REQUEST= stripslashes_deep(getWDSrt($_REQUEST));
+        //}
     }
 
     /**

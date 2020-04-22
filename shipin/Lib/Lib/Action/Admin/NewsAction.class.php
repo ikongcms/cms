@@ -7,11 +7,11 @@ class NewsAction extends BaseAction{
 		$admin['cid']= !empty($_REQUEST['cid'])?intval($_REQUEST['cid']):0;
 		$admin['status'] = !empty($_REQUEST['status'])?intval($_REQUEST['status']):0;
 		$admin['stars'] = !empty($_REQUEST['stars'])?intval($_REQUEST['stars']):0;
-		$admin['type'] = !empty($_GET['type'])?$_GET['type']:C('admin_order_type');
-		$admin['order'] = !empty($_GET['order'])?$_GET['order']:'desc';
+		$admin['type'] = !empty($_GET['type'])?getWDSrt($_GET['type']):C('admin_order_type');
+		$admin['order'] = !empty($_GET['order'])?getWDSrt($_GET['order']):'desc';
 		$admin['orders'] = 'news_'.$admin["type"].' '.$admin['order'];
-		$admin['wd'] = !empty($_GET['wd'])?urldecode(trim($_REQUEST['wd'])):'';
-		$admin['tag'] = !empty($_GET['tag'])?urldecode(trim($_REQUEST['tag'])):'';
+		$admin['wd'] = !empty($_GET['wd'])?urldecode(trim(getWDSrt($_REQUEST['wd']))):'';
+		$admin['tag'] = !empty($_GET['tag'])?urldecode(trim(getWDSrt($_REQUEST['tag']))):'';
 		$admin['tid'] = !empty($_GET['tid'])?intval($_REQUEST['tid']):0;//专题ID
 		$admin['p'] = '';
 		//生成查询参数
@@ -37,7 +37,7 @@ class NewsAction extends BaseAction{
 			$where['tag_sid'] = 2;
 			$where['tag_name'] = $admin['tag'];
 			$rs = D('TagnewsView');
-			$admin['tag'] = urlencode($_REQUEST['tag']);
+			$admin['tag'] = urlencode(getWDSrt($_REQUEST['tag']));
 		}else{
 			$rs = D("News");
 		}
@@ -80,7 +80,7 @@ class NewsAction extends BaseAction{
 			$array['news_tplname'] = '编辑';
             if(!empty($array['Tag'])){
                 foreach($array['Tag'] as $key=>$value){
-                    $tag[$key] = getWD($value['tag_name']);
+                    $tag[$key] = getWDSrt($value['tag_name']);
                 }
             }
 			$array['news_starsarr'] = admin_star_arr($array['news_stars']);
@@ -108,7 +108,7 @@ class NewsAction extends BaseAction{
     public function _before_insert(){
 		//自动获取关键词tag
 		if(empty($_POST["news_keywords"]) && C('rand_tag')){
-			$_POST["news_keywords"] = ff_tag_auto($_POST["news_name"],$_POST["news_content"]);
+			$_POST["news_keywords"] = ff_tag_auto(getWDSrt($_POST["news_name"]),getWDSrt($_POST["news_content"]));
 		}
 	}	
 	// 新增新闻保存到数据库
@@ -138,7 +138,7 @@ class NewsAction extends BaseAction{
 			if(false !==  $rs->save()){
 				//手动更新TAG
 				if($_POST["news_keywords"]){
-					$tag->tag_update($_POST["news_id"],$_POST["news_keywords"],2);
+					$tag->tag_update($_POST["news_id"],getWDSrt($_POST["news_keywords"]),2);
 				}
 				//后置操作条件
 				$rs->$news_id = !empty($_POST["news_id"])?intval($_POST["news_id"]):0;
@@ -187,7 +187,7 @@ class NewsAction extends BaseAction{
     }
 	// 设置状态
     public function status(){
-		$where['news_id'] = $_GET['id'];
+		$where['news_id'] = !empty($_GET['id'])?intval($_GET['id']):0;
 		$rs = D("News");
 		if($_GET['value']){
 			$rs->where($where)->setField('news_status',1);
@@ -198,7 +198,7 @@ class NewsAction extends BaseAction{
     }
 	// 删除文章
     public function del(){
-		$this->delfile($_GET['id']);
+		$this->delfile(intval($_GET['id']));
 		redirect($_SESSION['news_jumpurl']);
     }
 	// 删除文章all
@@ -206,9 +206,9 @@ class NewsAction extends BaseAction{
 		if(empty($_POST['ids'])){
 			$this->error('请选择需要删除的文章！');
 		}	
-		$array = $_POST['ids'];
+		$array = getWDSrt($_POST['ids']);
 		foreach($array as $val){
-			$this->delfile($val);
+			$this->delfile(getWDSrt($val));
 		}
 		redirect($_SESSION['news_jumpurl']);
     }
@@ -256,7 +256,7 @@ class NewsAction extends BaseAction{
 		if (getlistson($cid)) {
 			$rs = D("News");
 			$data['news_cid'] = $cid;
-			$where['news_id'] = array('in',$_POST['ids']);
+			$where['news_id'] = array('in',getWDSrt($_POST['ids']));
 			$rs->where($where)->save($data);
 			redirect($_SESSION['news_jumpurl']);
 		}else{
@@ -265,7 +265,7 @@ class NewsAction extends BaseAction{
     }	
 	// 批量生成数据
     public function create(){
-		echo'<iframe scrolling="no" src="?s=Admin-Create-newsid-id-'.implode(',',$_POST['ids']).'" frameborder="0" style="display:none"></iframe>';
+		echo'<iframe scrolling="no" src="?s=Admin-Create-newsid-id-'.getWDSrt(implode(',',$_POST['ids'])).'" frameborder="0" style="display:none"></iframe>';
 		$this->assign("jumpUrl",$_SESSION['news_jumpurl']);
 		$this->success('批量生成新闻成功！');
     }				

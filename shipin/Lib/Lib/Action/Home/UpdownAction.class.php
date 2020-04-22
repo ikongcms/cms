@@ -6,7 +6,7 @@ class UpdownAction extends HomeAction{
 		if ($id < 1) {
 			$this->ajaxReturn(-1,'数据非法！',-1);
 		}
-		$this->show($id,trim($_GET['type']),'vod');
+		$this->show($id,trim(getWDSrt($_GET['type'])),'vod');
     }
     public function news(){
 		$id = intval($_GET['id']);

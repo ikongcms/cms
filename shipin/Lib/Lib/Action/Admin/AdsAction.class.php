@@ -49,7 +49,7 @@ class AdsAction extends BaseAction{
 	}
 	// 预览广告
     public function view(){
-		$id = $_GET['id'];
+		$id = getWDSrt($_GET['id']);
 		if ($id) {
 		    $rs = D("Ads");
 			$list = $rs->field('ads_name')->where('ads_id='.$id)->find();
@@ -59,7 +59,7 @@ class AdsAction extends BaseAction{
 	// 删除广告
     public function del(){
 		$rs = D("Ads");
-		$where['ads_id'] = $_GET['id'];
+		$where['ads_id'] = getWDSrt($_GET['id']);
 		$array = $rs->field('ads_name')->where($where)->find();
 	    $rs->where($where)->delete();
 		@unlink('./'.C('admin_ads_file').'/'.$array['ads_name'].'.js');

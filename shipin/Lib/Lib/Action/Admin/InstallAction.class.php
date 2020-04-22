@@ -16,7 +16,7 @@ class InstallAction extends Action{
         $this->display('./Public/system/install.html');
     }
     public function install(){
-		$data = $_POST['data'];
+		$data = getWDSrt($_POST['data']);
 		$rs = @mysqli_connect($data['db_host'].":".intval($data['db_port']),$data['db_user'],$data['db_pwd']);
 		if(!$rs){
 			$this->error(L('install_db_connect'));	

@@ -10,7 +10,7 @@ class SpecialModel extends RelationModel {
 		if ($_POST['checktime']) {
 			return time();
 		}else{
-			return strtotime($_POST['special_addtime']);
+			return strtotime(getWDSrt($_POST['special_addtime']));
 		}
 	}
 	//关联定义

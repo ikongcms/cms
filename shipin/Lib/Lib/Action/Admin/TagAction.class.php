@@ -46,7 +46,7 @@ class TagAction extends BaseAction{
 	// 删除标签
     public function del(){
 		$rs = D("Tag");
-		$where['tag_name'] = trim($_GET['id']);
+		$where['tag_name'] = trim(getWDSrt($_GET['id']));
 		$rs->where($where)->delete();
 		$this->success('标签:'.$tag.'删除成功！');
     }									

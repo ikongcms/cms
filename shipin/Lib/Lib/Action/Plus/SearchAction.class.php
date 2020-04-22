@@ -1,7 +1,7 @@
 <?php
 class SearchAction extends HomeAction{
 	public function vod(){
-		$wd = trim($_GET['q']);
+		$wd = trim(getWDSrt($_GET['q']));
 		$where = array();
 		$where['vod_name'] = array('like',$wd.'%');
 		$rs = D('Vod');

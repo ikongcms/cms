@@ -17,7 +17,7 @@ class CmModel extends AdvModel {
 	);
 	//检测验证码是否正确
 	public function check_vcode(){
-		if($_SESSION['verify'] != md5($_POST['vcode'])){
+		if($_SESSION['verify'] != md5(getWDSrt($_POST['vcode']))){
 			return false;
 		}
 	}

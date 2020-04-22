@@ -6,7 +6,7 @@ class GbAction extends BaseAction{
 		$admin['cid']    = !empty($_REQUEST['cid'])?intval($_REQUEST['cid']):0;
 		$admin['status'] = !empty($_GET['status'])?intval($_GET['status']):0;
 		$admin['intro']     = !empty($_GET['intro'])?intval($_GET['intro']):0;
-		$admin['wd']     = !empty($_REQUEST['wd'])?urldecode(trim($_REQUEST['wd'])):0;
+		$admin['wd']     = !empty($_REQUEST['wd'])?urldecode(trim(getWDSrt($_REQUEST['wd']))):0;
 		if ($admin['cid']) {
 			$where['gb_cid'] = array('gt',0);
 			$admin['gb_title'] = '报错';
@@ -49,7 +49,7 @@ class GbAction extends BaseAction{
 	// 用户留言编辑
     public function add(){
 		$rs = D('Gb');
-		$where['gb_id'] = $_GET['id'];
+		$where['gb_id'] = intval($_GET['id']);
 		$array = $rs->where($where)->find();
 		$this->assign($array);	
         $this->display('./Public/system/gb_add.html');
@@ -70,7 +70,7 @@ class GbAction extends BaseAction{
 	// 删除留言BY-ID
     public function del(){
 		$rs = D('Gb');
-		$where['gb_id'] = $_GET['id'];
+		$where['gb_id'] = intval($_GET['id']);
 		$rs->where($where)->delete();
 		redirect($_SERVER['HTTP_REFERER']);
     }
@@ -80,7 +80,7 @@ class GbAction extends BaseAction{
 			$this->error('请选择需要删除的留言信息！');
 		}
 		$rs = D('Gb');	
-		$where['gb_id'] = array('in',implode(',',$_POST['ids']));
+		$where['gb_id'] = array('in',getWDSrt(implode(',',$_POST['ids'])));
 		$rs->where($where)->delete();
 		redirect($_SERVER['HTTP_REFERER']);
     }	
@@ -97,7 +97,7 @@ class GbAction extends BaseAction{
 	// 隐藏与显示留言
     public function status(){
 		$rs = D('Gb');
-		$where['gb_id'] = $_GET['id'];
+		$where['gb_id'] = intval($_GET['id']);
 		if(intval($_GET['value'])){
 			$rs->where($where)->setField('gb_status',1);
 		}else{
@@ -108,7 +108,7 @@ class GbAction extends BaseAction{
 	// 置顶留言
     public function order(){
 		$rs = D('Gb');
-		$where['gb_id'] = $_GET['id'];
+		$where['gb_id'] = intval($_GET['id']);
 		if(intval($_GET['value'])){
 			$rs->where($where)->setField('gb_oid',1);
 		}else{
@@ -122,7 +122,7 @@ class GbAction extends BaseAction{
 			$this->error('请选择需要操作的留言内容！');
 		}
 		$rs = D('Gb');
-		$where['gb_id'] = array('in',implode(',',$_POST['ids']));
+		$where['gb_id'] = array('in',getWDSrt(implode(',',$_POST['ids'])));
 		if(intval($_GET['value'])){
 			$rs->where($where)->setField('gb_status',1);
 		}else{

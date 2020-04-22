@@ -53,7 +53,7 @@ class LinkAction extends BaseAction{
 	}			
 	// 批量更新
 	public function updateall(){
-	    $array = $_POST;
+	    $array = getWDSrt($_POST);
 		$rs = D("Link");
 		foreach($array['link_id'] as $value){
 		    $data['link_id'] = $array['link_id'][$value];
@@ -73,7 +73,7 @@ class LinkAction extends BaseAction{
 	// 删除友情链接
     public function del(){
 		$rs = D("Link");
-		$where['link_id'] = $_GET['id'];
+		$where['link_id'] = intval($_GET['id']);
 	    $rs->where($where)->delete();
 		redirect('?s=Admin-Link-Show');
     }					

@@ -76,7 +76,7 @@ class Dispatcher extends Think
                 }
                 if(isset($rule[1])) { // 传入参数
                     parse_str($rule[1],$parms);
-                    $_GET   =  array_merge($_GET,$parms);
+                    $_GET   =  array_merge(getWDSrt($_GET),$parms);
                 }
             }
         }
@@ -99,9 +99,9 @@ class Dispatcher extends Think
             }
             $var[C('VAR_ACTION')]  =   array_shift($paths);
             // 解析剩余的URL参数
-            preg_replace_callback('/(\w+)'.$depr.'([^'.$depr.'\/]+)/', function ($match) use (&$var) {$var[$match[1]] = strip_tags($match[2]);}, implode($depr,$paths));
+            $res = preg_replace_callback('/(\w+)'.$depr.'([^'.$depr.'\/]+)/', function ($match) use (&$var) {$var[$match[1]] = strip_tags($match[2]);}, implode($depr,$paths));
             //$res = preg_replace('@(\w+)'.$depr.'([^'.$depr.'\/]+)@e', '$var[\'\\1\']=strip_tags(\'\\2\');', implode($depr,$paths));
-            $_GET   =  array_merge($var,$_GET);
+            $_GET   =  array_merge($var,getWDSrt($_GET));
         }
 
         // 获取分组 模块和操作名称
@@ -136,7 +136,7 @@ class Dispatcher extends Think
         // 当前操作地址
         define('__ACTION__',__URL__.$depr.ACTION_NAME);
         //保证$_REQUEST正常取值
-        $_REQUEST = array_merge($_POST,$_GET);
+        $_REQUEST = array_merge(getWDSrt($_POST),getWDSrt($_GET));
     }
 
     /**
@@ -176,8 +176,8 @@ class Dispatcher extends Think
                 if(!empty($parsedUrl['query'])) {
                     $_SERVER['QUERY_STRING'] = $parsedUrl['query'];
                     parse_str($parsedUrl['query'], $GET);
-                    $_GET = array_merge($_GET, $GET);
-                    reset($_GET);
+                    $_GET = array_merge(getWDSrt($_GET), $GET);
+                    reset(getWDSrt($_GET));
                 }else {
                     unset($_SERVER['QUERY_STRING']);
                 }
@@ -222,11 +222,12 @@ class Dispatcher extends Think
                     for($i=0;$i<count($vars);$i++)
                         $var[$vars[$i]]     =   array_shift($paths);
                     // 解析剩余的URL参数
-                    $res = preg_replace('@(\w+)\/([^,\/]+)@e', '$var[\'\\1\']=strip_tags(\'\\2\');', implode('/',$paths));
-                    $_GET   =  array_merge($var,$_GET);
+                    $res = preg_replace_callback('/(\w+)\/([^,\/]+)/', function ($match) use (&$var) {$var[$match[1]] = strip_tags($match[2]);}, implode('/',$paths));
+                    //$res = preg_replace('@(\w+)\/([^,\/]+)@e', '$var[\'\\1\']=strip_tags(\'\\2\');', implode('/',$paths));
+                    $_GET   =  array_merge($var,getWDSrt($_GET));
                     if(isset($route[3])) {
                         parse_str($route[3],$params);
-                        $_GET   =   array_merge($_GET,$params);
+                        $_GET   =   array_merge(getWDSrt($_GET),$params);
                     }
                     return true;
                 }elseif(1 < substr_count($route[0],'/') && preg_match($route[0],$regx,$matches)) {
@@ -237,11 +238,12 @@ class Dispatcher extends Think
                     for($i=0;$i<count($vars);$i++)
                         $var[$vars[$i]]     =   $matches[$i+1];
                     // 解析剩余的URL参数
-                    $res = preg_replace('@(\w+)\/([^,\/]+)@e', '$var[\'\\1\']= strip_tags(\'\\2\');', str_replace($matches[0],'',$regx));
-                    $_GET   =  array_merge($var,$_GET);
+                    $res = preg_replace_callback('/(\w+)\/([^,\/]+)/', function ($match) use (&$var) {$var[$match[1]] = strip_tags($match[2]);}, str_replace($matches[0],'',$regx));
+                    //$res = preg_replace('@(\w+)\/([^,\/]+)@e', '$var[\'\\1\']= strip_tags(\'\\2\');', str_replace($matches[0],'',$regx));
+                    $_GET   =  array_merge($var,getWDSrt($_GET));
                     if(isset($route[3])) {
                         parse_str($route[3],$params);
-                        $_GET   =   array_merge($_GET,$params);
+                        $_GET   =   array_merge(getWDSrt($_GET),$params);
                     }
                     return true;
                 }
@@ -270,7 +272,7 @@ class Dispatcher extends Think
      */
     static private function getModule($var)
     {
-        $module = (!empty($_GET[$var])? $_GET[$var]:C('DEFAULT_MODULE'));
+        $module = (!empty($_GET[$var])? getWDSrt($_GET[$var]):C('DEFAULT_MODULE'));
         if(C('URL_CASE_INSENSITIVE')) {
             // URL地址不区分大小写
             define('P_MODULE_NAME',strtolower($module));
@@ -293,8 +295,8 @@ class Dispatcher extends Think
     static private function getAction($var)
     {
         $action   = !empty($_POST[$var]) ?
-            $_POST[$var] :
-            (!empty($_GET[$var])?$_GET[$var]:C('DEFAULT_ACTION'));
+            getWDSrt($_POST[$var]) :
+            (!empty($_GET[$var])?getWDSrt($_GET[$var]):C('DEFAULT_ACTION'));
         unset($_POST[$var],$_GET[$var]);
         return C('URL_CASE_INSENSITIVE')?strtolower($action):$action;
     }
@@ -310,7 +312,7 @@ class Dispatcher extends Think
      */
     static private function getGroup($var)
     {
-        $group   = (!empty($_GET[$var])?$_GET[$var]:C('DEFAULT_GROUP'));
+        $group   = (!empty($_GET[$var])?getWDSrt($_GET[$var]):C('DEFAULT_GROUP'));
         unset($_GET[$var]);
         return ucfirst(strtolower($group));
     }

@@ -195,7 +195,7 @@ class ThinkTemplateCompiler {
     }
     // 解析特殊变量
     protected function parseThink($varStr) {
-        $vars = explode('.',$varStr);
+        $vars = explode('.',getWDSrt($varStr));
         $vars[1] = strtoupper(trim($vars[1]));
         $parseStr = '';
         if(count($vars)>=3){

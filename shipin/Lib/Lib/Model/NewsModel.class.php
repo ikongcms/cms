@@ -32,27 +32,27 @@ class NewsModel extends RelationModel {
 	// 自动添加简介
 	public function get_remark(){
 		if(empty($_POST['news_remark'])){
-			return msubstr(trim($_POST['news_content']),0,100,'utf-8',false);
+			return msubstr(trim(getWDSrt($_POST['news_content'])),0,100,'utf-8',false);
 		}else{
-			return trim($_POST['news_remark']);
+			return trim(getWDSrt($_POST['news_remark']));
 		}
 	}
 	// 取首字母
 	public function a_letter(){
-		return ff_letter_first(trim($_POST['news_name']));
+		return ff_letter_first(trim(getWDSrt($_POST['news_name'])));
 	}
 	// 更新时间
 	public function a_addtime(){
 		if ($_POST['checktime']) {
 			return time();
 		}else{
-			return strtotime($_POST['addtime']);
+			return strtotime(getWDSrt($_POST['addtime']));
 		}
 	}
 	//图片处理
 	public function news_pic(){
 		$img = D('Img');
-		return $img->down_load(trim($_POST["news_pic"]));
+		return $img->down_load(trim(getWDSrt($_POST["news_pic"])));
 	}			
 }
 ?>

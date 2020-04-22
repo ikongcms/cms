@@ -57,7 +57,7 @@ class CmAction extends HomeAction{
 		if ($id < 1) {
 			exit('-1');
 		}
-		$ajax = trim($_GET['ajax']);
+		$ajax = trim(getWDSrt($_GET['ajax']));
 		$cookie = 'cmud-'.$id;
 		if(isset($_COOKIE[$cookie])){
 			exit('0');

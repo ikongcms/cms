@@ -66,7 +66,7 @@ class SlideAction extends BaseAction{
 	}
 	// 隐藏与显示幻灯
     public function status(){
-		$where['slide_id'] = $_GET['id'];
+		$where['slide_id'] = intval($_GET['id']);
 		$rs = D("Slide");
 		if (intval($_GET['sid'])) {
 			$rs->where($where)->setField('slide_status',1);
@@ -78,7 +78,7 @@ class SlideAction extends BaseAction{
 	// 删除幻灯片
     public function del(){
 		$rs = D("Slide");
-		$where['slide_id'] = $_GET['id'];
+		$where['slide_id'] = intval($_GET['id']);
 		$rs->where($where)->delete();
 		$this->redirect('Admin-Slide/Show');
     }								

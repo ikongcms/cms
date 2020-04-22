@@ -747,22 +747,10 @@ class Model extends Think
      * @return mixed
      +----------------------------------------------------------
      */
-     public function getPOST($data) {
-         $da = array();
-         foreach ($data as $key => $val) {
-            if(is_array($val)){
-                $da[$key] = $this->getPOST($val);
-            } else {
-                $da[trim(getWD($key))] = trim(getWD($val));
-            }
-         }
-         return $da;
-     }
-
      public function create($data='',$type='') {
         // 如果没有传值默认取POST数据
         if(empty($data)) {
-            $data   =   $this->getPOST($_POST);
+            $data   =   getWDSrt($_POST);
         }elseif(is_object($data)){
             $data   =   get_object_vars($data);
         }elseif(!is_array($data)){

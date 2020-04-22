@@ -3,8 +3,8 @@ class HitsAction extends HomeAction{
 	//静态模式JS展示人气
     public function show(){
 		$id	= intval($_GET['id']);
-		$sid = trim($_GET['sid']);
-		$type = trim($_GET['type']);
+		$sid = trim(getWDSrt($_GET['sid']));
+		$type = trim(getWDSrt($_GET['type']));
 		$where[$sid.'_id'] = $id;
 		$rs = M(ucfirst($sid));
 		$array = $rs->field($sid.'_id,'.$sid.'_hits,'.$sid.'_hits_month,'.$sid.'_hits_week,'.$sid.'_hits_day,'.$sid.'_addtime,'.$sid.'_hits_lasttime')->where($where)->find();

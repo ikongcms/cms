@@ -9,7 +9,7 @@ class CjAction extends BaseAction{
 		exit();
 		$rs = D("Cj");
 		$cj_id = intval($_GET['id']);
-		$cj_mod = trim($_GET['mod']);
+		$cj_mod = trim(getWDSrt($_GET['mod']));
 		$where = array();
 		if($cj_id){
 			if(!$cj_mod){
@@ -87,8 +87,8 @@ class CjAction extends BaseAction{
     }
 	// 栏目分类转换保存
     public function changeup(){
-		F('_collect/change',trim($_POST["content"]));
-		$array_rule = explode(chr(13),trim($_POST["content"]));
+		F('_collect/change',trim(getWDSrt($_POST["content"])));
+		$array_rule = explode(chr(13),trim(getWDSrt($_POST["content"])));
 		foreach($array_rule as $key => $listvalue){
 			$arrlist = explode('|',trim($listvalue));
 			$array[$arrlist[0]] = intval($arrlist[1]);

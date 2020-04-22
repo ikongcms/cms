@@ -30,7 +30,7 @@ class AdminAction extends BaseAction{
 				$rs[$i]=0;
 			}
 		}
-		$_POST['admin_ok'] = implode(',',$rs);
+		$_POST['admin_ok'] = getWDSrt(implode(',',$rs));
 	}   	
 	// 写入数据
 	public function insert(){
@@ -75,7 +75,7 @@ class AdminAction extends BaseAction{
     public function delall() {
         foreach($_POST['ids'] as $value) {
             if(ceil($value) != 1) {
-                $id[] = ceil($value);
+                $id[] = intval($value);
             }
         }
         if(!empty($id)) {
