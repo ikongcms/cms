@@ -33,6 +33,7 @@ if(!empty($_GET['id'])&&!empty($_GET['n'])) {
     $sum = 50;
     $data = array();
     $list = array(8,10,5,17,6,7,13,12);
+    $name = array('DM','YBD','ZP','ZM','YZ','OM','YM','WM');
     if(empty($list[$_GET['n']-1])) { exit('采集完成'); }
     if($sum-ceil($_GET['id'])>1) { 
         $caiji = getVideo($list[$_GET['n']-1], ($sum-ceil($_GET['id'])));
@@ -45,7 +46,7 @@ if(!empty($_GET['id'])&&!empty($_GET['n'])) {
             preg_match_all('/([a-zA-Z0-9\_\～\-\.\s]+|[\x{4e00}-\x{9fff}]+|[\x{0800}-\x{4e00}]+|[\x{AC00}-\x{D7A3}]+|[\x{4e00}-\x{9fa5}]+)/u', str_replace(array('骗','下','迷','药','强','奸'),array('带'),$value['vod_name']), $vod_name);
             if(empty($vod_name[0])){continue;}
             $vod_all = explode("番号", implode('',$vod_name[1]));
-            $vod_name = (empty($vod_all[1])?array($vod_all[0],''):array($vod_all[0],$vod_all[1]));
+            $vod_name = (empty($vod_all[1])?array($vod_all[0],$name[$_GET['n']-1].'_'.strtoupper(shortUrl(uniqid()))):array($vod_all[0],strtoupper(shortUrl(md5($vod_all[1])))));
             preg_match_all('/([a-zA-Z0-9\:\_\/\-\.]+m3u8)/u', $value['vod_url'], $vod_url);
             if(empty($vod_url[1])){continue;}
             $vod_url = $vod_url[1][0];
@@ -72,6 +73,36 @@ function getVideo($cid = 1, $p = 1) {
         return json_decode($jsonVideo[0], true);
     }
     return '404';
+}
+
+function shortUrl($longUrl) {
+    //要使用生成URL的字符
+    $mapStr = array(
+        'a','b','c','d','e','f','g',
+        'h','i','j','k','l','m','n',
+        'o','p','q','r','s','t',
+        'u','v','w','x','y','z',
+        '0','1','2','3','4','5','6','7','8','9',
+        'A','B','C','D','E','F','G',
+        'H','I','J','K','L','M','N',
+        'O','P','Q','R','S','T',
+        'U','V','W','X','Y','Z',
+    );
+    $key = $mapStr[rand(0, count($mapStr)-1)];
+    //对传入网址进行MD5加密 ,加个干扰key
+    $hash = md5($longUrl.$key);
+    $shortUrl = array();
+    //把加密字符按照8位一组16进制与0x3FFFFFFF进行位与运算
+    $hexint = 0x3FFFFFFF & bin2hex(substr($hash, mt_rand(0,3) * 8, 8));
+    for ($j = 0; $j < 6; $j++) {
+        //把得到的值与0x0000003D进行位与运算，取得字符数组$mapStr索引
+        $index = 0x0000003D & $hexint;
+        //把取得的字符相加
+        $shortUrl[] = $mapStr[$index];
+        //每次循环按位右移5位
+        $hexint >>= 5;
+    }
+    return join($shortUrl);
 }
 
 function getJson($url, $randIP) {
