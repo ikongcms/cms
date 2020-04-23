@@ -24,14 +24,14 @@ class CreateAction extends BaseAction{
 	}
 	//缓存视频/资讯列表列表路径为数组
 	public function list_cache_array($sid=1){
-		$jump = intval($_REQUEST['jump']);
+		$jump = !empty($_REQUEST['jump'])?intval($_REQUEST['jump']):0;
 		$this->check(C('url_html_list'),getsidname($sid).'列表页','?s=Admin-Create-Index-jump-'.$jump);
 		$array_list = F('_ppvod/list');
 		$array_listids = explode(',',getWDSrt($_REQUEST['ids_list_'.$sid]));
 		$k = 0;
 		foreach($array_listids as $key=>$value){
 			$list = list_search($array_list,'list_id='.$value);
-			if($list[0]["list_limit"]){
+			if(!empty($list[0]["list_limit"])){
 				$totalpages = ceil(getcount($value)/$list[0]["list_limit"]);
 			}else{
 				$totalpages = 1;
@@ -42,7 +42,7 @@ class CreateAction extends BaseAction{
 				$k++;
 			}
 		}
-		F('_create/list',$array);
+		F('_create/list',!empty($array)?$array:'');
 		if($sid == 1){
 			$this->vodlist_create();
 		}else{
@@ -53,8 +53,8 @@ class CreateAction extends BaseAction{
     public function list_create_array($sid){
 		$List = F('_ppvod/list');
 		$Url = F('_create/list');
-		$key = intval($_REQUEST['key']);
-		$jump = intval($_REQUEST['jump']);
+		$key = !empty($_REQUEST['key'])?intval($_REQUEST['key']):0;
+		$jump = !empty($_REQUEST['jump'])?intval($_REQUEST['jump']):0;
 		if($sid==1){
 			$nextcreate = '?s=Admin-Create-Vodlist_create-jump-'.$jump.'-key-'.$key;
 			$sidname = '视频';
@@ -65,9 +65,9 @@ class CreateAction extends BaseAction{
 		//断点生成(写入缓存)
 		F('_create/nextcreate',$nextcreate);
 		echo'<ul id="show" style="font-size:12px;list-style:none;margin:0px;padding:0px;font-family:宋体">';
-		echo'<li>总共需要生成<font color=blue>'.count($Url).'</font>个'.$sidname.'列表页，每页生成'.C('url_number').'个。</li>';
+		echo'<li>总共需要生成<font color=blue>'.(!empty($Url)?count($Url):0).'</font>个'.$sidname.'列表页，每页生成'.C('url_number').'个。</li>';
 		for($i=1;$i<=C('url_number');$i++){
-			if(!$Url[$key]){
+			if(empty($Url[$key])){
 				break;
 			}
 			//变量赋值
@@ -75,22 +75,22 @@ class CreateAction extends BaseAction{
 			C('currentpage',$Url[$key]['page']);
 			$channel = list_search($List,'list_id='.$Url[$key]['id']);
 			if($sid == 1){
-				$channel = $this->Lable_Vod_List(array('id'=>$Url[$key]['id'],'page'=>$Url[$key]['page'],'order'=>'addtime'),$channel[0]);
+				$channel = $this->Lable_Vod_List(array('id'=>$Url[$key]['id'],'page'=>$Url[$key]['page'],'order'=>'addtime'),(!empty($channel[0])?$channel[0]:''));
 			}else{
-				$channel = $this->Lable_News_List(array('id'=>$Url[$key]['id'],'page'=>$Url[$key]['page'],'order'=>'addtime'),$channel[0]);
+				$channel = $this->Lable_News_List(array('id'=>$Url[$key]['id'],'page'=>$Url[$key]['page'],'order'=>'addtime'),(!empty($channel[0])?$channel[0]:''));
 			}
 			$this->assign($channel);
 			//目录路径并生成
 			$listdir = str_replace('{!page!}',$Url[$key]['page'],ff_list_url_dir(getsidname($sid),$Url[$key]['id'],$Url[$key]['page']));
 			$this->buildHtml($listdir,'./','Home:'.$channel['list_skin']);	
+            $this->echo_ob_flush();
 			//预览路径
 			$showurl = C('sitepath').$listdir.C('html_file_suffix');
 			echo'<li>第<font color=red>'.($key+1).'</font>个生成完毕　<a href="'.$showurl.'" target="_blank">'.$showurl.'</a></li>';
-			ob_flush();flush();
 			$key++;
 		}
 		echo'</ul>';
-		if($key < count($Url)){
+		if(!empty($Url)&&$key < count($Url)){
 			if($sid==1){
 				$nextcreate = '?s=Admin-Create-Vodlist_create-jump-'.$jump.'-key-'.$key;
 			}else{
@@ -107,7 +107,7 @@ class CreateAction extends BaseAction{
 	}
 	//读取资讯内容按分类
 	public function newsclass(){
-		$jump = intval($_REQUEST['jump']);
+		$jump = !empty($_REQUEST['jump'])?intval($_REQUEST['jump']):0;
 		$ids = trim(getWDSrt($_REQUEST['ids_2']));
 		$page = !empty($_GET['page']) ? intval($_GET['page']) : 1;
 		//检测是否需要生成
@@ -152,8 +152,8 @@ class CreateAction extends BaseAction{
 		$this->check(C('url_html'),'资讯内容页');
 		//查询数据开始
 		$rs = D("News");
-		$mday = intval($_REQUEST['mday_2']);
-		$min = intval($_REQUEST['min']);
+		$mday = !empty($_REQUEST['mday_2'])?intval($_REQUEST['mday_2']):0;
+		$min = !empty($_REQUEST['min'])?intval($_REQUEST['min']):0;
 		$where['news_status'] = array('eq',1);
 		$where['news_cid'] = array('gt',0);
 		if($min){//生成多少分钟内的影片
@@ -216,14 +216,14 @@ class CreateAction extends BaseAction{
 		$this->assign($arrays['read']);
 		$newsdir = ff_data_url_dir('news',$arrays['read']['news_id'],$arrays['read']['news_cid'],$arrays['read']['news_name'],1);
 		$this->buildHtml($newsdir,'./',$arrays['read']['news_skin_detail']);
+        $this->echo_ob_flush();
 		$newsurl = C('site_path').$newsdir.C('html_file_suffix');
 		echo '<li>'.$arrays['read']['news_id'].' <a href="'.$newsurl.'" target="_blank">'.$newsurl.'</a> 生成完毕</li>';
-		ob_flush();flush();
     }
 	//读取视频内容按分类
 	public function vodclass(){
-		$jump = intval($_REQUEST['jump']);
-		$ids = trim(getWDSrt($_REQUEST['ids_1']));
+		$jump = !empty($_REQUEST['jump'])?intval($_REQUEST['jump']):0;
+		$ids = !empty($_REQUEST['ids_1'])?trim(getWDSrt($_REQUEST['ids_1'])):'';
 		$page = !empty($_GET['page']) ? intval($_GET['page']) : 1;
 		$this->check(C('url_html'),'视频内容页','?s=Admin-Create-Vodlist-ids_1-'.$ids.'-jump-'.$jump);
 		//断点生成(写入缓存)
@@ -260,11 +260,11 @@ class CreateAction extends BaseAction{
 	}
 	//读取视频内容按时间
 	public function vodday(){
-		$jump = intval($_REQUEST['jump']);
+		$jump = !empty($_REQUEST['jump'])?intval($_REQUEST['jump']):0;
 		$this->check(C('url_html'),'视频内容页');
 		$rs = D("Vod");
-		$mday = intval($_REQUEST['mday_1']);
-		$min = intval($_REQUEST['min']);
+		$mday = !empty($_REQUEST['mday_1'])?intval($_REQUEST['mday_1']):0;
+		$min = !empty($_REQUEST['min'])?intval($_REQUEST['min']):0;
 		$where['vod_status'] = array('eq',1);
 		$where['vod_cid'] = array('gt',0);
 		//
@@ -328,13 +328,12 @@ class CreateAction extends BaseAction{
 		//生成内容页
 		$videodir = ff_data_url_dir('vod',$arrays['read']['vod_id'],$arrays['read']['vod_cid'],$arrays['read']['vod_name'],1);
 		$this->buildHtml($videodir,'./',$arrays['read']['vod_skin_detail']);
+        $this->echo_ob_flush();
 		echo('<li><a href="'.C('site_path').$videodir.C('html_file_suffix').'" target="_blank">'.$arrays['read']['vod_id'].'</a> detail ok</li>');
 		//生成播放页
 		if(C('url_html')){
 			$this->vod_play_create($arrays);
 		}
-		ob_flush();
-		flush();
     }
 	//生成播放页
 	public function vod_play_create($arrays){
@@ -345,6 +344,7 @@ class CreateAction extends BaseAction{
 			$this->assign($arrays['read']);
 			$playdir = ff_play_url_dir($arrays['read']['vod_id'],0,1,$arrays['read']['vod_cid'],$arrays['read']['vod_name']);
 			$this->buildHtml($playdir,'./',$arrays['read']['vod_skin_play']);
+            $this->echo_ob_flush();
 			echo('<li>'.$arrays['read']['vod_id'].' play ok</li>');
 		}elseif(C('url_html_play')==2){
 			echo('<li>'.$arrays['read']['vod_id'].' play ');
@@ -363,6 +363,7 @@ class CreateAction extends BaseAction{
 					$this->assign($this->Lable_Vod_Play($arrays['read'],array('id'=>$arrays['read']['vod_id'],'sid'=>$arr_sid[1],'pid'=>$pid+1),true));
 					$this->buildHtml($player_dir_ji,'./',$arrays['read']['vod_skin_play']);
 					//echo($arr_sid[1].'-'.($pid+1).' ');
+                    $this->echo_ob_flush();
 				}
 				echo('ok </li>');
 			}			
@@ -378,7 +379,7 @@ class CreateAction extends BaseAction{
 		$this->success('恭喜您，所有地图生成完毕！');	
 	}
 	//生成Baidu地图
-    public function baidu($id){
+    public function baidu($id = ''){
 		$baiduall = !empty($_REQUEST['baiduall'])?intval($_REQUEST['baiduall']):10000;
 		$baidu = !empty($_REQUEST['baidu'])?intval($_REQUEST['baidu']):2000;
 		$page = ceil(intval($baiduall)/intval($baidu));
@@ -392,7 +393,7 @@ class CreateAction extends BaseAction{
 		}			    
     }
 	//生成Google地图
-    public function google($id){
+    public function google($id = ''){
 		$googleall = !empty($_REQUEST['googleall'])?intval($_REQUEST['googleall']):5000;
 		$google = !empty($_REQUEST['google'])?intval($_REQUEST['google']):1000;
 		$page = ceil(intval($googleall)/intval($google));
@@ -406,7 +407,7 @@ class CreateAction extends BaseAction{
 		}
     }
 	//生成Rss订阅
-    public function rss($id){
+    public function rss($id = ''){
 		$rss = !empty($_REQUEST['rss'])?intval($_REQUEST['rss']):50;
 		$this->map_create('rss',$rss,1);
 		if (empty($id)) {
@@ -423,8 +424,10 @@ class CreateAction extends BaseAction{
 			C('html_file_suffix','.xml');
 			if ($page == 1){
 				$this->buildHtml($mapname,'./'.C('url_map'),'./Public/maps/'.$mapname.'.html');
+                $this->echo_ob_flush();
 			}else{
 				$this->buildHtml($mapname.'-'.$page,'./'.C('url_map'),'./Public/maps/'.$mapname.'.html');
+                $this->echo_ob_flush();
 			}
 			C('html_file_suffix',$suffix);
 		}
@@ -436,6 +439,7 @@ class CreateAction extends BaseAction{
 		F('_create/nextcreate',NULL);
 	    $this->assign($this->Lable_Index());
 		$this->buildHtml("index",'./','Home:pp_index');
+        $this->echo_ob_flush();
 		if ($jump) {
 			$this->assign("jumpUrl",'?s=Admin-Create-Mytpl-jump-'.$jump);
 			$this->success('首页生成完毕，准备生成自定义模板！');
@@ -458,6 +462,7 @@ class CreateAction extends BaseAction{
 			if(preg_match("/my_(.*)\.html/",$value['filename'])){
 				C('html_file_suffix',$suffix);
 				$this->buildHtml(str_replace(array('my_','.html'),'',$value['filename']),'./'.C('url_mytpl'),'Home:'.str_replace('.html','',$value['filename']));
+                $this->echo_ob_flush();
 			}
 		}
 		if ($jump) {
@@ -478,7 +483,7 @@ class CreateAction extends BaseAction{
 		$rs = D("Special");
 		$where['special_status'] = array('eq',1);
 		$count = $rs->where($where)->count('special_id');
-		$totalpages = ceil($count/$limit);
+		$totalpages = ceil((!empty($count)?$count:1)/(!empty($limit)?$limit:1));
 		echo'<ul id="show" style="font-size:12px;list-style:none;margin:0px;padding:0px;font-family:宋体">';
 		echo'<li>共有专题<font color=red>'.$count.'</font>篇，专题列表需要生成<font color=blue>'.$totalpages.'</font>页。</li>';
 		for($i=1;$i<=$totalpages;$i++){
@@ -489,12 +494,11 @@ class CreateAction extends BaseAction{
 			//生成文件		
 			$htmldir = str_replace('{!page!}',$i,ff_special_url_dir($i));
 			$htmlurl = C('sitepath').$htmldir.C('html_file_suffix');
-			$this->buildHtml($htmldir,'./','Home:'.$channel['special_skin']);	
+			$this->buildHtml($htmldir,'./','Home:'.$channel['special_skin']);
+            $this->echo_ob_flush();
 			echo'<li>第<font color=blue>'.$i.'</font>页生成完毕　<a href="'.$htmlurl.'" target="_blank">'.$htmlurl.'</a></li>';
-			ob_flush();flush();			
 		}
 		echo'</ul>';
-		exit();
 		$this->jump('?s=Admin-Create-Show','恭喜您，专题列表页已经全部生成！');
 	}
 	//生成专题内容分页处理
@@ -523,7 +527,7 @@ class CreateAction extends BaseAction{
 			$jumpurl = '?s=Admin-Create-Specialclass-page-'.($page+1);
 			$this->jump($jumpurl,'稍等一会，准备生成下一次专题内容页...');
 		}
-		$this->jump($jumpurl,'恭喜您，专题内容页全部生成完毕。');		
+		$this->jump($jumpurl,'恭喜您，专题内容页全部生成完毕。');
 	}
 	//生成专题内容页
     public function create_red_special($specialid){
@@ -541,6 +545,7 @@ class CreateAction extends BaseAction{
 			$htmldir = ff_data_url_dir('special',$arrays['read']['special_id'],0,$arrays['read']['special_name'],1);
 			$htmlurl = C('site_path').$htmldir.C('html_file_suffix');
 			$this->buildHtml($htmldir,'./',$arrays['read']['special_skin']);
+            $this->echo_ob_flush();
 			echo '<li>'.$arrays['read']['special_id'].' <a href="'.$htmlurl.'" target="_blank">'.$htmlurl.'</a> 生成完毕</li>';
 		}
 	}	
@@ -578,6 +583,16 @@ class CreateAction extends BaseAction{
 		$this->assign("waitSecond",C('url_time'));
 		$this->assign("jumpUrl",$jumpurl);
 		$this->success($html);
-	}	
+	}
+    //清空缓存
+	private function echo_ob_flush(){
+		//header("Connection: close");
+		//header("HTTP/1.1 200 OK");
+		//echo str_repeat(" ", 1024*128*8);
+		//echo('<p style="font-size:13px;color:red;">任务已经开始，后台执行中</p>');
+		ob_flush();flush();
+		//ob_end_clean();//销毁缓冲区，后面的不会显示在浏览器上了
+		//ignore_user_abort(true);//后台运行
+	}
 }
 ?>

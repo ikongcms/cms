@@ -8,7 +8,7 @@ define('THINK_PATH','./Lib/ThinkPHP');
 //缓存路径
 define('RUNTIME_PATH','./Runtime/');
 //项目名称
-define('APP_NAME','feifeicms-ppvod');
+define('APP_NAME','Anonymous');
 //项目路径
 define('APP_PATH','./Lib/');
 //加载入口文件

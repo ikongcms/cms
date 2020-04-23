@@ -2,14 +2,14 @@
 //顶踩模块
 class UpdownAction extends HomeAction{
     public function vod(){
-		$id = intval($_GET['id']);
+		$id = !empty($_GET['id'])?intval($_GET['id']):0;
 		if ($id < 1) {
 			$this->ajaxReturn(-1,'数据非法！',-1);
 		}
 		$this->show($id,trim(getWDSrt($_GET['type'])),'vod');
     }
     public function news(){
-		$id = intval($_GET['id']);
+		$id = !empty($_GET['id'])?intval($_GET['id']):0;
 		if ($id < 1) {
 			$this->ajaxReturn(-1,'数据非法！',-1);
 		}

@@ -689,7 +689,7 @@ function F($name, $value='', $path=DATA_PATH) {
     if ('' !== $value) {
         if (is_null($value)) {
             // 删除缓存
-            return unlink($filename);
+            return is_file($filename)?unlink($filename):true;
         } else {
             // 缓存数据
             $dir = dirname($filename);
@@ -789,7 +789,7 @@ function array_define($array) {
 
 //[/RUNTIME]
 // 循环创建目录
-function mk_dir($dir, $mode = 0777) {
+function mk_dir($dir, $mode = 0755) {
     if (is_dir($dir) || @mkdir($dir, $mode))
         return true;
     if (!mk_dir(dirname($dir), $mode))

@@ -13,7 +13,7 @@ function write_file($l1, $l2=''){
 	return @file_put_contents($l1, $l2);
 }
 //递归创建文件
-function mkdirss($dirs,$mode=0777) {
+function mkdirss($dirs,$mode=0755) {
 	if(!is_dir($dirs)){
 		mkdirss(dirname($dirs), $mode);
 		return @mkdir($dirs, $mode);
@@ -63,7 +63,7 @@ function get_domain($url){
 /*-------------------------------------------------字符串处理开始------------------------------------------------------------------*/
 // 过滤字符串
 function getWD($str){
-    preg_match_all('/([a-zA-Z0-9\_\～\！\：\。\，\《\》\-\,\.\:\|\/\s]+|[\x{4e00}-\x{9fff}]+|[\x{0800}-\x{4e00}]+|[\x{AC00}-\x{D7A3}]+|[\x{4e00}-\x{9fa5}]+)/u', $str, $match);
+    preg_match_all('/([a-zA-Z0-9\_\～\！\：\。\，\《\》\?\=\-\,\.\:\|\/\s]+|[\x{4e00}-\x{9fff}]+|[\x{0800}-\x{4e00}]+|[\x{AC00}-\x{D7A3}]+|[\x{4e00}-\x{9fa5}]+)/u', $str, $match);
     return !empty($match[1])?implode($match[1]):'';
 }
 // 过滤字符串无限循环
@@ -78,7 +78,7 @@ function getWDSrt($data) {
             }
         }
     } else {
-        $da = getWD($data);
+        $da = trim(getWD($data));
     }
     return $da;
 }
@@ -283,21 +283,6 @@ function ff_replace_rule($str){
 	//$str = str_replace(array("\n","\r"),array("<nr/>","<rr/>"),strtolower($str));
 	return str_replace('\[$ppvod\]','([\s\S]*?)',str_replace($arr1,$arr2,$str));
 }
-//生成随机伪静态简介
-function ff_rand_str($string){
-    $arr=C('play_collect_content');
-    //$all=mb_strlen($string,'utf-8');
-	$all=iconv_strlen($string,'utf-8');
-    $len=floor(mt_rand(0,$all-1));
-    $str=msubstr($string,0,$len);
-	$str2=msubstr($string,$len,$all);
-	return $str.$arr[array_rand($arr,1)].$str2;
-}
-//获取绑定分类对应ID值
-function ff_bind_id($key){
-	$bindcache = F('_xml/bind');
-	return $bindcache[$key];
-}
 //TAG分词自动获取
 function ff_tag_auto($title,$content){
 	$data = ff_file_get_contents('http://keyword.discuz.com/related_kw.html?ics=utf-8&ocs=utf-8&title='.rawurlencode($title).'&content='.rawurlencode(msubstr($content,0,500)));
@@ -320,17 +305,6 @@ function ff_tag_auto($title,$content){
 		return implode(',',$kws);
 	}
 	return false;
-}
-// 格式化采集影片名称
-function ff_xml_vodname($vodname){
-	$vodname = str_replace(array('【','】','（','）','(',')','{','}'),array('[',']','[',']','[',']','[',']'),$vodname);
-	$vodname = preg_replace('/\[([a-z][A-Z])\]|([a-z][A-Z])版/i','',$vodname);
-	$vodname = preg_replace('/TS清晰版|枪版|抢先版|HD|BD|TV|DVD|VCD|TS|\/版|\[\]/i','',$vodname);
-	return trim($vodname);
-}
-// 格式化采集影片主演
-function ff_xml_vodactor($vodactor){
-	return str_replace(array(',','/','，','|','、'),',',$vodactor);	
 }
 /*-------------------------------------------------栏目相关函数开始------------------------------------------------------------------*/
 //通过栏目名名获取对应的栏目ID
@@ -605,42 +579,39 @@ function ff_detail_array($sid='vod', $type='next', $id, $cid, $field='vod_id,vod
 function UU($model,$params,$redirect=false,$suffix=false){
 	//rewrite重写
 	if(C('url_rewrite')){
-		if($params['p'] != '{!page!}'){
-			$params['p'] = 1;
-		}
 		if($model == 'Home-vod/show'){
-			$reurl = str_replace(array('$id','$page'),array($params['id'],$params['p']),C('rewrite_vodlist'));
+			$reurl = str_replace(array('$id','$page'),array(!empty($params['id'])?$params['id']:'',!empty($params['p'])?$params['p']:1),C('rewrite_vodlist'));
 		}elseif($model == 'Home-vod/read'){
-			$reurl = str_replace('$id',$params['id'],C('rewrite_voddetail'));
+			$reurl = str_replace('$id',!empty($params['id'])?$params['id']:'',C('rewrite_voddetail'));
 		}elseif($model == 'Home-vod/play'){
-			$reurl = str_replace(array('$id','$sid','$pid'),array($params['id'],$params['sid'],$params['pid']),C('rewrite_vodplay'));
+			$reurl = str_replace(array('$id','$sid','$pid'),array(!empty($params['id'])?$params['id']:'',!empty($params['sid'])?$params['sid']:'',!empty($params['pid'])?$params['pid']:''),C('rewrite_vodplay'));
 		}elseif($model == 'Home-vod/search'){
-			$reurl = str_replace(array('$wd','$page','$actor','$director','$order'),array($params['wd'],$params['p'],$params['actor'],$params['director'],$params['order']),C('rewrite_vodsearch'));
+			$reurl = str_replace(array('$wd','$page','$actor','$director','$order'),array(!empty($params['wd'])?$params['wd']:'',!empty($params['p'])?$params['p']:1,!empty($params['actor'])?$params['actor']:'',!empty($params['director'])?$params['director']:'',!empty($params['order'])?$params['order']:''),C('rewrite_vodsearch'));
 		}elseif($model == 'Home-vod/type'){
-			$reurl = str_replace(array('$id','$page','$wd','$area','$language','$actor','$director','$year','$letter','$order'),array($params['id'],$params['p'],$params['wd'],$params['area'],$params['language'],$params['actor'],$params['director'],$params['year'],$params['letter'],$params['order']),C('rewrite_vodtype'));
+			$reurl = str_replace(array('$id','$page','$wd','$area','$language','$actor','$director','$year','$letter','$order'),array(!empty($params['id'])?$params['id']:'',!empty($params['p'])?$params['p']:1,!empty($params['wd'])?$params['wd']:'',!empty($params['area'])?$params['area']:'',!empty($params['language'])?$params['language']:'',!empty($params['actor'])?$params['actor']:'',!empty($params['director'])?$params['director']:'',!empty($params['year'])?$params['year']:'',!empty($params['letter'])?$params['letter']:'',!empty($params['order'])?$params['order']:''),C('rewrite_vodtype'));
 		}elseif($model == 'Home-tag/vod'){
-			$reurl = str_replace(array('$wd','$page'),array($params['wd'],$params['p']),C('rewrite_vodtag'));
+			$reurl = str_replace(array('$wd','$page'),array(!empty($params['wd'])?$params['wd']:'',!empty($params['p'])?$params['p']:1),C('rewrite_vodtag'));
 		}elseif($model == 'Home-news/show'){
-			$reurl = str_replace(array('$id','$page'),array($params['id'],$params['p']),C('rewrite_newslist'));
+			$reurl = str_replace(array('$id','$page'),array(!empty($params['id'])?$params['id']:'',!empty($params['p'])?$params['p']:1),C('rewrite_newslist'));
 		}elseif($model == 'Home-news/read'){
 			$reurl = str_replace('$id',$params['id'],C('rewrite_newsdetail'));
 		}elseif($model == 'Home-news/search'){
-			$reurl = str_replace(array('$wd','$page'),array($params['wd'],$params['p']),C('rewrite_newssearch'));
+			$reurl = str_replace(array('$wd','$page'),array(!empty($params['wd'])?$params['wd']:'',!empty($params['p'])?$params['p']:1),C('rewrite_newssearch'));
 		}elseif($model == 'Home-tag/news'){
-			$reurl = str_replace(array('$wd','$page'),array($params['wd'],$params['p']),C('rewrite_newstag'));
+			$reurl = str_replace(array('$wd','$page'),array(!empty($params['wd'])?$params['wd']:'',!empty($params['p'])?$params['p']:1),C('rewrite_newstag'));
 		}elseif($model == 'Home-special/show'){
-			$reurl = str_replace('$page',$params['p'],C('rewrite_specialshow'));
+			$reurl = str_replace('$page',!empty($params['p'])?$params['p']:1,C('rewrite_specialshow'));
 		}elseif($model == 'Home-special/read'){
-			$reurl = str_replace('$id',$params['id'],C('rewrite_specialdetail'));
+			$reurl = str_replace('$id',!empty($params['id'])?$params['id']:1,C('rewrite_specialdetail'));
 		}elseif($model == 'Home-gb/show'){
-			$reurl = str_replace(array('$id','$page'),array($params['id'],$params['p']),C('rewrite_guestbook'));
+			$reurl = str_replace(array('$id','$page'),array(!empty($params['id'])?$params['id']:'',!empty($params['p'])?$params['p']:1),C('rewrite_guestbook'));
 		}elseif($model == 'Home-my/show'){
-			$reurl = str_replace('$id',$params['id'],C('rewrite_mytpl'));
+			$reurl = str_replace('$id',!empty($params['id'])?$params['id']:1,C('rewrite_mytpl'));
 		}elseif($model == 'Home-map/show'){
-			$reurl = str_replace(array('$id','$limit'),array($params['id'],$params['limit']),C('rewrite_map'));
+			$reurl = str_replace(array('$id','$limit'),array(!empty($params['id'])?$params['id']:'',!empty($params['limit'])?$params['limit']:''),C('rewrite_map'));
 		}
 		//伪静态规则设置正确
-		if($reurl){
+		if(!empty($reurl)){
 			return $reurl.C('url_html_suffix');
 		}else{
 			return str_replace('index.php?s=/Home-','',U($model,$params,$redirect,$suffix));
@@ -690,9 +661,9 @@ function ff_list_url($sid,$arrurl,$page){
 function ff_list_url_dir($sid,$cid,$page){
 	//影视或文章
 	if('vod' == $sid){
-		$listdir = str_replace_dir(C('url_vodlist'),$id,$cid,$name);
+		$listdir = str_replace_dir(C('url_vodlist'),$sid,$cid,$page);
 	}else{
-		$listdir = str_replace_dir(C('url_newslist'),$id,$cid,$name);
+		$listdir = str_replace_dir(C('url_newslist'),$sid,$cid,$page);
 	}
 	if($page > 1){
 		$listdir .= '-{!page!}';

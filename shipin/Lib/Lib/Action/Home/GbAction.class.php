@@ -24,7 +24,7 @@ class GbAction extends HomeAction{
             }
 		}
 		// 是否报错	
-		$vodid = intval($_GET['id']);
+		$vodid = !empty($_GET['id'])?intval($_GET['id']):0;
 		if($vodid){
 			$rs = M("Vod");
 			$array = $rs->field('vod_id,vod_name,vod_actor')->where('vod_status = 1 and vod_id='.$vodid)->find();

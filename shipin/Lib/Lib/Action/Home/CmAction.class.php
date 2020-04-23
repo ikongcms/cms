@@ -53,7 +53,7 @@ class CmAction extends HomeAction{
     }
 	// Ajax顶踩
     public function updown(){
-		$id = intval($_GET['id']);
+		$id = !empty($_GET['id'])?intval($_GET['id']):0;
 		if ($id < 1) {
 			exit('-1');
 		}

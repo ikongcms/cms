@@ -49,7 +49,7 @@ class VodAction extends HomeAction{
     public function play(){
 		$array_detail = $this->get_cache_detail( intval($_GET['id']) );
 		if($array_detail){
-			$array_detail['read'] = $this->Lable_Vod_Play($array_detail['read'],array('id'=>intval($_GET['id']), 'sid'=>intval($_GET['sid']), 'pid'=>intval($_GET['pid'])));
+			$array_detail['read'] = $this->Lable_Vod_Play($array_detail['read'],array('id'=>!empty($_GET['id'])?intval($_GET['id']):0, 'sid'=>!empty($_GET['sid'])?intval($_GET['sid']):0, 'pid'=>!empty($_GET['pid'])?intval($_GET['pid']):0));
 			$this->assign($array_detail['show']);
 			$this->assign($array_detail['read']);
 			$this->display($array_detail['read']['vod_skin_play']);

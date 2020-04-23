@@ -99,7 +99,7 @@ class Dispatcher extends Think
             }
             $var[C('VAR_ACTION')]  =   array_shift($paths);
             // 解析剩余的URL参数
-            $res = preg_replace_callback('/(\w+)'.$depr.'([^'.$depr.'\/]+)/', function ($match) use (&$var) {$var[$match[1]] = strip_tags($match[2]);}, implode($depr,$paths));
+            $res = preg_replace_callback('/(\w+)'.$depr.'([^'.$depr.'\/]+)/', function ($match) use (&$var) { return $var[$match[1]] = strip_tags($match[2]);}, implode($depr,$paths));
             //$res = preg_replace('@(\w+)'.$depr.'([^'.$depr.'\/]+)@e', '$var[\'\\1\']=strip_tags(\'\\2\');', implode($depr,$paths));
             $_GET   =  array_merge($var,getWDSrt($_GET));
         }
@@ -222,7 +222,7 @@ class Dispatcher extends Think
                     for($i=0;$i<count($vars);$i++)
                         $var[$vars[$i]]     =   array_shift($paths);
                     // 解析剩余的URL参数
-                    $res = preg_replace_callback('/(\w+)\/([^,\/]+)/', function ($match) use (&$var) {$var[$match[1]] = strip_tags($match[2]);}, implode('/',$paths));
+                    $res = preg_replace_callback('/(\w+)\/([^,\/]+)/', function ($match) use (&$var) { return $var[$match[1]] = strip_tags($match[2]);}, implode('/',$paths));
                     //$res = preg_replace('@(\w+)\/([^,\/]+)@e', '$var[\'\\1\']=strip_tags(\'\\2\');', implode('/',$paths));
                     $_GET   =  array_merge($var,getWDSrt($_GET));
                     if(isset($route[3])) {
@@ -238,7 +238,7 @@ class Dispatcher extends Think
                     for($i=0;$i<count($vars);$i++)
                         $var[$vars[$i]]     =   $matches[$i+1];
                     // 解析剩余的URL参数
-                    $res = preg_replace_callback('/(\w+)\/([^,\/]+)/', function ($match) use (&$var) {$var[$match[1]] = strip_tags($match[2]);}, str_replace($matches[0],'',$regx));
+                    $res = preg_replace_callback('/(\w+)\/([^,\/]+)/', function ($match) use (&$var) { return $var[$match[1]] = strip_tags($match[2]);}, str_replace($matches[0],'',$regx));
                     //$res = preg_replace('@(\w+)\/([^,\/]+)@e', '$var[\'\\1\']= strip_tags(\'\\2\');', str_replace($matches[0],'',$regx));
                     $_GET   =  array_merge($var,getWDSrt($_GET));
                     if(isset($route[3])) {

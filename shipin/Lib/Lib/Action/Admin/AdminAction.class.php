@@ -23,7 +23,7 @@ class AdminAction extends BaseAction{
 	//处理权限入库
 	public function _before_insert(){
 		$ok = $_POST['ids'];
-		for($i=0;$i<20;$i++){
+		for($i=0;$i<19;$i++){
 			if(!empty($ok[$i])){
 				$rs[$i]=intval($ok[$i]);
 			}else{
@@ -104,7 +104,6 @@ class AdminAction extends BaseAction{
     public function configsave(){
 		$config = $_POST["config"];
 		$config['site_tongji'] = stripslashes($config['site_tongji']);
-		$config['play_collect_content'] = stripslashes($config['play_collect_content']);
 		$config['admin_time_edit'] = (bool) $config['admin_time_edit'];
 		$config['url_voddata'] = trim($config['url_voddata']);
 		$config['url_newsdata'] = trim($config['url_newsdata']);
@@ -123,11 +122,6 @@ class AdminAction extends BaseAction{
 			$arrserver[trim($key)] = trim($val);
 		}
 		$config["play_server"] = $arrserver;
-		//采集伪原创内容
-		foreach(explode(chr(13),trim($config["play_collect_content"])) as $v){
-			$arrcollect[] = trim($v);
-		}
-		$config["play_collect_content"] = $arrcollect;
 		//静态缓存
 		$config['html_cache_time'] = $config['html_cache_time']*3600;//其它页缓存
 		if($config['html_cache_index']>0){

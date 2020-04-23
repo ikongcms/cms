@@ -157,9 +157,9 @@ class AllAction extends Action{
 	//资讯栏目页变量定义
 	public function Lable_News_List($param,$array_list){
 		$array_list['sid'] = 2;
-		$array_list['list_wd'] = $param['wd'];	
-		$array_list['list_page'] = $param['page'];
-		$array_list['list_letter'] = $param['letter'];
+		$array_list['list_wd'] = !empty($param['wd'])?getWDSrt($param['wd']):'';	
+		$array_list['list_page'] = !empty($param['page'])?getWDSrt($param['page']):'';
+		$array_list['list_letter'] = !empty($param['letter'])?getWDSrt($param['letter']):'';
 		$array_list['list_order'] = $param['order'];
 		if ($param['page'] > 1) {
 			$array_list['title'] = $array_list['list_name'].'-第'.$param['page'].'页';
@@ -199,7 +199,7 @@ class AllAction extends Action{
 		$array_list['sid'] = 3;
 		$array_list['special_skin'] = 'pp_speciallist';
 		$array_list['special_page'] = $param['page'];
-		$array_list['special_order'] = 'special_'.$param['order'];
+		$array_list['special_order'] = 'special_'.(!empty($param['order'])?$param['order']:'');
 		if ($param['page'] > 1) {
 			$array_list['title'] = '专题列表-第'.$param['page'].'页'.'-'.C('site_name');
 		}else{

@@ -181,15 +181,16 @@ class View extends Think
         // 网页字符编码
         if(empty($charset))  $charset = C('DEFAULT_CHARSET');
         if(empty($contentType)) $contentType = C('TMPL_CONTENT_TYPE');
-        header("Content-Type:".$contentType."; charset=".$charset);
-        header("Cache-control: private");  //支持页面回跳
-        header("X-Powered-By:ThinkPHP".THINK_VERSION);
+        //header("Content-Type:".$contentType."; charset=".$charset);
+        //header("Cache-control: private");  //支持页面回跳
+        //header("X-Powered-By: Anonymous");
         //页面缓存
         ob_start();
         ob_implicit_flush(0);
         // 自动定位模板文件
-        if(!file_exists_case($templateFile))
+        if(!file_exists_case($templateFile)) {
             $templateFile   = $this->parseTemplateFile($templateFile);
+        }
         $engine  = strtolower(C('TMPL_ENGINE_TYPE'));
         if('php'==$engine) {
             // 模板阵列变量分解成为独立变量
@@ -394,8 +395,9 @@ class View extends Think
             $templateFile  = str_replace(array('@',':'),'/',$templateFile);
             $count   =  substr_count($templateFile,'/');
             $path   = dirname(C('TMPL_FILE_NAME'));
-            for($i=0;$i<$count;$i++)
+            for($i=0;$i<$count;$i++) {
                 $path   = dirname($path);
+            }
             $templateFile =  $path.'/'.$templateFile.C('TMPL_TEMPLATE_SUFFIX');
         }
         if(!file_exists_case($templateFile))

@@ -49,11 +49,14 @@ class ThinkTemplateCompiler {
         $this->templateFile = $templateFile;
         //模板标签解析
         $tmplContent = $this->parseTag($tmplContent);
-        if(ini_get('short_open_tag'))
+        if(ini_get('short_open_tag')) {
             // 开启短标签的情况要将<?标签用echo方式输出 否则无法正常输出xml标识
             $tmplContent = preg_replace('/(<\?(?!php|=|$))/i', '<?php echo \'\\1\'; ?>'."\n", $tmplContent );
+        }
         // 还原被替换的Literal标签
-        $tmplContent = preg_replace('/<!--###literal(\d)###-->/eis',"\$this->restoreLiteral('\\1')",$tmplContent);
+        $that = $this;
+        $tmplContent = preg_replace_callback('/<!--###literal(\d)###-->/is', function ($matches) use ($that) { return $that->restoreLiteral($matches[1]);}, $tmplContent);
+        //$tmplContent = preg_replace('/<!--###literal(\d)###-->/eis',"\$this->restoreLiteral('\\1')",$tmplContent);
         // 添加安全代码
         $tmplContent  =  '<?php if (!defined(\'THINK_PATH\')) exit();?>'.$tmplContent;
         if(C('TMPL_STRIP_SPACE')) {
@@ -266,7 +269,9 @@ class ThinkTemplateCompiler {
         // 解析普通标签 {tagName:}
         $begin = $this->tpl->tmpl_begin;
         $end   = $this->tpl->tmpl_end;
-        $content = preg_replace('/('.$begin.')(\S.+?)('.$end.')/eis',"\$this->parseCommonTag('\\2')",$content);
+        $that  = $this;
+        $content = preg_replace_callback('/('.$begin.')(\S.+?)('.$end.')/is', function ($matches) use ($that) { return $that->parseCommonTag($matches[2]);}, $content);
+        //$content = preg_replace('/('.$begin.')(\S.+?)('.$end.')/eis',"\$this->parseCommonTag('\\2')",$content);
         return $content;
     }
     protected function parseCommonTag($tagStr) {
@@ -355,6 +360,7 @@ class ThinkTemplateCompiler {
     protected function parseXmlTag(&$content) {
         $begin = $this->tpl->taglib_begin;
         $end   = $this->tpl->taglib_end;
+        $that  = $this;
         foreach ($this->tags as $tag=>$val){
             if(isset($val['alias'])) {// 别名设置
                 $tags = explode(',',$val['alias']);
@@ -366,10 +372,13 @@ class ThinkTemplateCompiler {
             $closeTag = isset($val['close'])?$val['close']:true;
             foreach ($tags as $tag){
                 if(!$closeTag) {
-                    $content = preg_replace('/'.$begin.$tag.'\s(.*?)\/(\s*?)'.$end.'/eis',"\$this->parseXmlItem('$tag','\\1','')",$content);
-                }else{
-                    for($i=0;$i<$level;$i++)
-                        $content = preg_replace('/'.$begin.$tag.'\s(.*?)'.$end.'(.+?)'.$begin.'\/'.$tag.'(\s*?)'.$end.'/eis',"\$this->parseXmlItem('$tag','\\1','\\2')",$content);
+                    $content = preg_replace_callback('/'.$begin.$tag.'\s(.*?)\/(\s*?)'.$end.'/is', function ($matches) use ($tag,$that) { return $that->parseXmlItem($tag,$matches[1],''); }, $content);
+                    //$content = preg_replace('/'.$begin.$tag.'\s(.*?)\/(\s*?)'.$end.'/eis',"\$this->parseXmlItem('$tag','\\1','')",$content);
+                } else {
+                    for($i=0;$i<$level;$i++) {
+                        $content = preg_replace_callback('/'.$begin.$tag.'\s(.*?)'.$end.'(.+?)'.$begin.'\/'.$tag.'(\s*?)'.$end.'/is', function ($matches) use ($tag,$that) { return $that->parseXmlItem($tag,$matches[1],$matches[2]); }, $content);
+                        //$content = preg_replace('/'.$begin.$tag.'\s(.*?)'.$end.'(.+?)'.$begin.'\/'.$tag.'(\s*?)'.$end.'/eis',"\$this->parseXmlItem('$tag','\\1','\\2')",$content);
+                    }
                 }
             }
         }

@@ -1,12 +1,3 @@
-/*******************************************************************************
-* Copyright (C) 2006 - 2010 feifeicms.com
-* @author 809 <271513820@qq.com>
-* @version 2.0.0 (2010-12-05)
-* ep:
-$(document).ready(function(){
-	$feifeicms.show.table();
-});
-*******************************************************************************/
 var $feifeicms = {};
 $feifeicms.version = '2.0';
 //所有class为table表格的隔行换色效果
@@ -158,40 +149,6 @@ $(window).scroll(function() {
 	$("#div0").css({left:'50%',top:$(this).scrollTop()+100});
 });
 */
-//绑定分类
-function setbind(event,cid,bind){
-	$('#showbg').css({width:$(window).width(),height:$(window).height()});	
-	var left = event.clientX+document.body.scrollLeft-70;
-	var top = event.clientY+document.body.scrollTop+5;
-	$.ajax({
-		url: '?s=Admin-Xml-Setbind-cid-'+cid+'-bind-'+bind,
-		cache: false,
-		async: false,
-		success: function(res){
-			if(res.indexOf('status') > 0){
-				alert('对不起,您没有该功能的管理权限!');
-			}else{
-				$("#setbind").css({left:left,top:top,display:""});			
-				$("#setbind").html(res);
-			}
-		}
-	});
-}
-//取消绑定
-function hidebind(){
-	$('#showbg').css({width:0,height:0});
-	$('#setbind').hide();
-}
-//提交绑定分类
-var submitbind = function (cid,bind){
-	$.ajax({
-		url: '?s=Admin-Xml-Insertbind-cid-'+cid+'-bind-'+bind,
-		success: function(res){
-			$("#bind_"+bind).html(" <a href='javascript:void(0)' onClick=setbind(event,'"+cid+"','"+bind+"');>已绑定</a>");
-			hidebind();
-		}
-	});	
-}
 //pop弹出层：引用网页
 function divwindow(strPath,Msg){
 	var htm = '<iframe src="'+strPath+'" width="100%" height="95%" frameborder="0" scrolling="auto" style="overflow-x:hidden;"></iframe>';

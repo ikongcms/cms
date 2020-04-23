@@ -112,7 +112,7 @@ class Dispatcher extends Think
                 }
             }
         }else {
-            $res = preg_replace_callback('/(\w+)'.C('URL_PATHINFO_DEPR').'([^,\/]+)/', function ($match) use (&$pathInfo) {$pathInfo[$match[1]] = $match[2];}, $_SERVER['PATH_INFO']);
+            $res = preg_replace_callback('/(\w+)'.C('URL_PATHINFO_DEPR').'([^,\/]+)/', function ($match) use (&$pathInfo) { return $pathInfo[$match[1]] = $match[2];}, $_SERVER['PATH_INFO']);
             //$res = preg_replace('@(\w+)'.C('URL_PATHINFO_DEPR').'([^,\/]+)@e', '$pathInfo[\'\\1\']="\\2";', $_SERVER['PATH_INFO']);
         }
         return $pathInfo;

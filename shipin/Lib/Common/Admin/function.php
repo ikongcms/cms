@@ -137,19 +137,16 @@ function gettablename($tablename){
 	}
 	if (strpos($tablename,'view')>0){
 		return '观看记录';
-	}	
+	}
 	if (strpos($tablename,'slide')>0){
 		return '幻灯片';
-	}	
+	}
 	if (strpos($tablename,'link')>0){
 		return '友情链接';
 	}
-	if (strpos($tablename,'collect')>0){
-		return '采集';
-	}	
 	if (strpos($tablename,'tag')>0){
 		return '标签';
-	}												
+	}
 }
 // 获取文件夹大小
 function getdirsize($dir){ 

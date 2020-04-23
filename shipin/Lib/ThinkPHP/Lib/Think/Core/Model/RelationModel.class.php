@@ -336,8 +336,9 @@ class RelationModel extends Model {
                                     $mappingRelationTable  =  $val['relation_table']?$val['relation_table']:$this->getRelationTableName($model);
                                     if(is_array($mappingData)) {
                                         $ids   = array();
-                                        foreach ($mappingData as $vo)
+                                        foreach ($mappingData as $vo) {
                                             $ids[]   =   $vo[$model->getPk()];
+                                        }
                                         $relationId =   implode(',',$ids);
                                     }
                                     switch (strtoupper($opType)){

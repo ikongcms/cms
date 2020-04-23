@@ -22,7 +22,7 @@ class PicAction extends BaseAction{
 					$rs->where('vod_id = '.$value['vod_id'])->setField('vod_pic',$imgnew);
 					echo(($key+1).' <a href="'.$value['vod_pic'].'" target="_blank">'.$value['vod_pic'].'</a> 下载成功！<br />');					
 				}
-				ob_flush();flush();
+				//ob_flush();flush();ob_end_clean();
 			}
 			echo'请稍等一会，正在释放服务器资源...<meta http-equiv="refresh" content='.C('play_collect_time').';url=?s=Admin-Pic-Down>';
 			echo'</div>';

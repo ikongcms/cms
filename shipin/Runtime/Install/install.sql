@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS ff_admin (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 INSERT INTO ff_admin (admin_id, admin_name, admin_pwd, admin_count, admin_ok, admin_del, admin_ip, admin_email, admin_logintime) VALUES
-(1, 'admin', 'd0763d18c2534bc412ff5736742e0293', 0, '1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1', 0, '127.0.0.1', 'admin@qq.com', 1311954804);
+(1, 'admin', 'd0763d18c2534bc412ff5736742e0293', 0, '1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1', 0, '127.0.0.1', 'admin@qq.com', 1311954804);
 
 CREATE TABLE IF NOT EXISTS ff_ads (
   ads_id smallint(4) unsigned NOT NULL auto_increment,
