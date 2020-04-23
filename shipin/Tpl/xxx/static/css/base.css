@@ -660,7 +660,7 @@ a.label-danger:hover,a.label-danger:focus {background-color:#c9302c;}
 .footer-links .tags-group {margin-right:-10px;}
 .copyright {padding-top:15px;font-size:12px;}
 .category {padding:10px 0 0 0;}
-.category dd {overflow-y:hidden;overflow-x:auto;white-space:nowrap;}
+.category dd {overflow-y:hidden;overflow-x:auto;white-space:nowrap;line-height: 40px;}
 .category dd a {margin:0 10px 0 0;font-size:14px;height:28px;line-height:28px;}
 .avtags-group {margin:0 -7px;}
 .avtags-group > li {width:33.33333333333%;padding:7px;}
