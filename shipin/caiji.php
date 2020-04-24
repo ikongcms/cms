@@ -30,7 +30,7 @@
  */
 
 if(!empty($_GET['id'])&&!empty($_GET['n'])) {
-    $sum = 50;
+    $sum = 3;
     $data = array();
     $list = array(8,10,5,17,6,7,13,12);
     $name = array('DM','YBD','ZP','ZM','YZ','OM','YM','WM');
