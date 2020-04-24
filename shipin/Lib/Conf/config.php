@@ -19,10 +19,10 @@ $array = array(
 	'play_player' =>array (
 		'm3u8'=>    array('00','CKPlayer'),
 	),
-    'APP_DEBUG'         => true,   // 是否开启调试模式
-    'SHOW_RUN_TIME'     => true,   // 运行时间显示
-    'SHOW_ADV_TIME'     => true,   // 显示详细的运行时间
-    'SHOW_DB_TIMES'     => true,   // 显示数据库查询和写入次数	
+    //'APP_DEBUG'         => true,   // 是否开启调试模式
+    //'SHOW_RUN_TIME'     => true,   // 运行时间显示
+    //'SHOW_ADV_TIME'     => true,   // 显示详细的运行时间
+    //'SHOW_DB_TIMES'     => true,   // 显示数据库查询和写入次数	
 );
 return array_merge($config,$array);
 ?>

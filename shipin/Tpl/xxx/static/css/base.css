@@ -404,15 +404,15 @@ a.label-danger:hover,a.label-danger:focus {background-color:#c9302c;}
 .pagego-control:-ms-input-placeholder {color:#aaa;}
 .pagego-button {position:absolute;width:50px;height:35px;line-height:35px;text-align:center;font-size:16px;cursor:pointer;color:#fff;border-radius:2px;background-color:#f50366;background:-webkit-linear-gradient(to right,#f50366,#752ce4);background:linear-gradient(to right,#f50366,#752ce4);}
 .vod_r {float:right;padding:5px}
-.vod_l {float:left;width:430px;padding:5px;line-height:28px;overflow:hidden}
+.vod_l {float:left;width:345px;padding:5px;line-height:28px;overflow:hidden}
 .vod_l p {float:left;margin-bottom:3px}
-.vod_l .w {display:inline-block;width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.vod_l .k {width:430px;}
+.vod_l .w {display:inline-block;width:155px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.vod_l .k {width:330px;}
 .vod_l .pic {margin-right:10px}
-.vod_l .pic img {padding:2px;border:1px solid #E1E1E1;width:205px;height:250px}
+.vod_l .pic img {padding:2px;border:1px solid #E1E1E1;width:170px;height:225px}
 .vod_l .title {font-weight:700;font-size:14px;line-height:35px;height:35px}
 .vod_l .title span {padding-left:5px;font-weight:normal}
-.vod_l span {margin-right:20px;font-size:12px}
+.vod_l span {margin-right:5px;font-size:12px}
 .vod_l .up span {margin-right:0px;font-size:15px;}
 .vod_l .actor,.vod_l .intro {width:480px;}
 .box2 {clear:both;margin:0 auto;color:#333333;margin-top:7px;overflow:hidden;}
