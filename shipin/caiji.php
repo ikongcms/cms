@@ -28,18 +28,19 @@
  02 = 动漫
  01 = 电影
  */
-
+date_default_timezone_set("PRC");
 if(!empty($_GET['id'])&&!empty($_GET['n'])) {
-    $sum = 3;
+    $sum = 100;
     $data = array();
     $list = array(8,10,5,17,6,7,13,12);
     $name = array('DM','YBD','ZP','ZM','YZ','OM','YM','WM');
     if(empty($list[$_GET['n']-1])) { exit('采集完成'); }
-    if($sum-ceil($_GET['id'])>1) { 
-        $caiji = getVideo($list[$_GET['n']-1], ($sum-ceil($_GET['id'])));
+    if($sum-ceil($_GET['id'])>0) { 
+        $caiji = getVideo($list[$_GET['n']-1], (($sum+1)-ceil($_GET['id'])));
     }
     if(!empty($caiji)&&is_array($caiji)) {
         foreach($caiji['data'] as $key => $value) {
+            //if(strtotime($value['vod_addtime'])<strtotime(date("Y-m-d"))){continue;}
             preg_match_all('/([a-zA-Z0-9\:\_\/\-\.]+jpg)/u', $value['vod_pic'], $vod_pic);
             if(empty($vod_pic[1])){continue;}
             $vod_pic = $vod_pic[1][0];
