@@ -18,7 +18,8 @@ return array (
   'site_copyright' => '本网站为非赢利性站点，本网站所有内容均来源于互联网相关站点自动搜索采集信息，相关链接已经注明来源。',
   'site_hot' => '热门影片1
 热门影片2
-热门影片3',
+热门影片3
+热门影片4',
   'site_tongji' => '',
   'site_icp' => 'ICP备2010111号',
   'url_html_suffix' => '.html',
@@ -48,7 +49,7 @@ return array (
   'data_cache_vod' => '0',
   'data_cache_news' => '0',
   'data_cache_special' => '0',
-  'data_cache_foreach' => '5ea149cb8ea62',
+  'data_cache_foreach' => '5ea1b99e5968c',
   'data_cache_vodforeach' => '0',
   'data_cache_newsforeach' => '0',
   'data_cache_specialforeach' => '0',
@@ -136,6 +137,7 @@ return array (
   'play_collect_time' => '2',
   'play_collect_name' => '0',
   'play_collect' => false,
+  'play_video_encrypt' => '2c2894c71487e1dc667f42b48f5bd125',
   'url_html' => '0',
   'url_dir_a' => '2',
   'url_dir_b' => '5',
@@ -149,7 +151,7 @@ return array (
   'url_play' => '{listdir}/{id}/play.html',
   'url_html_list' => '1',
   'url_html_play' => '1',
-  'url_rewrite' => '1',
+  'url_rewrite' => '0',
   'url_map' => 'detail/',
   'url_mytpl' => 'detail/',
   'url_special' => 'detail/',

@@ -95,9 +95,9 @@ class AllAction extends Action{
 		if($createplayone){
 			//适用于静态网页生成每一集
 			$player_jsdir = C('site_path').ff_play_url_dir($array['vod_id'],0,1,$array['vod_cid'],$array['vod_name']).'.js?'.uniqid();
-			$array['vod_player'] = '<script language="javascript">var player_sid='.ceil($array_play['sid']).';var player_pid='.ceil($array_play['pid']).';</script><script charset="utf-8" src="'.$player_jsdir.'"></script><script charset="utf-8" src="'.C('site_path').'Runtime/Player/play.js"></script><script charset="utf-8" src="'.C('site_path').'Public/player2.9/play.js"></script>'."\n";
+			$array['vod_player'] = '<script language="javascript">var a="'.md5(C('play_video_encrypt')).'";var player_sid='.ceil($array_play['sid']).';var player_pid='.ceil($array_play['pid']).';</script><script charset="utf-8" src="'.$player_jsdir.'"></script><script charset="utf-8" src="'.C('site_path').'Runtime/Player/play.js"></script><script charset="utf-8" src="'.C('site_path').'Public/player2.9/play.js"></script>'."\n";
 		}else{
-			$array['vod_player'] = '<script language="javascript">var player_sid='.ceil($array_play['sid']).';var player_pid='.ceil($array_play['pid']).';</script><script language="javascript">'.$array['vod_player'].'</script><script charset="utf-8" src="'.C('site_path').'Runtime/Player/play.js"></script><script charset="utf-8" src="'.C('site_path').'Public/player2.9/play.js?"></script>'."\n";
+			$array['vod_player'] = '<script language="javascript">var a="'.md5(C('play_video_encrypt')).'";var player_sid='.ceil($array_play['sid']).';var player_pid='.ceil($array_play['pid']).';</script><script language="javascript">'.$array['vod_player'].'</script><script charset="utf-8" src="'.C('site_path').'Runtime/Player/play.js"></script><script charset="utf-8" src="'.C('site_path').'Public/player2.9/play.js?"></script>'."\n";
 		}
 		//点击数调用
 		$array['vod_hits_month'] = ff_get_hits('vod','vod_hits_month',$array,C('url_html_play'));
@@ -148,7 +148,7 @@ class AllAction extends Action{
 			$array_urls[$key]['servername'] = $val['servername'];
 			$array_urls[$key]['playname'] = $val['playname'];
 			foreach($val['son'] as $keysub=>$valsub){
-				$array_urls[$key]['playurls'][$keysub] = array($valsub['playname'], $valsub['playpath'], $valsub['playurl']);
+                $array_urls[$key]['playurls'][$keysub] = array($valsub['playname'], trim(base64_encode(openssl_encrypt(trim($valsub['playpath']), 'AES-128-CBC', substr(md5(C('play_video_encrypt')),0,16), OPENSSL_RAW_DATA, substr(md5(C('play_video_encrypt')),16,32)))), $valsub['playurl']);
 			}
 			$key++;
 		}

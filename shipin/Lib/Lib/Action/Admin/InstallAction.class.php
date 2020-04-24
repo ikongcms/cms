@@ -40,6 +40,7 @@ class InstallAction extends Action{
 			'db_pwd'=>$data['db_pwd'],
 			'db_port'=>$data['db_port'],
 			'db_prefix'=>$data['db_prefix'],
+            'play_video_encrypt'=>md5(uniqid()),
 		);
 		$config_old = require './Runtime/Conf/config.php';
 		$config_new = array_merge($config_old,$config);
