@@ -3,7 +3,7 @@ class InstallAction extends Action{
     public function _initialize() {
 		if(is_file('./Runtime/Install/install.lock')){
 			$this->assign("waitSecond",60);
-			$this->error('Sorry，您已经安装了飞飞PHP影视系统 V'.C('ffvod_version').' 版<br />重新安装请先删除 Runtime/install/install.lock 文件。');
+			$this->error('Sorry，您已经安装了影视系统重新安装请<br />先删除 Runtime/install/install.lock 文件。');
 		}
     }
     public function index(){
