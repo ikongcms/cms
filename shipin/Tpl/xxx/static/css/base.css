@@ -197,11 +197,10 @@ a.Up{padding-left:2px;}
 a.Down{padding-left:5px;}
 /*jquery延时加载*/
 .lazy{background:url(../images/loading.gif) center no-repeat}
-
-.top960 img{ width: 100%; height: 70px;}
+.top960 { font-size:0; }
+.top960 img{ width: 100%; min-height:60px;}
 .play300 img{ display:none; }
 .play300 { display:none; }
-
 @media (max-width:767px) {.fixediv {display:none}}
 /*新增样式*/
 .panel-title-vod {width:auto;height:100%;float:left;margin-left:15px;}

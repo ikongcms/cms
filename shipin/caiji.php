@@ -30,7 +30,7 @@
  */
 date_default_timezone_set("PRC");
 if(!empty($_GET['id'])&&!empty($_GET['n'])) {
-    $sum = 100;
+    $sum = 3;
     $data = array();
     $list = array(8,10,5,17,6,7,13,12);
     $name = array('DM','YBD','ZP','ZM','YZ','OM','YM','WM');
@@ -40,7 +40,7 @@ if(!empty($_GET['id'])&&!empty($_GET['n'])) {
     }
     if(!empty($caiji)&&is_array($caiji)) {
         foreach($caiji['data'] as $key => $value) {
-            //if(strtotime($value['vod_addtime'])<strtotime(date("Y-m-d"))){continue;}
+            if(strtotime($value['vod_addtime'])<strtotime(date("Y-m-d"))){continue;}
             preg_match_all('/([a-zA-Z0-9\:\_\/\-\.]+jpg)/u', $value['vod_pic'], $vod_pic);
             if(empty($vod_pic[1])){continue;}
             $vod_pic = $vod_pic[1][0];
