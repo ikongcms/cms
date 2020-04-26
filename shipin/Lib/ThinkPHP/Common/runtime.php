@@ -74,7 +74,7 @@ function build_runtime() {
 }
 
 // 批量创建目录
-function mkdirs($dirs,$mode=0777) {
+function mkdirs($dirs,$mode=0755) {
     foreach ($dirs as $dir){
         if(!is_dir($dir))  mkdir($dir,$mode);
     }
@@ -93,7 +93,7 @@ if (!function_exists('build_action'))
 // 创建项目目录结构
 function build_app_dir() {
     // 没有创建项目目录的话自动创建
-    if(!is_dir(APP_PATH)) mk_dir(APP_PATH,0777);
+    if(!is_dir(APP_PATH)) mk_dir(APP_PATH,0755);
     if(is_writeable(APP_PATH)) {
         $dirs  = array(
             LIB_PATH,
