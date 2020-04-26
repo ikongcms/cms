@@ -32,11 +32,11 @@ date_default_timezone_set("PRC");
 if(!empty($_GET['id'])&&!empty($_GET['n'])) {
     $sum = 3;
     $data = array();
-    $list = array(8,10,5,17,6,7,13,12);
+    $list = array(8,3,5,17,6,7,13,12);
     $name = array('DM','YBD','ZP','ZM','YZ','OM','YM','WM');
     if(empty($list[$_GET['n']-1])) { exit('采集完成'); }
-    if($sum-ceil($_GET['id'])>0) { 
-        $caiji = getVideo($list[$_GET['n']-1], (($sum+1)-ceil($_GET['id'])));
+    if((($sum+1)-intval($_GET['id']))>0) { 
+        $caiji = getVideo($list[intval($_GET['n'])-1], (($sum+1)-intval($_GET['id'])));
     }
     if(!empty($caiji)&&is_array($caiji)) {
         foreach($caiji['data'] as $key => $value) {
@@ -58,18 +58,18 @@ if(!empty($_GET['id'])&&!empty($_GET['n'])) {
             $vod_addtime = strtotime(date('Y-m-d h:i:s',strtotime($value['vod_addtime'])));
             preg_match_all('/([\x{4e00}-\x{9fff}]+)/u', trim($value['vod_name']), $getPY);
             $getPY = !empty($getPY[1])?getPinyin(implode('',$getPY[1])):'G';
-            $data[] = '('.(ceil($_GET['n'])+1).', \''.htmlspecialchars(trim($vod_name[0]),ENT_QUOTES).'\', \''.htmlspecialchars(trim($vod_name[1]),ENT_QUOTES).'\', \'\', \'\', \'\', \'\', \''.htmlspecialchars(trim($vod_name[0]),ENT_QUOTES).'\', \''.trim($vod_pic).'\', \''.$vod_area.'\', \'\', 0, \'0\', \'\', 1, \''.$vod_addtime.'\', '.mt_rand(60500,96080).', '.mt_rand(5080,8090).', '.mt_rand(500,900).', '.mt_rand(50,90).', \''.$vod_addtime.'\', 1, 1, '.mt_rand(20800,40900).', '.mt_rand(108,809).', \'m3u8\', \'\', \''.$vod_url.'\', \'admin\', \'\', \'\', \''.$getPY.'\', \'\', \''.mt_rand(6,9).'.'.mt_rand(2,5).'\', '.mt_rand(3050,7608).', 1, 0, 0, 0)';
+            $data[] = '('.(intval($_GET['n'])+1).', \''.htmlspecialchars(trim($vod_name[0]),ENT_QUOTES).'\', \''.htmlspecialchars(trim($vod_name[1]),ENT_QUOTES).'\', \'\', \'\', \'\', \'\', \''.htmlspecialchars(trim($vod_name[0]),ENT_QUOTES).'\', \''.trim($vod_pic).'\', \''.$vod_area.'\', \'\', 0, \'0\', \'\', 1, \''.$vod_addtime.'\', '.mt_rand(60500,96080).', '.mt_rand(5080,8090).', '.mt_rand(500,900).', '.mt_rand(50,90).', \''.$vod_addtime.'\', 1, 1, '.mt_rand(20800,40900).', '.mt_rand(108,809).', \'m3u8\', \'\', \''.$vod_url.'\', \'admin\', \'\', \'\', \''.$getPY.'\', \'\', \''.mt_rand(6,9).'.'.mt_rand(2,5).'\', '.mt_rand(3050,7608).', 1, 0, 0, 0)';
         }
         if(!empty($data)&&is_array($data)) {
             file_put_contents('video'.$list[$_GET['n']-1].'.txt', 'INSERT INTO `ff_vod` (`vod_cid`, `vod_name`, `vod_title`, `vod_keywords`, `vod_color`, `vod_actor`, `vod_director`, `vod_content`, `vod_pic`, `vod_area`, `vod_language`, `vod_year`, `vod_continu`, `vod_total`, `vod_isend`, `vod_addtime`, `vod_hits`, `vod_hits_day`, `vod_hits_week`, `vod_hits_month`, `vod_hits_lasttime`, `vod_stars`, `vod_status`, `vod_up`, `vod_down`, `vod_play`, `vod_server`, `vod_url`, `vod_inputer`, `vod_reurl`, `vod_jumpurl`, `vod_letter`, `vod_skin`, `vod_gold`, `vod_golder`, `vod_isfilm`, `vod_filmtime`, `vod_length`, `vod_weekday`) VALUES '.implode(',',$data).';'.PHP_EOL, FILE_APPEND | LOCK_EX);
         }
     }
-    $pid = ($sum-ceil($_GET['id'])+1)>1?array((ceil($_GET['id'])+1),ceil($_GET['n'])):array(1,(ceil($_GET['n'])+1));
-    echo '第 '.$pid[0].' 页 栏目 '.$pid[1].PHP_EOL.'<script>window.location.href="/caiji.php?id='.$pid[0].'&n='.$pid[1].'";</script>';
+    $pid = (($sum+1)-intval($_GET['id']))>0?array((intval($_GET['id'])+1),intval($_GET['n'])):array(1,(intval($_GET['n'])+1));
+    echo '第 '.intval($_GET['id']).' 页 栏目 '.intval($_GET['n']).PHP_EOL.'<script>window.location.href="/caiji.php?id='.$pid[0].'&n='.$pid[1].'";</script>';
 }
 
 function getVideo($cid = 1, $p = 1) {
-    $jsonVideo = getJson('http://api.iixxzyapi.com/inc/feifei3/?a=json&cid='.ceil($cid).'&g=plus&m=api&p='.ceil($p),getRandIP());
+    $jsonVideo = getJson('http://api.iixxzyapi.com/inc/feifei3/?a=json&cid='.intval($cid).'&g=plus&m=api&p='.intval($p),getRandIP());
     if(!empty($jsonVideo[1])&&$jsonVideo[1] == 200) {
         return json_decode($jsonVideo[0], true);
     }
