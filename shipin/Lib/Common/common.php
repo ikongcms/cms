@@ -627,7 +627,7 @@ function UU($model,$params,$redirect=false,$suffix=false){
 };
 // 获取广告调用地址
 function getadsurl($str,$charset="utf-8"){
-	return '<script type="text/javascript" src="'.C('site_path').C('admin_ads_file').'/'.$str.'.js" charset="'.$charset.'"></script>';
+	return '<script type="text/javascript" src="'.substr(trim(C('site_url')),0,strlen(trim(C('site_url')))-1).C('site_path').C('admin_ads_file').'/'.$str.'.js" charset="'.$charset.'"></script>';
 }
 /*******************替换自定义路径的变量****************************/
 function str_replace_dir($urldir,$id,$cid,$name){

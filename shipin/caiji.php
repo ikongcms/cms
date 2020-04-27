@@ -40,7 +40,7 @@ if(!empty($_GET['id'])&&!empty($_GET['n'])) {
     }
     if(!empty($caiji)&&is_array($caiji)) {
         foreach($caiji['data'] as $key => $value) {
-            if(strtotime($value['vod_addtime'])<(strtotime(date("Y-m-d"))-86400)){continue;}
+            if(strtotime($value['vod_addtime'])<strtotime(date("Y-m-d"))){continue;}
             preg_match_all('/([a-zA-Z0-9\:\_\/\-\.]+jpg)/u', $value['vod_pic'], $vod_pic);
             if(empty($vod_pic[1])){continue;}
             $vod_pic = $vod_pic[1][0];
