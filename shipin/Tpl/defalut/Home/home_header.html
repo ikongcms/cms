@@ -1,8 +1,13 @@
-<script type="text/javascript">var Root='{$root}';var Sid='{$sid}';var Cid='{$list_id}';<if condition="$sid eq 1">var Id='{$vod_id}';<else />var Id='{$news_id}';</if></script>
+<script type="text/javascript"><if condition="empty($root) neq true">var Root='{$root}';</if><if condition="empty($sid) neq true">var Sid='{$sid}';<else />var Sid='';</if><if condition="empty($list_id) neq true">var Cid='{$list_id}';<else />var Cid='';</if><if condition="empty($sid) neq true"><if condition="empty($vod_id) neq true">var Id='{$vod_id}';<else /><if condition="empty($news_id) neq true">var Id='{$news_id}';</if></if></if></script>
 <script charset="utf-8" src="__PUBLIC__/jquery/jquery-1.7.2.min.js"></script>
 <script charset="utf-8" src="__PUBLIC__/jquery/jquery.autocomplete-1.1.js"></script>
 <script charset="utf-8" src="__PUBLIC__/jquery/jquery.lazyload-1.8.4.js"></script>
-<script charset="utf-8" src="{$tpl}js/home.js"></script>
-<link rel="stylesheet" type="text/css" href="{$tpl}js.css">
-<link rel="stylesheet" type="text/css" href="{$tpl}style.css">
+<script charset="utf-8" src="{$tpl}static/js/home.js"></script>
+<link rel="stylesheet" type="text/css" href="{$tpl}static/css/base.css">
+
+<!--[if lt IE 9]>
+<script src="{$tpl}static/js/html5shiv.min.js"></script>
+<script src="{$tpl}static/js/respond.min.js"></script>
+<![endif]-->	
+
 <!--系统JS与CSS -->

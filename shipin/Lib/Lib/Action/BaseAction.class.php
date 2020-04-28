@@ -5,7 +5,7 @@ class BaseAction extends AllAction{
     public function _initialize(){
 	    parent::_initialize();
 		//检查登录
-		if (!$_SESSION[C('USER_AUTH_KEY')]) {
+		if (empty($_SESSION[C('USER_AUTH_KEY')])||(trim($_SESSION['host_key'])!=trim($_SERVER['HTTP_HOST']))) {
 			$this->assign('jumpUrl',C('cms_admin').'?s=Admin-Login');
 			$this->error('对不起，您还没有登录，请先登录！');
 		}
