@@ -102,7 +102,7 @@ class DataAction extends BaseAction{
 	}
 	//下载还原
 	public function down(){
-		$filepath = DATA_PATH.'_bak/'.getWDSrt($_GET['id']);
+		$filepath = DATA_PATH.'_bak/'.getWDSrt($_GET['id'],true);
 		if (file_exists($filepath)) {
 			$filename = $filename ? $filename : basename($filepath);
 			$filetype = trim(substr(strrchr($filename, '.'), 1));

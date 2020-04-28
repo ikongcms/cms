@@ -66,21 +66,41 @@ function getWD($str){
     preg_match_all('/([a-zA-Z0-9\_\～\！\：\。\，\《\》\?\=\-\,\.\:\|\/\s]+|[\x{4e00}-\x{9fff}]+|[\x{0800}-\x{4e00}]+|[\x{AC00}-\x{D7A3}]+|[\x{4e00}-\x{9fa5}]+)/u', $str, $match);
     return !empty($match[1])?implode($match[1]):'';
 }
+// 过滤字符串
+function getSrt($str){
+    preg_match_all('/([a-zA-Z0-9\_\.\|]+)/u', $str, $match);
+    return !empty($match[1])?implode($match[1]):'';
+}
 // 过滤字符串无限循环
-function getWDSrt($data) {
+function getWDSrt($data,$str=false) {
     $da = array();
-    if(is_array($data)) {
-        foreach ($data as $key => $val) {
-            if(is_array($val)){
-                $da[$key] = getWDSrt($val);
-            } else {
-                $da[trim(getWD($key))] = trim(getWD($val));
+    if($str) {
+        if(is_array($data)) {
+            foreach ($data as $key => $val) {
+                if(is_array($val)){
+                    $da[$key] = getWDSrt($val);
+                } else {
+                    $da[trim(getSrt($key))] = trim(getSrt($val));
+                }
             }
+        } else {
+            $da = trim(getSrt($data));
         }
+        return $da;
     } else {
-        $da = trim(getWD($data));
+        if(is_array($data)) {
+            foreach ($data as $key => $val) {
+                if(is_array($val)){
+                    $da[$key] = getWDSrt($val);
+                } else {
+                    $da[trim(getWD($key))] = trim(getWD($val));
+                }
+            }
+        } else {
+            $da = trim(getWD($data));
+        }
+        return $da;
     }
-    return $da;
 }
 // UT*转GBK
 function u2g($str){
