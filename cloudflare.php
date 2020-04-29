@@ -1,7 +1,7 @@
 <?php 
 $header = array(
-    "X-Auth-Email:admin@admin.cn",
-    "X-Auth-Key:HnHnHNhnhnhnhnhnhn",
+    "X-Auth-Email:admin@admin.com",
+    "X-Auth-Key:HaHaHaHaHaHaHaHaHaHaHaHa",
     "Content-Type:application/json"
 );
 
@@ -11,6 +11,7 @@ $record = file(__DIR__.DIRECTORY_SEPARATOR.'dom'.DIRECTORY_SEPARATOR.'record.txt
 
 // 删除域名
 foreach ($domain as $v_domain) {
+    sleep(2);
     $url = 'https://api.cloudflare.com/client/v4/zones?name='.trim($v_domain);
     $rs = post_data($url, 0, $header, 8, 1);
     $rs = json_decode($rs, true);
@@ -26,6 +27,7 @@ foreach ($domain as $v_domain) {
 
 // 创建域名
 foreach ($domain as $id => $v_domain) {
+    sleep(2);
     $url = "https://api.cloudflare.com/client/v4/zones";
     $post = array(
         "name" => trim($v_domain),
@@ -51,7 +53,7 @@ foreach ($domain as $id => $v_domain) {
     // 域名解析
     $records = explode('|', $record[$id]);
     foreach ($records as $v_record) {
-        $url_add_records = "https://api.cloudflare.com/client/v4/zones/$zoneid/dns_records";
+        $url_add_records = 'https://api.cloudflare.com/client/v4/zones/'.$zoneid.'/dns_records';
         $record_detail = explode(',', trim($v_record));
         $name = strtolower($record_detail[0]);
         $type = strtoupper($record_detail[1]);
@@ -78,7 +80,7 @@ foreach ($domain as $id => $v_domain) {
 
     // 开启HSTS
     $url = 'https://api.cloudflare.com/client/v4/zones/'.$zoneid.'/settings/security_header';
-    $hsts = '{"value":{"strict_transport_security":{"enabled":true,"max_age":86400,"include_subdomains":true,"nosniff":true}}}';
+    $hsts = '{"value":{"strict_transport_security":{"enabled":true,"include_subdomains":true,"max_age":15552000,"nosniff":true,"preload":true}}}';
     $rs = post_data($url, 0, $header, 8, 1, $hsts);
     $rs = json_decode($rs, true);
     if($rs['success'] == false){
@@ -134,3 +136,4 @@ function post_data($url, $post=null, $header=array(), $timeout=8, $https=0, $pat
 
     return $content;
 }
+
