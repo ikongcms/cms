@@ -58,7 +58,7 @@ class CmAction extends BaseAction{
 	// 删除评论BY-ID
     public function del(){
 		$rs = D('Cm');
-		$where['cm_id'] = intval($_GET['id']);
+		$where['cm_id'] = intval(getWDSrt($_GET['id'],true));
 		$rs->where($where)->delete();
 		redirect($_SERVER['HTTP_REFERER']);
     }

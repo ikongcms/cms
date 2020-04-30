@@ -59,11 +59,11 @@ class AdsAction extends BaseAction{
 	// 删除广告
     public function del(){
 		$rs = D("Ads");
-		$where['ads_id'] = getWDSrt($_GET['id']);
+		$where['ads_id'] = intval(getWDSrt($_GET['id'],true));
 		$array = $rs->field('ads_name')->where($where)->find();
 	    $rs->where($where)->delete();
 		@unlink('./'.C('admin_ads_file').'/'.$array['ads_name'].'.js');
 		redirect('?s=Admin-Ads-Show');
-    }					
+    }
 }
 ?>

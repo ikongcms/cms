@@ -81,7 +81,7 @@ class DataAction extends BaseAction{
 	//导入还原
 	public function back(){
 		$rs = new Model();
-		$pre = trim(getWDSrt($_GET['id']));
+		$pre = trim(getWDSrt($_GET['id'].true));
 		$fileid = !empty($_GET['fileid']) ? intval($_GET['fileid']) : 1;
 		$filename = $pre.$fileid.'.sql';
 		$filepath = DATA_PATH.'_bak/'.$filename;
@@ -121,14 +121,14 @@ class DataAction extends BaseAction{
 	}
 	//删除分卷文件
 	public function del(){
-		$filename = trim(getWDSrt($_GET['id']));
+		$filename = trim(getWDSrt($_GET['id'],true));
 		@unlink(DATA_PATH.'_bak/'.$filename);
 		$this->success($filename.'已经删除！');
 	}
 	//删除所有分卷文件
 	public function delall(){
-		foreach($_POST['ids'] as $value){
-			@unlink(DATA_PATH.'_bak/'.$value);
+		foreach(getWDSrt($_POST['ids'],true) as $value){
+			@unlink(DATA_PATH.'_bak/'.getWDSrt($value,true));
 		}
 		$this->success('批量删除分卷文件成功！');
 	}

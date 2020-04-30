@@ -78,7 +78,7 @@ class SlideAction extends BaseAction{
 	// 删除幻灯片
     public function del(){
 		$rs = D("Slide");
-		$where['slide_id'] = intval($_GET['id']);
+		$where['slide_id'] = intval(getWDSrt($_GET['id'],true));
 		$rs->where($where)->delete();
 		$this->redirect('Admin-Slide/Show');
     }								

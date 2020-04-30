@@ -68,7 +68,7 @@ function getWD($str){
 }
 // 过滤字符串
 function getSrt($str){
-    preg_match_all('/([a-zA-Z0-9\_\.\|]+)/u', $str, $match);
+    preg_match_all('/([a-zA-Z0-9\_\.]+)/u', $str, $match);
     return !empty($match[1])?implode($match[1]):'';
 }
 // 过滤字符串无限循环

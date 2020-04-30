@@ -198,7 +198,7 @@ class NewsAction extends BaseAction{
     }
 	// 删除文章
     public function del(){
-		$this->delfile(intval($_GET['id']));
+		$this->delfile(intval(getWDSrt($_GET['id'],true)));
 		redirect($_SESSION['news_jumpurl']);
     }
 	// 删除文章all
@@ -206,9 +206,9 @@ class NewsAction extends BaseAction{
 		if(empty($_POST['ids'])){
 			$this->error('请选择需要删除的文章！');
 		}	
-		$array = getWDSrt($_POST['ids']);
+		$array = getWDSrt($_POST['ids'],true);
 		foreach($array as $val){
-			$this->delfile(getWDSrt($val));
+			$this->delfile(intval($val));
 		}
 		redirect($_SESSION['news_jumpurl']);
     }

@@ -122,7 +122,7 @@ class SpecialAction extends BaseAction{
     }
 	// 删除专题
     public function del(){
-		$this->delfile(intval($_GET['id']));
+		$this->delfile(intval(getWDSrt($_GET['id'],true)));
 		$this->redirect('?s=Admin-Special-Show');
     }
 	// 删除专题all
@@ -130,9 +130,9 @@ class SpecialAction extends BaseAction{
 		if(empty($_POST['ids'])){
 			$this->error('请选择需要删除的专题！');
 		}	
-		$array = $_POST['ids'];
+		$array = getWDSrt($_POST['ids'],true);
 		foreach($array as $val){
-			$this->delfile(getWDSrt($val));
+			$this->delfile(intval($val));
 		}
 		redirect($_SERVER['HTTP_REFERER']);
     }

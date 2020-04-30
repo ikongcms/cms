@@ -77,8 +77,8 @@ class PicAction extends BaseAction{
 	// 删除单个本地附件
     public function del(){
 		$path = trim(admin_ff_url_repalce(trim(getWDSrt(str_replace('*','-',$_GET['id'])))));
-		if(is_file($path)) { @unlink($path); }
-		if(is_file(str_replace(C('upload_path').'/',C('upload_path').'-s/',$path))) { @unlink(str_replace(C('upload_path').'/',C('upload_path').'-s/',$path)); }
+		if(is_file($path)&&trim('./'.C('upload_path'))==trim(substr($path,0,mb_strlen('./'.C('upload_path'))))) { @unlink($path); }
+		if(is_file(str_replace(C('upload_path').'/',C('upload_path').'-s/',$path))&&trim('./'.C('upload_path'))==trim(substr($path,0,mb_strlen('./'.C('upload_path'))))) { @unlink(str_replace(C('upload_path').'/',C('upload_path').'-s/',$path)); }
 		$this->success('删除附件成功！');
     }
 	// 清理无效图片

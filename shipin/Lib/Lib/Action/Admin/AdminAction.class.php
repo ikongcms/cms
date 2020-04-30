@@ -64,18 +64,19 @@ class AdminAction extends BaseAction{
 	// 删除用户
     public function del(){
 		$rs = D("Admin");
-        if(ceil($_GET['id']) == 1) {
+        if(ceil(getWDSrt($_GET['id'],true)) == 1) {
             $this->error("更新管理员信息失败！");
         } else {
-            $rs->where('admin_id='.ceil($_GET['id']))->delete();
+            $rs->where('admin_id='.ceil(getWDSrt($_GET['id'],true)))->delete();
             $this->success('删除后台管理员成功！');
         }
     }
 	// 批量删除
     public function delall() {
-        foreach($_POST['ids'] as $value) {
-            if(ceil($value) != 1) {
-                $id[] = intval($value);
+        $array = getWDSrt($_POST['ids'],true);
+        foreach($array as $value) {
+            if($value != 1) {
+                $id[] = $value;
             }
         }
         if(!empty($id)) {

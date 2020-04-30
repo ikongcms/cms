@@ -60,7 +60,7 @@ class UserAction extends BaseAction{
 	// 删除用户
 	public function del(){
 		$rs = D("Admin.User");
-		$rs->where('user_id = '.intval($_GET['id']))->delete();
+		$rs->where('user_id = '.intval(getWDSrt($_GET['id'],true)))->delete();
 		$this->success('删除用户成功！');
 	}			
 	// 用户组列表

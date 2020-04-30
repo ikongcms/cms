@@ -8,7 +8,7 @@ return array (
   'db_port' => '3306',
   'db_prefix' => 'ff_',
   'db_charset' => 'utf8',
-  'default_theme' => 'defalut',
+  'default_theme' => 'xxx',
   'site_name' => '影视导航系统',
   'site_path' => '/',
   'site_url' => 'http://127.0.0.1/',
@@ -74,12 +74,12 @@ return array (
     'home:vod:show' => 
     array (
       0 => '{:module}_{:action}/{$_SERVER.REQUEST_URI|md5}',
-      1 => 5400.0,
+      1 => 5400,
     ),
     'home:news:show' => 
     array (
       0 => '{:module}_{:action}/{$_SERVER.REQUEST_URI|md5}',
-      1 => 5400.0,
+      1 => 5400,
     ),
     'home:vod:read' => 
     array (
@@ -137,7 +137,7 @@ return array (
   'play_collect_time' => '2',
   'play_collect_name' => '0',
   'play_collect' => false,
-  'play_video_encrypt' => 'ca33ef7199994c5330f49c8d2de6216a',
+  'play_video_encrypt' => 'd3a23f43c63232fea90f3077633c2613',
   'url_html' => '0',
   'url_dir_a' => '2',
   'url_dir_b' => '5',

@@ -246,7 +246,7 @@ class VodAction extends BaseAction{
 	}	
 	// 删除影片
     public function del(){
-		$this->delfile(intval($_GET['id']));
+		$this->delfile(intval(getWDSrt($_GET['id'],true)));
 		redirect($_SESSION['vod_jumpurl']);
     }
 	// 删除影片all
@@ -254,7 +254,7 @@ class VodAction extends BaseAction{
 		if(empty($_POST['ids'])){
 			$this->error('请选择需要删除的影片！');
 		}	
-		$array = $_POST['ids'];
+		$array = getWDSrt($_POST['ids'],true);
 		foreach($array as $val){
 			$this->delfile(intval($val));
 		}

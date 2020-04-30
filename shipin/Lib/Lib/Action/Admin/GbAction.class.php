@@ -70,7 +70,7 @@ class GbAction extends BaseAction{
 	// 删除留言BY-ID
     public function del(){
 		$rs = D('Gb');
-		$where['gb_id'] = intval($_GET['id']);
+		$where['gb_id'] = intval(getWDSrt($_GET['id'],true));
 		$rs->where($where)->delete();
 		redirect($_SERVER['HTTP_REFERER']);
     }

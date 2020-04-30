@@ -121,7 +121,7 @@ class ListAction extends BaseAction{
 	// 删除数据
     public function del(){
 		$rs = D("Admin.List");
-		$where['list_id'] = intval($_GET['id']);
+		$where['list_id'] = intval(getWDSrt($_GET['id'],true));
 		if (!getlistson(intval($_GET['id']))) {
 			$this->error("请先删除本类下面的子栏目！");
 		}
@@ -147,7 +147,7 @@ class ListAction extends BaseAction{
 			$this->error('请选择需要删除的栏目！');
 		}	
 		$list = D("Admin.List");
-		$array = getWDSrt($_POST);
+		$array = getWDSrt($_POST,true);
 		foreach($array['ids'] as $value){
 			$id = intval($value);
 			$sid = getlistname($id,'list_id');

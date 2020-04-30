@@ -81,17 +81,7 @@ class TplAction extends BaseAction{
 	}
 	// 删除模板
     public function del(){
-		$id = !empty($_GET['id'])?admin_ff_url_repalce(trim(getWDSrt(str_replace('*','.',trim($_GET['id']))))):'';
-		if (!substr(sprintf("%o",fileperms($id)),-3)){
-			$this->error('无删除权限！');
-		}
-		@unlink($id);
-		if (!empty($_SESSION['tpl_jumpurl'])) {
-			$this->assign("jumpUrl",$_SESSION['tpl_jumpurl']);
-		}else{
-			$this->assign("jumpUrl",'?s=Admin/Tpl/Show');
-		}
-		$this->success('删除文件成功！');
-    }				
+		$this->error('无删除权限！');
+    }
 }
 ?>

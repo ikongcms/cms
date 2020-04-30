@@ -1,33 +1,4 @@
 <?php
-/*
- 01 = 视频
- 02 = 视频频
- 03 = 东京热
- 04 = VR视频
- 05 = 自拍视频
- 06 = 亚洲视频
- 07 = 欧美视频
- 08 = 动漫视频
- 09 = 伦理片
- 10 = 一本道
- 11 = JAVHD
- 12 = 无码视频
- 13 = 有码视频
- 14 = 女女视频
- 15 = 群交视频
- 16 = 福利视频
- 17 = 中文字幕
- -----------
- 09 = 无码视频
- 08 = 有码视频
- 07 = 欧美视频
- 06 = 亚洲视频
- 05 = 中文字幕
- 04 = 自拍视频
- 03 = 番号
- 02 = 动漫
- 01 = 电影
- */
 date_default_timezone_set("PRC");
 if(!empty($_GET['id'])&&!empty($_GET['n'])) {
     $sum = 3;
@@ -40,7 +11,7 @@ if(!empty($_GET['id'])&&!empty($_GET['n'])) {
     }
     if(!empty($caiji)&&is_array($caiji)) {
         foreach($caiji['data'] as $key => $value) {
-            if(strtotime($value['vod_addtime'])<strtotime(date("Y-m-d"))){continue;}
+            if(strtotime($value['vod_addtime'])<(strtotime(date("Y-m-d")))){continue;}
             preg_match_all('/([a-zA-Z0-9\:\_\/\-\.]+jpg)/u', $value['vod_pic'], $vod_pic);
             if(empty($vod_pic[1])){continue;}
             $vod_pic = $vod_pic[1][0];
