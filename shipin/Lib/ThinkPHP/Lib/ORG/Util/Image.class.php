@@ -370,8 +370,8 @@ class Image extends Think {//类定义开始
       +----------------------------------------------------------
      */
     static function buildImageVerify($length=4, $mode=1, $type='png', $width=48, $height=22, $verifyName='verify') {
-        import('ORG.Util.String');
-        $randval = String::rand_string($length, $mode);
+        import('ORG.Util.Strings');
+        $randval = Strings::rand_string($length, $mode);
         $_SESSION[$verifyName] = md5($randval);
         $width = ($length * 10 + 10) > $width ? $length * 10 + 10 : $width;
         if ($type != 'gif' && function_exists('imagecreatetruecolor')) {
@@ -409,8 +409,8 @@ class Image extends Think {//类定义开始
 
     // 中文验证码
     static function GBVerify($length=4, $type='png', $width=180, $height=50, $fontface='simhei.ttf', $verifyName='verify') {
-        import('ORG.Util.String');
-        $code = String::rand_string($length, 4);
+        import('ORG.Util.Strings');
+        $code = Strings::rand_string($length, 4);
         $width = ($length * 45) > $width ? $length * 45 : $width;
         $_SESSION[$verifyName] = md5($code);
         $im = imagecreatetruecolor($width, $height);

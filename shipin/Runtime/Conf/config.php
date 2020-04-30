@@ -8,7 +8,7 @@ return array (
   'db_port' => '3306',
   'db_prefix' => 'ff_',
   'db_charset' => 'utf8',
-  'default_theme' => 'xxx',
+  'default_theme' => 'defalut',
   'site_name' => '影视导航系统',
   'site_path' => '/',
   'site_url' => 'http://127.0.0.1/',
@@ -74,12 +74,12 @@ return array (
     'home:vod:show' => 
     array (
       0 => '{:module}_{:action}/{$_SERVER.REQUEST_URI|md5}',
-      1 => 5400,
+      1 => 5400.0,
     ),
     'home:news:show' => 
     array (
       0 => '{:module}_{:action}/{$_SERVER.REQUEST_URI|md5}',
-      1 => 5400,
+      1 => 5400.0,
     ),
     'home:vod:read' => 
     array (
@@ -159,7 +159,7 @@ return array (
   'user_replace' => '她妈|它妈|他妈|你妈|去死|贱人',
   'user_gbnum' => '10',
   'user_cmnum' => '10',
-  'user_vcode' => '0',
+  'user_vcode' => '1',
   'user_register' => '0',
   'html_home_suffix' => '.html',
   'upload_ftp_del' => '0',
@@ -169,6 +169,6 @@ return array (
   'rand_golder' => '9',
   'rand_tag' => '0',
   'user_post' => '0',
-  'user_check' => '1',
+  'user_check' => '0',
 );
 ?>
