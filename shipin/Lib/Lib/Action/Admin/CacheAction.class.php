@@ -9,16 +9,17 @@ class CacheAction extends BaseAction{
 		import("ORG.Io.Dir");
 		$dir = new Dir;
 		$this->ppvod_list();
-        if(is_file('./Runtime/~app.php')) {
-            @unlink('./Runtime/~app.php');
+        if(is_file(RUNTIME_PATH.'~app.php')) {
+            @unlink(RUNTIME_PATH.'~app.php');
         }
-        if(is_file('./Runtime/~runtime.php')) {
-            @unlink('./Runtime/~runtime.php');
+        if(is_file(RUNTIME_PATH.'~runtime.php')) {
+            @unlink(RUNTIME_PATH.'~runtime.php');
         }
-		if(!$dir->isEmpty('./Runtime/Data/_fields')){$dir->del('./Runtime/Data/_fields');}
-		if(!$dir->isEmpty('./Runtime/Temp')){$dir->delDir('./Runtime/Temp');}
-		if(!$dir->isEmpty('./Runtime/Cache')){$dir->delDir('./Runtime/Cache');}
-		if(!$dir->isEmpty('./Runtime/Logs')){$dir->delDir('./Runtime/Logs');}
+		if(!$dir->isEmpty(RUNTIME_PATH.'Data/_fields')){$dir->del(RUNTIME_PATH.'Data/_fields');}
+		if(!$dir->isEmpty(RUNTIME_PATH.'Temp')){$dir->delDir(RUNTIME_PATH.'Temp');}
+		if(!$dir->isEmpty(RUNTIME_PATH.'Cache')){$dir->delDir(RUNTIME_PATH.'Cache');}
+		if(!$dir->isEmpty(RUNTIME_PATH.'Html')){$dir->delDir(RUNTIME_PATH.'Html');}
+		if(!$dir->isEmpty(RUNTIME_PATH.'Logs')){$dir->delDir(RUNTIME_PATH.'Logs');}
 		echo('清除成功');
     }
 	// 删除静态缓存
@@ -29,17 +30,17 @@ class CacheAction extends BaseAction{
 		if('index' == $id){
 			@unlink(HTML_PATH.'index'.C('html_file_suffix'));
 		}elseif('vodlist'== $id){
-			if(is_dir(HTML_PATH.'Vod_show')){$dir->delDir(HTML_PATH.'Vod_show');}	    
+			if(is_dir(HTML_PATH.'Vod_show')){$dir->delDir(HTML_PATH.'Vod_show');}
 		}elseif('vodread' == $id){
-			if(is_dir(HTML_PATH.'Vod_read')){$dir->delDir(HTML_PATH.'Vod_read');}	    
+			if(is_dir(HTML_PATH.'Vod_read')){$dir->delDir(HTML_PATH.'Vod_read');}
 		}elseif('vodplay' == $id){
-			if(is_dir(HTML_PATH.'Vod_play')){$dir->delDir(HTML_PATH.'Vod_play');}	    
+			if(is_dir(HTML_PATH.'Vod_play')){$dir->delDir(HTML_PATH.'Vod_play');}
 		}elseif('newslist' == $id){
-			if(is_dir(HTML_PATH.'News_show')){$dir->delDir(HTML_PATH.'News_show');}    
+			if(is_dir(HTML_PATH.'News_show')){$dir->delDir(HTML_PATH.'News_show');}
 		}elseif('newsread' == $id){
-			if(is_dir(HTML_PATH.'News_read')){$dir->delDir(HTML_PATH.'News_read');}   
+			if(is_dir(HTML_PATH.'News_read')){$dir->delDir(HTML_PATH.'News_read');}
 		}elseif('ajax' == $id){
-		    if(is_dir(HTML_PATH.'Ajax_show')){$dir->delDir(HTML_PATH.'Ajax_show');}	    
+		    if(is_dir(HTML_PATH.'Ajax_show')){$dir->delDir(HTML_PATH.'Ajax_show');}
 		}elseif('day' == $id){
 		    $this->delhtml_day();    
 		}else{
@@ -62,16 +63,17 @@ class CacheAction extends BaseAction{
 		if($array){
 			foreach($array as $key=>$val){
 			    $id = md5($array[$key]['vod_id']).C('html_file_suffix');
-			    @unlink('./Html/Vod_read/'.$id);
-				@unlink('./Html/Vod_play/'.$id);
+			    @unlink(HTML_PATH.'Vod_read/'.$id);
+				@unlink(HTML_PATH.'Vod_play/'.$id);
 			}
 		    import("ORG.Io.Dir");
 			$dir = new Dir;
-			if(!$dir->isEmpty('./Html/Vod_show')){$dir->delDir('./Html/Vod_show');}	
-			if(!$dir->isEmpty('./Html/Ajax_show')){$dir->delDir('./Html/Ajax_show');}
-			@unlink('./Html/index'.C('html_file_suffix'));						
+			if(!$dir->isEmpty(HTML_PATH.'Vod_show')){$dir->delDir(HTML_PATH.'Vod_show');}	
+			if(!$dir->isEmpty(HTML_PATH.'Ajax_show')){$dir->delDir(HTML_PATH.'Ajax_show');}
+			@unlink(HTML_PATH.'index'.C('html_file_suffix'));						
+		} else {
+			echo('清除成功');
 		}
-		echo('清除成功');
 	}
 	//清空所有数据缓存
     public function dataclear(){
@@ -89,10 +91,10 @@ class CacheAction extends BaseAction{
     }
 	//循环标签调用
     public function dataforeach(){
-		$config_old = require './Runtime/Conf/config.php';
+		$config_old = require RUNTIME_PATH.'Conf/config.php';
 		$config_new = array_merge($config_old, array('data_cache_foreach'=>uniqid()) );
-		arr2file('./Runtime/Conf/config.php',$config_new);
-		@unlink('./Runtime/~app.php');
+		arr2file(RUNTIME_PATH.'Conf/config.php',$config_new);
+		if(is_file(RUNTIME_PATH.'~app.php')){@unlink(RUNTIME_PATH.'~app.php');}
 		echo('清除成功');
     }
 	//当天视频

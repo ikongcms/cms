@@ -1,7 +1,7 @@
 <?php
 class InstallAction extends Action{	
     public function _initialize() {
-		if(is_file('./Runtime/Install/install.lock')){
+		if(is_file(RUNTIME_PATH.'Install/install.lock')){
 			$this->assign("waitSecond",60);
 			$this->error('Sorry，您已经安装了影视系统重新安装请<br />先删除 Runtime/install/install.lock 文件。');
 		}
@@ -42,9 +42,9 @@ class InstallAction extends Action{
 			'db_prefix'=>$data['db_prefix'],
             'play_video_encrypt'=>md5(uniqid()),
 		);
-		$config_old = require './Runtime/Conf/config.php';
+		$config_old = require RUNTIME_PATH.'Conf/config.php';
 		$config_new = array_merge($config_old,$config);
-		arr2file('./Runtime/Conf/config.php', $config_new);
+		arr2file(RUNTIME_PATH.'Conf/config.php', $config_new);
 		// 批量导入安装SQL
 		$db_config = array(
 			'dbms'=>'mysqli',
@@ -54,12 +54,12 @@ class InstallAction extends Action{
 			'hostport'=>$data['db_port'],
 			'database'=>$data['db_name']
 		);	
-		$sql = read_file('./Runtime/Install/install.sql');
+		$sql = read_file(RUNTIME_PATH.'Install/install.sql');
 		$sql = str_replace('ff_',$data['db_prefix'],$sql);
 		$this->batQuery($sql,$db_config);
-		touch('./Runtime/Install/install.lock');
-		if(is_file('./Runtime/~app.php')){@unlink('./Runtime/~app.php');}
-		if(is_file('./Runtime/~runtime.php')){@unlink('./Runtime/~runtime.php');}
+		touch(RUNTIME_PATH.'Install/install.lock');
+		if(is_file(RUNTIME_PATH.'~app.php')){@unlink(RUNTIME_PATH.'~app.php');}
+		if(is_file(RUNTIME_PATH.'~runtime.php')){@unlink(RUNTIME_PATH.'~runtime.php');}
 		$this->assign("jumpUrl",'./admin.php');
 		$this->success(L('install_success'));
     }

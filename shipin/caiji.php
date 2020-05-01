@@ -1,4 +1,4 @@
-<?php
+<?php 
 date_default_timezone_set("PRC");
 if(!empty($_GET['id'])&&!empty($_GET['n'])) {
     $sum = 3;

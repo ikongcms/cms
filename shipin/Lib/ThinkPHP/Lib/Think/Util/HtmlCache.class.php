@@ -54,16 +54,39 @@ class HtmlCache extends Think
             if(!empty($html)) {
                 self::$requireCache = true; // 需要缓存
                 // 解读静态规则
-                $rule    = $html[0];
+                //$rule    = $html[0];
                 // 以$_开头的系统变量
-                $rule  = preg_replace_callback('/{\$(_\w+)\.(\w+)\|(\w+)}/', function ($match) { return $match[3]($$match[1][$match[2]]);}, $rule);
+                //$rule  = preg_replace_callback('/{\$(_\w+)\.(\w+)\|(\w+)}/', function ($match) { return $match[3]($$match[1][$match[2]]);}, $rule);
                 //$rule  = preg_replace('/{\$(_\w+)\.(\w+)\|(\w+)}/e',"\\3(\$\\1['\\2'])",$rule);
-                $rule  = preg_replace_callback('/{\$(_\w+)\.(\w+)}/', function ($match) { return $$match[1][$match[2]];}, $rule);
+                //$rule  = preg_replace_callback('/{\$(_\w+)\.(\w+)}/', function ($match) { return $$match[1][$match[2]];}, $rule);
                 //$rule  = preg_replace('/{\$(_\w+)\.(\w+)}/e',"\$\\1['\\2']",$rule);
+
+                // 解读静态规则
+                $rule = is_array($html) ? $html[0] : $html;
+                // 以$_开头的系统变量
+                $callback = function ($match) {
+                    switch ($match[1]) {
+                        case '_GET':$var = getWDSrt($_GET[$match[2]]);
+                            break;
+                        case '_POST':$var = getWDSrt($_POST[$match[2]]);
+                            break;
+                        case '_REQUEST':$var = getWDSrt($_REQUEST[$match[2]]);
+                            break;
+                        case '_SERVER':$var = getWDSrt($_SERVER[$match[2]]);
+                            break;
+                        case '_SESSION':$var = getWDSrt($_SESSION[$match[2]]);
+                            break;
+                        case '_COOKIE':$var = getWDSrt($_COOKIE[$match[2]]);
+                            break;
+                    }
+                    return (count($match) == 4) ? $match[3]($var) : $var;
+                };
+                $rule = preg_replace_callback('/{\$(_\w+)\.(\w+)(?:\|(\w+))?}/', $callback, $rule);
+
                 // {ID|FUN} GET变量的简写
-                $rule  = preg_replace_callback('/{(\w+)\|(\w+)}/', function ($match) use (&$_GET) { return $match[2]($_GET[$match[1]]);}, $rule);
+                $rule  = preg_replace_callback('/{(\w+)\|(\w+)}/', function ($match) {return $match[2](getWDSrt($_GET[$match[1]]));}, $rule);
                 //$rule  = preg_replace('/{(\w+)\|(\w+)}/e',"\\2(\$_GET['\\1'])",$rule);
-                $rule  = preg_replace_callback('/{(\w+)}/', function ($match) use (&$_GET) { return $_GET[$match[1]];}, $rule);
+                $rule  = preg_replace_callback('/{(\w+)}/', function ($match) {return getWDSrt($_GET[$match[1]]);}, $rule);
                 //$rule  = preg_replace('/{(\w+)}/e',"\$_GET['\\1']",$rule);
                 // 特殊系统变量
                 $rule  = str_ireplace(

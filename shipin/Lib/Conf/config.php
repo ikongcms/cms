@@ -1,5 +1,5 @@
 <?php
-$config = require './Runtime/Conf/config.php';
+$config = require RUNTIME_PATH.'Conf/config.php';
 $array = array(
 	'USER_AUTH_KEY'=>'ffvod',// 用户认证SESSION标记
 	'NOT_AUTH_ACTION'=>'index,show,add,top,left,main',// 默认无需认证操作

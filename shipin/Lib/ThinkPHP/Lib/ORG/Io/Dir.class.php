@@ -398,17 +398,20 @@ class Dir extends Think implements IteratorAggregate
 	 */
 	function isEmpty($directory)
 	{
-		$handle = opendir($directory);
-		while (($file = readdir($handle)) !== false)
-		{
-			if ($file != "." && $file != "..")
-			{
-				closedir($handle);
-				return false;
-			}
-		}
-		closedir($handle);
-		return true;
+		if(is_dir($directory)) {
+            $handle = opendir($directory);
+            while (($file = readdir($handle)) !== false)
+            {
+                if ($file != "." && $file != "..")
+                {
+                    closedir($handle);
+                    return false;
+                }
+            }
+            closedir($handle);
+            return true;
+        }
+        return true;
 	}
 
 	/**

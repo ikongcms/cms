@@ -395,7 +395,7 @@ function import($class, $baseUrl = '', $ext='.class.php') {
         } else {
             // 加载其他项目应用类库
             $class = substr_replace($class, '', 0, strlen($class_strut[0]) + 1);
-            $baseUrl = APP_PATH . '/../' . $class_strut[0] . '/' . LIB_DIR . '/';
+            $baseUrl = APP_PATH . '../' . $class_strut[0] . '/' . LIB_DIR . '/';
         }
     }
     if (substr($baseUrl, -1) != "/")
@@ -429,7 +429,7 @@ function load($name, $baseUrl='', $ext='.php') {
     if (empty($baseUrl)) {
         if (0 === strpos($name, '@/')) {
             //加载当前项目函数库
-            $baseUrl = APP_PATH . '/Common/';
+            $baseUrl = APP_PATH . 'Common/';
             $name = substr($name, 2);
         } else {
             //加载ThinkPHP 系统函数库
@@ -790,17 +790,21 @@ function array_define($array) {
 //[/RUNTIME]
 // 循环创建目录
 function mk_dir($dir, $mode = 0755) {
-    if (is_dir($dir) || @mkdir($dir, $mode))
-        return true;
-    if (!mk_dir(dirname($dir), $mode))
-        return false;
-    return @mkdir($dir, $mode);
+    if(!is_dir($dir)){
+        if(!mk_dir(dirname($dir))){
+            return false;
+        }
+        if(!mkdir($dir,$mode)){
+            return false;
+        }
+    }
+    return true;
 }
 
 // 自动转换字符集 支持数组转换
 function auto_charset($fContents, $from='gbk', $to='utf-8') {
     $from = strtoupper($from) == 'UTF8' ? 'utf-8' : $from;
-    $to = strtoupper($to) == 'UTF8' ? 'utf-8' : $to;
+    $to = strtoupper($to) == 'UTF8' ? 'utf-8//IGNORE' : $to;
     if (strtoupper($from) === strtoupper($to) || empty($fContents) || (is_scalar($fContents) && !is_string($fContents))) {
         //如果编码相同或者非字符串标量则不转换
         return $fContents;

@@ -177,7 +177,7 @@ function admin_ff_hot_key($string){
 	}
 	$hotkey = implode(' ',$array_hot);
 	$hotkey = 'document.write(\''.$hotkey.'\');';
-	write_file('./Runtime/Js/hotkey.js',$hotkey);
+	write_file(RUNTIME_PATH.'Js/hotkey.js',$hotkey);
 }
 //替换采集等通过url参数传值
 function admin_ff_url_repalce($xmlurl,$order='asc'){

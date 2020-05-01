@@ -104,11 +104,11 @@ function getWDSrt($data,$str=false) {
 }
 // UT*转GBK
 function u2g($str){
-	return iconv("UTF-8","GBK",$str);
+	return iconv("UTF-8","GBK//IGNORE",$str);
 }
 // GBK转UTF8
 function g2u($str){
-	return iconv("GBK","UTF-8//ignore",$str);
+	return iconv("GBK","UTF-8//IGNORE",$str);
 }
 // 转换成JS
 function t2js($l1, $l2=1){
@@ -604,7 +604,7 @@ function UU($model,$params,$redirect=false,$suffix=false){
 		}elseif($model == 'Home-vod/read'){
 			$reurl = str_replace('$id',!empty($params['id'])?$params['id']:'',C('rewrite_voddetail'));
 		}elseif($model == 'Home-vod/play'){
-			$reurl = str_replace(array('$id','$sid','$pid'),array(!empty($params['id'])?$params['id']:'',!empty($params['sid'])?$params['sid']:'',!empty($params['pid'])?$params['pid']:''),C('rewrite_vodplay'));
+			$reurl = str_replace(array('$id','$sid','$pid'),array(!empty($params['id'])?$params['id']:'',!empty($params['sid'])?$params['sid']:0,!empty($params['pid'])?$params['pid']:1),C('rewrite_vodplay'));
 		}elseif($model == 'Home-vod/search'){
 			$reurl = str_replace(array('$wd','$page','$actor','$director','$order'),array(!empty($params['wd'])?$params['wd']:'',!empty($params['p'])?$params['p']:1,!empty($params['actor'])?$params['actor']:'',!empty($params['director'])?$params['director']:'',!empty($params['order'])?$params['order']:''),C('rewrite_vodsearch'));
 		}elseif($model == 'Home-vod/type'){

@@ -28,7 +28,7 @@ class UserAction extends BaseAction{
 		$listgroup = $rsg->order('group_id desc')->select();
 		$this->assign($array);
 		$this->assign('listgroup',$listgroup);
-        $this->display(APP_PATH.'/Public/admin/user/add.html');
+        $this->display(APP_PATH.'Public/admin/user/add.html');
     }
 	// 用户添加入库
 	public function insert() {
@@ -68,7 +68,7 @@ class UserAction extends BaseAction{
 	    $rs = D("Admin.Group");
 		$list = $rs->order('group_id asc')->select();
 		$this->assign('list',$list);
-        $this->display(APP_PATH.'/Public/admin/user/showgroup.html');
+        $this->display(APP_PATH.'Public/admin/user/showgroup.html');
     }	
 	// 用户组添加与编辑表单
     public function addgroup(){
@@ -79,7 +79,7 @@ class UserAction extends BaseAction{
 			$array = $rs->where($where)->find();
 			$this->assign($array);
 		}
-        $this->display(APP_PATH.'/Public/admin/user/addgroup.html');
+        $this->display(APP_PATH.'Public/admin/user/addgroup.html');
     }
 	// 用户组添加入库
 	public function insertgroup() {

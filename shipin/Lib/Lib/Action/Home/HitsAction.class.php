@@ -3,7 +3,7 @@ class HitsAction extends HomeAction{
 	//静态模式JS展示人气
     public function show(){
 		$id	= !empty($_GET['id'])?intval($_GET['id']):0;
-		$sid = trim(getWDSrt($_GET['sid']));
+		$sid = !empty($_GET['sid'])?trim(getWDSrt($_GET['sid'])):0;
 		$type = trim(getWDSrt($_GET['type']));
 		$where[$sid.'_id'] = $id;
 		$rs = M(ucfirst($sid));

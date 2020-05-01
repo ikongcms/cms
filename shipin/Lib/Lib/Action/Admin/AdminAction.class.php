@@ -96,7 +96,7 @@ class AdminAction extends BaseAction{
 			$dir[$i]['filename'] = basename($file);
 		}
 		$this->assign('dir',$dir);
-		$config = require './Runtime/Conf/config.php';
+		$config = require RUNTIME_PATH.'Conf/config.php';
 		$this->assign($config);
 		$this->ppvod_list();//更新导航菜单
         $this->display('./Public/system/admin_conf.html');
@@ -159,10 +159,10 @@ class AdminAction extends BaseAction{
 		}else{
 			$config['html_home_suffix'] = $config['html_file_suffix'];//将静态后缀写入配置供前台生成的路径的时候调用
 		}
-		$config_old = require './Runtime/Conf/config.php';
+		$config_old = require RUNTIME_PATH.'Conf/config.php';
 		$config_new = array_merge($config_old,$config);
-		arr2file('./Runtime/Conf/config.php',$config_new);
-		if(is_file('./Runtime/~app.php')){ @unlink('./Runtime/~app.php'); }
+		arr2file(RUNTIME_PATH.'Conf/config.php',$config_new);
+		if(is_file(RUNTIME_PATH.'~app.php')){ @unlink(RUNTIME_PATH.'~app.php'); }
 		//
 		$pp_play = 'var ff_root="'.$config['site_path'].'";';
 		$pp_play.= 'var ff_width='.$config['play_width'].';';
@@ -175,7 +175,7 @@ class AdminAction extends BaseAction{
 		foreach(C('play_player') as $key=>$value){
 			$pp_play.= 'var play_'.$key.'="'.$value[1].'";';
 		}			
-		write_file('./Runtime/Player/play.js',$pp_play);
+		write_file(RUNTIME_PATH.'Player/play.js',$pp_play);
 		admin_ff_hot_key(C('site_hot'));
 		$this->success('恭喜您，配置信息更新成功！');
     }				

@@ -170,7 +170,7 @@ class NewsAction extends BaseAction{
 		//删除静态缓存
 		if(C('html_cache_on')){
 			$id = md5($news_id).C('html_file_suffix');
-			@unlink('./Html/News_read/'.$news_id);
+			@unlink(HTML_PATH.'News_read/'.$news_id);
 		}
 		//生成网页
 		if(C('url_html')){

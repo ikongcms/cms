@@ -9,7 +9,7 @@ class GbAction extends HomeAction{
 			$where['gb_status'] = array('eq',1);
 		}
 		// 组合分页信息
-		$count = $rs->where($where)->count('gb_id');
+		$count = !empty($where)?$rs->where($where)->count('gb_id'):1;
 		$totalpages = ceil($count/$limit);
 		if($page > $totalpages){
 			$page = $totalpages;
@@ -17,7 +17,7 @@ class GbAction extends HomeAction{
 		$pageurl = UU('Home-gb/show',array('p'=>'{!page!}'),false,true);
 		$pages = '共'.$count.'篇留言&nbsp;当前:'.$page.'/'.$totalpages.'页&nbsp;'.getPageIndex($page,$totalpages,C('home_pagenum'),$pageurl,'pagego(\''.$pageurl.'\','.$totalpages.')');
 		// 查询数据
-		$list = $rs->where($where)->limit($limit)->order('gb_oid desc,gb_addtime desc')->page($page)->select();
+		$list = !empty($where)?$rs->where($where)->limit($limit)->order('gb_oid desc,gb_addtime desc')->page($page)->select():'';
         if(!empty($list)) {
             foreach($list as $key=>$val){
                 $list[$key]['gb_floor'] = $count-(($page-1) * $limit + $key);

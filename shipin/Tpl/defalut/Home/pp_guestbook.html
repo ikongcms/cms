@@ -33,7 +33,7 @@
           <div class="Gb">
 			<div class="form">
               <form action="{$root}index.php?s=Gb-Insert" method="post" name="guestbook" id="guestbook">
-                <input name="gb_cid" type="hidden" value="{.id}" /><textarea name="gb_content" id="gb_content" class="gb_content" maxlength="200">{$gb_content|default='请留下您的宝贵意见，最多200个字。'}</textarea>
+                <input name="gb_cid" type="hidden" value="<if condition="empty($id) neq true">{$id}</if>" /><textarea name="gb_content" id="gb_content" class="gb_content" maxlength="200"><if condition="empty($gb_content) neq true">{$gb_content}<else />请留下您的宝贵意见，最多200个字。</if></textarea>
                 <input id="gb_button" class="gb_button" type="submit" value="发表留言"/>
                 <if condition="C('user_vcode') eq 1"><div class="vcode">验证码：<input name="gb_code" type="text" class="gb_vcode" id="gb_vcode"/> <span id="gb_vcode_html"></span></div></if>
                 <label id="gb_tips"></label>

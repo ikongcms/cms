@@ -236,8 +236,8 @@ class VodAction extends BaseAction{
 		//删除静态缓存
 		if(C('html_cache_on')){
 			$id = md5($vod_id).C('html_file_suffix');
-			@unlink('./Html/Vod_read/'.$vod_id);
-			@unlink('./Html/Vod_play/'.$vod_id);
+			@unlink(HTML_PATH.'Vod_read/'.$vod_id);
+			@unlink(HTML_PATH.'Vod_play/'.$vod_id);
 		}
 		//生成网页
 		if(C('url_html')){
