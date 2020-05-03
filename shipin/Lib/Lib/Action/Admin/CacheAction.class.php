@@ -71,8 +71,6 @@ class CacheAction extends BaseAction{
 			if(!$dir->isEmpty(HTML_PATH.'Vod_show')){$dir->delDir(HTML_PATH.'Vod_show');}	
 			if(!$dir->isEmpty(HTML_PATH.'Ajax_show')){$dir->delDir(HTML_PATH.'Ajax_show');}
 			@unlink(HTML_PATH.'index'.C('html_file_suffix'));						
-		} else {
-			echo('清除成功');
 		}
 	}
 	//清空所有数据缓存
