@@ -1,4 +1,5 @@
 <?php 
+header("Content-type:text/html;charset=utf-8");
 date_default_timezone_set("PRC");
 if(!empty($_GET['id'])&&!empty($_GET['n'])) {
     $sum = 3;
@@ -18,7 +19,7 @@ if(!empty($_GET['id'])&&!empty($_GET['n'])) {
             preg_match_all('/([a-zA-Z0-9\_\～\-\.\s]+|[\x{4e00}-\x{9fff}]+|[\x{0800}-\x{4e00}]+|[\x{AC00}-\x{D7A3}]+|[\x{4e00}-\x{9fa5}]+)/u', str_replace(array('骗','下','迷','药','强','奸'),array('带'),$value['vod_name']), $vod_name);
             if(empty($vod_name[0])){continue;}
             $vod_all = explode("番号", implode('',$vod_name[1]));
-            $vod_name = (empty($vod_all[1])?array($vod_all[0],$name[$_GET['n']-1].'_'.strtoupper(shortUrl(uniqid()))):array($vod_all[0],strtoupper(shortUrl(md5($vod_all[1])))));
+            $vod_name = (empty($vod_all[1])?array($vod_all[0],$name[$_GET['n']-1].'_'.strtoupper(shortUrl(md5($vod_all[0])))):array($vod_all[0],strtoupper(shortUrl(md5($vod_all[1])))));
             preg_match_all('/([a-zA-Z0-9\:\_\/\-\.]+m3u8)/u', $value['vod_url'], $vod_url);
             if(empty($vod_url[1])){continue;}
             $vod_url = $vod_url[1][0];
@@ -32,7 +33,8 @@ if(!empty($_GET['id'])&&!empty($_GET['n'])) {
             $data[] = '('.(intval($_GET['n'])+1).', \''.htmlspecialchars(trim($vod_name[0]),ENT_QUOTES).'\', \''.htmlspecialchars(trim($vod_name[1]),ENT_QUOTES).'\', \'\', \'\', \'\', \'\', \''.htmlspecialchars(trim($vod_name[0]),ENT_QUOTES).'\', \''.trim($vod_pic).'\', \''.$vod_area.'\', \'\', 0, \'0\', \'\', 1, \''.$vod_addtime.'\', '.mt_rand(60500,96080).', '.mt_rand(5080,8090).', '.mt_rand(500,900).', '.mt_rand(50,90).', \''.$vod_addtime.'\', 1, 1, '.mt_rand(20800,40900).', '.mt_rand(108,809).', \'m3u8\', \'\', \''.$vod_url.'\', \'admin\', \'\', \'\', \''.$getPY.'\', \'\', \''.mt_rand(6,9).'.'.mt_rand(2,5).'\', '.mt_rand(3050,7608).', 1, 0, 0, 0)';
         }
         if(!empty($data)&&is_array($data)) {
-            file_put_contents('video'.$list[$_GET['n']-1].'.txt', 'INSERT INTO `ff_vod` (`vod_cid`, `vod_name`, `vod_title`, `vod_keywords`, `vod_color`, `vod_actor`, `vod_director`, `vod_content`, `vod_pic`, `vod_area`, `vod_language`, `vod_year`, `vod_continu`, `vod_total`, `vod_isend`, `vod_addtime`, `vod_hits`, `vod_hits_day`, `vod_hits_week`, `vod_hits_month`, `vod_hits_lasttime`, `vod_stars`, `vod_status`, `vod_up`, `vod_down`, `vod_play`, `vod_server`, `vod_url`, `vod_inputer`, `vod_reurl`, `vod_jumpurl`, `vod_letter`, `vod_skin`, `vod_gold`, `vod_golder`, `vod_isfilm`, `vod_filmtime`, `vod_length`, `vod_weekday`) VALUES '.implode(',',$data).';'.PHP_EOL, FILE_APPEND | LOCK_EX);
+            // 配置数据库连接
+            getInsert('127.0.0.1','root','root','root','INSERT INTO `ff_vod` (`vod_cid`, `vod_name`, `vod_title`, `vod_keywords`, `vod_color`, `vod_actor`, `vod_director`, `vod_content`, `vod_pic`, `vod_area`, `vod_language`, `vod_year`, `vod_continu`, `vod_total`, `vod_isend`, `vod_addtime`, `vod_hits`, `vod_hits_day`, `vod_hits_week`, `vod_hits_month`, `vod_hits_lasttime`, `vod_stars`, `vod_status`, `vod_up`, `vod_down`, `vod_play`, `vod_server`, `vod_url`, `vod_inputer`, `vod_reurl`, `vod_jumpurl`, `vod_letter`, `vod_skin`, `vod_gold`, `vod_golder`, `vod_isfilm`, `vod_filmtime`, `vod_length`, `vod_weekday`) VALUES '.implode(',',$data).';');
         }
     }
     $pid = (($sum+1)-intval($_GET['id']))>0?array((intval($_GET['id'])+1),intval($_GET['n'])):array(1,(intval($_GET['n'])+1));
@@ -47,34 +49,39 @@ function getVideo($cid = 1, $p = 1) {
     return '404';
 }
 
-function shortUrl($longUrl) {
-    //要使用生成URL的字符
-    $mapStr = array(
-        'a','b','c','d','e','f','g',
-        'h','i','j','k','l','m','n',
-        'o','p','q','r','s','t',
-        'u','v','w','x','y','z',
-        '0','1','2','3','4','5','6','7','8','9',
-        'A','B','C','D','E','F','G',
-        'H','I','J','K','L','M','N',
-        'O','P','Q','R','S','T',
-        'U','V','W','X','Y','Z',
-    );
-    $key = $mapStr[rand(0, count($mapStr)-1)];
-    //对传入网址进行MD5加密 ,加个干扰key
-    $hash = md5($longUrl.$key);
-    $shortUrl = array();
-    //把加密字符按照8位一组16进制与0x3FFFFFFF进行位与运算
-    $hexint = 0x3FFFFFFF & bin2hex(substr($hash, mt_rand(0,3) * 8, 8));
-    for ($j = 0; $j < 6; $j++) {
-        //把得到的值与0x0000003D进行位与运算，取得字符数组$mapStr索引
-        $index = 0x0000003D & $hexint;
-        //把取得的字符相加
-        $shortUrl[] = $mapStr[$index];
-        //每次循环按位右移5位
-        $hexint >>= 5;
+function getInsert($host,$user,$passwd,$db,$sql){
+    try {
+        $conn = new PDO('mysql:host='.$host.';dbname='.$db, $user, $passwd);
+		$conn->query("set names utf8");
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $conn->exec($sql);
+        echo "新记录插入成功";
+    } catch(PDOException $e) {
+        echo $sql . "<br>" . $e->getMessage();exit();
     }
-    return join($shortUrl);
+    $conn = null;
+}
+
+function code62($x) {
+    $show = '';
+    while($x > 0) {
+        $s = $x % 62;
+        if ($s > 35) {
+            $s = chr($s+61);
+        } elseif ($s > 9 && $s <=35) {
+            $s = chr($s + 55);
+        }
+        $show .= $s;
+        $x = floor($x/62);
+    }
+    return $show;
+}
+
+function shortUrl($url) {
+    $url = md5($url);
+    $url = crc32($url);
+    $result = sprintf("%u", $url);
+    return code62($result);
 }
 
 function getJson($url, $randIP) {

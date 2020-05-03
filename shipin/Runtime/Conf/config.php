@@ -49,7 +49,7 @@ return array (
   'data_cache_vod' => '0',
   'data_cache_news' => '0',
   'data_cache_special' => '0',
-  'data_cache_foreach' => '5ead90a4761ef',
+  'data_cache_foreach' => '5eae81ebeced5',
   'data_cache_vodforeach' => '0',
   'data_cache_newsforeach' => '0',
   'data_cache_specialforeach' => '0',
@@ -74,12 +74,12 @@ return array (
     'home:vod:show' => 
     array (
       0 => '{:module}_{:action}/{$_SERVER.REQUEST_URI|md5}',
-      1 => 5400,
+      1 => 5400.0,
     ),
     'home:news:show' => 
     array (
       0 => '{:module}_{:action}/{$_SERVER.REQUEST_URI|md5}',
-      1 => 5400,
+      1 => 5400.0,
     ),
     'home:vod:read' => 
     array (
@@ -137,8 +137,8 @@ return array (
   'play_collect_time' => '2',
   'play_collect_name' => '0',
   'play_collect' => true,
-  'play_video_encrypt' => 'da9b1d334213614118eb352773860dbb',
-  'url_html' => '1',
+  'play_video_encrypt' => '15345dc581930da37f6bf8a2818897cb',
+  'url_html' => '0',
   'url_dir_a' => '2',
   'url_dir_b' => '5',
   'url_time' => '2',
