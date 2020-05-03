@@ -42,7 +42,6 @@
           <h3 class="panel-title">影片预览</h3>
         </div>
         <div class="panel-body">
-        <if condition="C('url_html') eq 0">
         <volist name="vod_playlist" id="ppvod">
         <eq name="ppvod.playname" value="$vod_playname">
         <div class="box2">
@@ -50,7 +49,6 @@
           <div class="playlist"><volist name="ppvod['son']" id="ppvodson"><a href="{$ppvodson.playurl}" <eq name="key+1" value="$vod_pid">class="on"</eq>>{$ppvodson.playname}</a></volist></div>
           </div>
           </eq></volist>
-          </if>
         </div>
       </div>
       

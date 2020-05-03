@@ -362,10 +362,10 @@ class CreateAction extends BaseAction{
 					$player_dir_ji = preg_replace('/play-([0-9]+)-([0-9]+)-([0-9]+)/i','play-$1-'.$arr_sid[1].'-'.($pid+1).'',$player_dir);
 					$this->assign($this->Lable_Vod_Play($arrays['read'],array('id'=>$arrays['read']['vod_id'],'sid'=>$arr_sid[1],'pid'=>$pid+1),true));
 					$this->buildHtml($player_dir_ji,'./',$arrays['read']['vod_skin_play']);
+					$this->echo_ob_flush();
 				}
 				echo('ok </li>');
 			}
-			$this->echo_ob_flush();
 		}
 	}
 	//一键生成全站地图
@@ -423,8 +423,10 @@ class CreateAction extends BaseAction{
 			C('html_file_suffix','.xml');
 			if ($page == 1){
 				$this->buildHtml($mapname,'./'.C('url_map'),'./Public/maps/'.$mapname.'.html');
+				$this->echo_ob_flush();
 			}else{
 				$this->buildHtml($mapname.'-'.$page,'./'.C('url_map'),'./Public/maps/'.$mapname.'.html');
+				$this->echo_ob_flush();
 			}
 			C('html_file_suffix',$suffix);
 		}
@@ -436,6 +438,7 @@ class CreateAction extends BaseAction{
 		F('_create/nextcreate',NULL);
 	    $this->assign($this->Lable_Index());
 		$this->buildHtml("index",'./','Home:pp_index');
+		$this->echo_ob_flush();
 		if ($jump) {
 			$this->assign("jumpUrl",'?s=Admin-Create-Mytpl-jump-'.$jump);
 			$this->success('首页生成完毕，准备生成自定义模板！');
@@ -457,6 +460,7 @@ class CreateAction extends BaseAction{
 			if(preg_match("/my_(.*)\.html/",$value['filename'])){
 				C('html_file_suffix',$suffix);
 				$this->buildHtml(str_replace(array('my_','.html'),'',$value['filename']),'./'.C('url_mytpl'),'Home:'.str_replace('.html','',$value['filename']));
+				$this->echo_ob_flush();
 			}
 		}
 		if ($jump) {
@@ -580,10 +584,10 @@ class CreateAction extends BaseAction{
 	}
     //清空缓存
 	private function echo_ob_flush(){
-		//header("Connection: close");
-		//header("HTTP/1.1 200 OK");
-		//echo str_repeat(" ", 1024*128*8);
-		echo('<p style="font-size:13px;color:red;">任务已经开始，后台执行中</p>');
+		header("Connection: close");
+		header("HTTP/1.1 200 OK");
+		echo str_repeat(" ", 1024*128*8);
+		//echo('<p style="font-size:13px;color:red;">任务已经开始，后台执行中</p>');
 		ob_flush();flush();
 		ob_end_clean();//销毁缓冲区，后面的不会显示在浏览器上了
 		//ignore_user_abort(true);//后台运行
