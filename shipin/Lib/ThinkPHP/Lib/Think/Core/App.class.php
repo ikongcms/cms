@@ -279,13 +279,14 @@ class App
                 import($_module[0]);
                 $class = isset($_module[1])?$_module[1]:MODULE_NAME.'Action';
                 $module = new $class;
-            }else{
+            } else {
                 // 是否定义Empty模块
                 $module = A("Empty");
             }
-            if(!$module)
+            if(!$module) {
                 // 模块不存在 抛出异常
                 throw_exception(L('_MODULE_NOT_EXIST_').MODULE_NAME);
+			}
         }
 
         //获取当前操作名

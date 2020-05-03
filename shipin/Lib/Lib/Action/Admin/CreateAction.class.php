@@ -83,10 +83,10 @@ class CreateAction extends BaseAction{
 			//目录路径并生成
 			$listdir = str_replace('{!page!}',$Url[$key]['page'],ff_list_url_dir(getsidname($sid),$Url[$key]['id'],$Url[$key]['page']));
 			$this->buildHtml($listdir,'./','Home:'.$channel['list_skin']);	
-            $this->echo_ob_flush();
 			//预览路径
 			$showurl = C('sitepath').$listdir.C('html_file_suffix');
 			echo'<li>第<font color=red>'.($key+1).'</font>个生成完毕　<a href="'.$showurl.'" target="_blank">'.$showurl.'</a></li>';
+			$this->echo_ob_flush();
 			$key++;
 		}
 		echo'</ul>';
@@ -216,9 +216,9 @@ class CreateAction extends BaseAction{
 		$this->assign($arrays['read']);
 		$newsdir = ff_data_url_dir('news',$arrays['read']['news_id'],$arrays['read']['news_cid'],$arrays['read']['news_name'],1);
 		$this->buildHtml($newsdir,'./',$arrays['read']['news_skin_detail']);
-        $this->echo_ob_flush();
 		$newsurl = C('site_path').$newsdir.C('html_file_suffix');
 		echo '<li>'.$arrays['read']['news_id'].' <a href="'.$newsurl.'" target="_blank">'.$newsurl.'</a> 生成完毕</li>';
+		$this->echo_ob_flush();
     }
 	//读取视频内容按分类
 	public function vodclass(){
@@ -328,12 +328,12 @@ class CreateAction extends BaseAction{
 		//生成内容页
 		$videodir = ff_data_url_dir('vod',$arrays['read']['vod_id'],$arrays['read']['vod_cid'],$arrays['read']['vod_name'],1);
 		$this->buildHtml($videodir,'./',$arrays['read']['vod_skin_detail']);
-        $this->echo_ob_flush();
 		echo('<li><a href="'.C('site_path').$videodir.C('html_file_suffix').'" target="_blank">'.$arrays['read']['vod_id'].'</a> detail ok</li>');
 		//生成播放页
 		if(C('url_html')){
 			$this->vod_play_create($arrays);
 		}
+		$this->echo_ob_flush();
     }
 	//生成播放页
 	public function vod_play_create($arrays){
@@ -344,8 +344,8 @@ class CreateAction extends BaseAction{
 			$this->assign($arrays['read']);
 			$playdir = ff_play_url_dir($arrays['read']['vod_id'],0,1,$arrays['read']['vod_cid'],$arrays['read']['vod_name']);
 			$this->buildHtml($playdir,'./',$arrays['read']['vod_skin_play']);
-            $this->echo_ob_flush();
 			echo('<li>'.$arrays['read']['vod_id'].' play ok</li>');
+			$this->echo_ob_flush();
 		}elseif(C('url_html_play')==2){
 			echo('<li>'.$arrays['read']['vod_id'].' play ');
 			//生成播放地址js(只需要一次)
@@ -362,11 +362,10 @@ class CreateAction extends BaseAction{
 					$player_dir_ji = preg_replace('/play-([0-9]+)-([0-9]+)-([0-9]+)/i','play-$1-'.$arr_sid[1].'-'.($pid+1).'',$player_dir);
 					$this->assign($this->Lable_Vod_Play($arrays['read'],array('id'=>$arrays['read']['vod_id'],'sid'=>$arr_sid[1],'pid'=>$pid+1),true));
 					$this->buildHtml($player_dir_ji,'./',$arrays['read']['vod_skin_play']);
-					//echo($arr_sid[1].'-'.($pid+1).' ');
-                    $this->echo_ob_flush();
 				}
 				echo('ok </li>');
-			}			
+			}
+			$this->echo_ob_flush();
 		}
 	}
 	//一键生成全站地图
@@ -424,10 +423,8 @@ class CreateAction extends BaseAction{
 			C('html_file_suffix','.xml');
 			if ($page == 1){
 				$this->buildHtml($mapname,'./'.C('url_map'),'./Public/maps/'.$mapname.'.html');
-                $this->echo_ob_flush();
 			}else{
 				$this->buildHtml($mapname.'-'.$page,'./'.C('url_map'),'./Public/maps/'.$mapname.'.html');
-                $this->echo_ob_flush();
 			}
 			C('html_file_suffix',$suffix);
 		}
@@ -439,7 +436,6 @@ class CreateAction extends BaseAction{
 		F('_create/nextcreate',NULL);
 	    $this->assign($this->Lable_Index());
 		$this->buildHtml("index",'./','Home:pp_index');
-        $this->echo_ob_flush();
 		if ($jump) {
 			$this->assign("jumpUrl",'?s=Admin-Create-Mytpl-jump-'.$jump);
 			$this->success('首页生成完毕，准备生成自定义模板！');
@@ -458,11 +454,9 @@ class CreateAction extends BaseAction{
 		$list_dir = $dir->toArray();
 		$array_tpl = array();
 		foreach($list_dir as $key=>$value){
-            // if(ereg("my_(.*)\.html",$value['filename'])){
 			if(preg_match("/my_(.*)\.html/",$value['filename'])){
 				C('html_file_suffix',$suffix);
 				$this->buildHtml(str_replace(array('my_','.html'),'',$value['filename']),'./'.C('url_mytpl'),'Home:'.str_replace('.html','',$value['filename']));
-                $this->echo_ob_flush();
 			}
 		}
 		if ($jump) {
@@ -495,8 +489,8 @@ class CreateAction extends BaseAction{
 			$htmldir = str_replace('{!page!}',$i,ff_special_url_dir($i));
 			$htmlurl = C('sitepath').$htmldir.C('html_file_suffix');
 			$this->buildHtml($htmldir,'./','Home:'.$channel['special_skin']);
-            $this->echo_ob_flush();
 			echo'<li>第<font color=blue>'.$i.'</font>页生成完毕　<a href="'.$htmlurl.'" target="_blank">'.$htmlurl.'</a></li>';
+			$this->echo_ob_flush();
 		}
 		echo'</ul>';
 		$this->jump('?s=Admin-Create-Show','恭喜您，专题列表页已经全部生成！');
@@ -519,6 +513,7 @@ class CreateAction extends BaseAction{
 		echo'<li>总共需要生成<font color=blue>'.$count.'</font>个专题内容页，需要分<font color=blue>'.$totalpages.'</font>次来执行，正在执行第<font color=red>'.$page.'</font>次</li>';
 		foreach($array as $key=>$value){
 			$this->create_red_special($value['special_id']);
+			$this->echo_ob_flush();
 		}
 		echo'</ul>';
 		//组合回跳URL路径与执行跳转
@@ -545,7 +540,6 @@ class CreateAction extends BaseAction{
 			$htmldir = ff_data_url_dir('special',$arrays['read']['special_id'],0,$arrays['read']['special_name'],1);
 			$htmlurl = C('site_path').$htmldir.C('html_file_suffix');
 			$this->buildHtml($htmldir,'./',$arrays['read']['special_skin']);
-            $this->echo_ob_flush();
 			echo '<li>'.$arrays['read']['special_id'].' <a href="'.$htmlurl.'" target="_blank">'.$htmlurl.'</a> 生成完毕</li>';
 		}
 	}	
@@ -589,9 +583,9 @@ class CreateAction extends BaseAction{
 		//header("Connection: close");
 		//header("HTTP/1.1 200 OK");
 		//echo str_repeat(" ", 1024*128*8);
-		//echo('<p style="font-size:13px;color:red;">任务已经开始，后台执行中</p>');
+		echo('<p style="font-size:13px;color:red;">任务已经开始，后台执行中</p>');
 		ob_flush();flush();
-		//ob_end_clean();//销毁缓冲区，后面的不会显示在浏览器上了
+		ob_end_clean();//销毁缓冲区，后面的不会显示在浏览器上了
 		//ignore_user_abort(true);//后台运行
 	}
 }

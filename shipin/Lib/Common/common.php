@@ -600,19 +600,19 @@ function UU($model,$params,$redirect=false,$suffix=false){
 	//rewrite重写
 	if(C('url_rewrite')){
 		if($model == 'Home-vod/show'){
-			$reurl = str_replace(array('$id','$page'),array(!empty($params['id'])?$params['id']:'',!empty($params['p'])?$params['p']:1),C('rewrite_vodlist'));
+			$reurl = str_replace(array('$id','$page'),array(!empty($params['id'])?$params['id']:1,!empty($params['p'])?$params['p']:1),C('rewrite_vodlist'));
 		}elseif($model == 'Home-vod/read'){
-			$reurl = str_replace('$id',!empty($params['id'])?$params['id']:'',C('rewrite_voddetail'));
+			$reurl = str_replace('$id',!empty($params['id'])?$params['id']:1,C('rewrite_voddetail'));
 		}elseif($model == 'Home-vod/play'){
-			$reurl = str_replace(array('$id','$sid','$pid'),array(!empty($params['id'])?$params['id']:'',!empty($params['sid'])?$params['sid']:0,!empty($params['pid'])?$params['pid']:1),C('rewrite_vodplay'));
+			$reurl = str_replace(array('$id','$sid','$pid'),array(!empty($params['id'])?$params['id']:1,!empty($params['sid'])?$params['sid']:0,!empty($params['pid'])?$params['pid']:1),C('rewrite_vodplay'));
 		}elseif($model == 'Home-vod/search'){
 			$reurl = str_replace(array('$wd','$page','$actor','$director','$order'),array(!empty($params['wd'])?$params['wd']:'',!empty($params['p'])?$params['p']:1,!empty($params['actor'])?$params['actor']:'',!empty($params['director'])?$params['director']:'',!empty($params['order'])?$params['order']:''),C('rewrite_vodsearch'));
 		}elseif($model == 'Home-vod/type'){
-			$reurl = str_replace(array('$id','$page','$wd','$area','$language','$actor','$director','$year','$letter','$order'),array(!empty($params['id'])?$params['id']:'',!empty($params['p'])?$params['p']:1,!empty($params['wd'])?$params['wd']:'',!empty($params['area'])?$params['area']:'',!empty($params['language'])?$params['language']:'',!empty($params['actor'])?$params['actor']:'',!empty($params['director'])?$params['director']:'',!empty($params['year'])?$params['year']:'',!empty($params['letter'])?$params['letter']:'',!empty($params['order'])?$params['order']:''),C('rewrite_vodtype'));
+			$reurl = str_replace(array('$id','$page','$wd','$area','$language','$actor','$director','$year','$letter','$order'),array(!empty($params['id'])?$params['id']:1,!empty($params['p'])?$params['p']:1,!empty($params['wd'])?$params['wd']:'',!empty($params['area'])?$params['area']:'',!empty($params['language'])?$params['language']:'',!empty($params['actor'])?$params['actor']:'',!empty($params['director'])?$params['director']:'',!empty($params['year'])?$params['year']:'',!empty($params['letter'])?$params['letter']:'',!empty($params['order'])?$params['order']:''),C('rewrite_vodtype'));
 		}elseif($model == 'Home-tag/vod'){
 			$reurl = str_replace(array('$wd','$page'),array(!empty($params['wd'])?$params['wd']:'',!empty($params['p'])?$params['p']:1),C('rewrite_vodtag'));
 		}elseif($model == 'Home-news/show'){
-			$reurl = str_replace(array('$id','$page'),array(!empty($params['id'])?$params['id']:'',!empty($params['p'])?$params['p']:1),C('rewrite_newslist'));
+			$reurl = str_replace(array('$id','$page'),array(!empty($params['id'])?$params['id']:1,!empty($params['p'])?$params['p']:1),C('rewrite_newslist'));
 		}elseif($model == 'Home-news/read'){
 			$reurl = str_replace('$id',$params['id'],C('rewrite_newsdetail'));
 		}elseif($model == 'Home-news/search'){
@@ -624,11 +624,11 @@ function UU($model,$params,$redirect=false,$suffix=false){
 		}elseif($model == 'Home-special/read'){
 			$reurl = str_replace('$id',!empty($params['id'])?$params['id']:1,C('rewrite_specialdetail'));
 		}elseif($model == 'Home-gb/show'){
-			$reurl = str_replace(array('$id','$page'),array(!empty($params['id'])?$params['id']:'',!empty($params['p'])?$params['p']:1),C('rewrite_guestbook'));
+			$reurl = str_replace(array('$id','$page'),array(!empty($params['id'])?$params['id']:1,!empty($params['p'])?$params['p']:1),C('rewrite_guestbook'));
 		}elseif($model == 'Home-my/show'){
 			$reurl = str_replace('$id',!empty($params['id'])?$params['id']:1,C('rewrite_mytpl'));
 		}elseif($model == 'Home-map/show'){
-			$reurl = str_replace(array('$id','$limit'),array(!empty($params['id'])?$params['id']:'',!empty($params['limit'])?$params['limit']:''),C('rewrite_map'));
+			$reurl = str_replace(array('$id','$limit'),array(!empty($params['id'])?$params['id']:1,!empty($params['limit'])?$params['limit']:''),C('rewrite_map'));
 		}
 		//伪静态规则设置正确
 		if(!empty($reurl)){

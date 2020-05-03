@@ -8,13 +8,13 @@
 <script language="javascript">
 $(document).ready(function(){
 	$("a").click(function(){
-		$(this).after(" <a id='loading' style='display:none;cursor: hand;'>loading...</a>");
+		$(this).after('<a id="loading" style="display:none;cursor: hand;">loading...</a>');
 		$ajaxurl = $(this).attr('href');
 		$(this).ajaxStart(function(){
 			$('#loading').show();
 		});
 		$.get($ajaxurl,null,function(data){
-			$("#loading").html(' <font color=#ff6600>'+data+'</font> ');
+			$("#loading").html('<font color="#ff6600">'+data+'</font>');
 			window.setTimeout(function(){
 				$("#loading").remove();
 			},2000);

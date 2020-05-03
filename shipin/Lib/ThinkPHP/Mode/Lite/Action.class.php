@@ -334,8 +334,9 @@ abstract class Action extends Think
             // 引入当前模块的其它操作模板
             $templateFile =  TMPL_PATH.MODULE_NAME.'/'.$templateFile.C('TMPL_TEMPLATE_SUFFIX');
         }
-        if(!file_exists_case($templateFile))
+        if(!file_exists_case($templateFile)) {
             throw_exception(L('_TEMPLATE_NOT_EXIST_').'['.$templateFile.']');
+		}
         return $templateFile;
     }
 

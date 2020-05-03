@@ -236,11 +236,12 @@ abstract class Action extends Think
                 $this->_empty($method,$parms);
             }else {
                 // 检查是否存在默认模版 如果有直接输出模版
-                if(file_exists_case(C('TMPL_FILE_NAME')))
+                if(file_exists_case(C('TMPL_FILE_NAME'))) {
                     $this->display();
-                else
+				} else {
                     // 抛出异常
                     throw_exception(L('_ERROR_ACTION_').ACTION_NAME);
+				}
             }
         }elseif(in_array(strtolower($method),array('ispost','isget','ishead','isdelete','isput'))){
             return strtolower($_SERVER['REQUEST_METHOD']) == strtolower(substr($method,2));

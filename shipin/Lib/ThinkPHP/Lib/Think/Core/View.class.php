@@ -179,11 +179,11 @@ class View extends Think
         // 使用null参数作为模版名直接返回不做任何输出
         if(null===$templateFile) return;
         // 网页字符编码
-        if(empty($charset))  $charset = C('DEFAULT_CHARSET');
-        if(empty($contentType)) $contentType = C('TMPL_CONTENT_TYPE');
-        //header("Content-Type:".$contentType."; charset=".$charset);
-        //header("Cache-control: private");  //支持页面回跳
-        //header("X-Powered-By: Anonymous");
+        if(empty($charset)) { $charset = C('DEFAULT_CHARSET'); }
+        if(empty($contentType)) { $contentType = C('TMPL_CONTENT_TYPE'); }
+        header("Content-Type:".$contentType."; charset=".$charset);
+        header("Cache-control: private");  //支持页面回跳
+        header("X-Powered-By: Anonymous");
         //页面缓存
         ob_start();
         ob_implicit_flush(0);
@@ -400,8 +400,9 @@ class View extends Think
             }
             $templateFile =  $path.'/'.$templateFile.C('TMPL_TEMPLATE_SUFFIX');
         }
-        if(!file_exists_case($templateFile))
+        if(!file_exists_case($templateFile)) {
             throw_exception(L('_TEMPLATE_NOT_EXIST_').'['.$templateFile.']');
+		}
         return $templateFile;
     }
 
